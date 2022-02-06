@@ -8,8 +8,6 @@
 #include <iostream>
 
 class SimpleTests {
-    public:
-    static void SelfTest() {
-        std::cout << "Hello tests" << std::endl;
-    }
+ public:
+  static void SelfTest() { std::cout << "Hello tests" << std::endl; }
 };

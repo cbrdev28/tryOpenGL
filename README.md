@@ -84,3 +84,13 @@ For now, this should be all the dependencies we need. I will come back to this s
 ### Building & Running Hello World C++
 
 At this point, I will try to put together a very basic C++ project with a Hello World as a starting point to run & build. The idea is to use some concept from this [cmake tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html).
+
+- Build & run the first Hello world
+  - Clone: `git clone git@github.com:cbrdev28/tryOpenGL.git`
+  - Checkout branch: `git checkout cbr/first-project`
+  - Try to build & run:
+    - `mkdir build`
+    - `cd build`
+    - `cmake ../`
+    - `cmake --build .`
+    - `./tryOpenGL.exe`

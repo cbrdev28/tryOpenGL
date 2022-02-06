@@ -94,3 +94,8 @@ At this point, I will try to put together a very basic C++ project with a Hello 
     - `cmake ../`
     - `cmake --build .`
     - `./tryOpenGL.exe`
+
+### Adding my first helper class
+
+I would like to do a simple parsing of the arguments passed to the main function, in order to run things like: `./tryOpenGL.exe --test version`, which would run the program to only print the version number.
+I will try to achieve that with a single file: `./src/simple-tests.h`

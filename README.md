@@ -73,6 +73,11 @@ I will use this README as a runbook for now, to describe pretty much all the ste
   - `pacman -S mingw-w64-x86_64-clang`
   - Verify with `clang-format --version`
   - TODO: generate a `.clang-format` file based on Google style & explore the [VS Code extension for clang-format](https://marketplace.visualstudio.com/items?itemName=xaver.clang-format)
+    - I will try the following content for my first `.clang-format`:
+    ```YAML
+    BasedOnStyle: Google
+    ```
+    - To run & format a file: `clang-format -style=file -i <path-to-file>`
 
 For now, this should be all the dependencies we need. I will come back to this section in case we add more in the future.
 

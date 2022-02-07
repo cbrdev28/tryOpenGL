@@ -21,7 +21,7 @@ class SimpleTests {
   static constexpr const char* TEST_ARG = "--test";
 
   /**
-   * Check if argument from main include "--test"
+   * Check if arguments from main function include "--test"
    * @param argc the argc from main function
    * @param argv the argv from main function
    * @return true if "--test" was found in arg, false otherwise
@@ -31,9 +31,7 @@ class SimpleTests {
       return false;
     }
 
-    const char* firstArg = argv[1];
-    int cmpRes = strcmp(firstArg, TEST_ARG);
-    if (cmpRes == 0) {
+    if (strcmp(argv[1], TEST_ARG) == 0) {
       return true;
     }
     return false;
@@ -50,8 +48,8 @@ class SimpleTests {
       // This function should not be called without enough arguments
       return -1;
     }
-    // TODO: check if we only have "--test" & run SelfTest()
-    if (argc >= MIN_ARG_FOR_TEST) {
+    // Check if we ONLY have "--test" & run SelfTest()
+    if (argc == MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0) {
       SelfTest();
       return 1;
     }

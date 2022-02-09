@@ -6,3 +6,5 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(tryOpenGL main.cc)
+
+install(TARGETS tryOpenGL DESTINATION bin)

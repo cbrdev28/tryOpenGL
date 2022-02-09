@@ -8,3 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(tryOpenGL main.cc)
 
 install(TARGETS tryOpenGL DESTINATION bin)
+
+enable_testing()
+# Does the application run
+add_test(NAME Runs COMMAND tryOpenGL)

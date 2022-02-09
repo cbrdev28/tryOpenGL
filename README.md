@@ -99,3 +99,11 @@ At this point, I will try to put together a very basic C++ project with a Hello 
 
 I would like to do a simple parsing of the arguments passed to the main function, in order to run things like: `./tryOpenGL.exe --test version`, which would run the program to only print the version number.
 I will try to achieve that with a single file: `./src/simple-tests.h`
+
+### Experimenting with a first window
+
+The goal here is to add dependencies to be able to open a window and hopefully some OpenGL.
+NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. [Link](https://github.com/cbrdev28/tryOpenGL/pull/2) to the pull request.
+
+- Add glfw dependency...
+- Add glad dependency...

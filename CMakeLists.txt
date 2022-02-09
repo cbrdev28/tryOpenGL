@@ -10,5 +10,12 @@ add_executable(tryOpenGL main.cc)
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()
-# Does the application run
+# Does the program run
 add_test(NAME Runs COMMAND tryOpenGL)
+
+# Does the program print "Hello world" 
+add_test(NAME PrintsHelloWorld COMMAND tryOpenGL)
+set_tests_properties(
+    PrintsHelloWorld
+    PROPERTIES PASS_REGULAR_EXPRESSION "Hello world"
+)

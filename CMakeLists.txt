@@ -19,3 +19,10 @@ set_tests_properties(
     PrintsHelloWorld
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello world"
 )
+
+# Does the program print "Hello tests" with "--test" 
+add_test(NAME PrintsHelloTests COMMAND tryOpenGL "--test")
+set_tests_properties(
+    PrintsHelloTests
+    PROPERTIES PASS_REGULAR_EXPRESSION "Hello tests"
+)

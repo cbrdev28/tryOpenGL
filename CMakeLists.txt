@@ -10,17 +10,17 @@ add_executable(tryOpenGL main.cc)
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()
-# Does the program run
+# Test 1: does the program run
 add_test(NAME Runs COMMAND tryOpenGL)
 
-# Does the program print "Hello world" 
+# Test 2: does the program print "Hello world" 
 add_test(NAME PrintsHelloWorld COMMAND tryOpenGL)
 set_tests_properties(
     PrintsHelloWorld
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello world"
 )
 
-# Does the program print "Hello tests" with "--test" 
+# Test 3: does the program print "Hello tests" with "--test" 
 add_test(NAME PrintsHelloTests COMMAND tryOpenGL "--test")
 set_tests_properties(
     PrintsHelloTests

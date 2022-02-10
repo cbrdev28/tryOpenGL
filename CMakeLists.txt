@@ -5,7 +5,28 @@ project(tryOpenGL)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(tryOpenGL main.cc)
+include(FetchContent)
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG 3.3.6
+    UPDATE_DISCONNECTED YES
+)
+FetchContent_MakeAvailable(glfw)
+
+add_executable(tryOpenGL main.cc "src/glad.c")
+
+target_include_directories(
+    tryOpenGL
+    PUBLIC
+    "src/include"
+)
+
+target_link_libraries(
+    tryOpenGL 
+    PRIVATE
+    glfw
+)
 
 install(TARGETS tryOpenGL DESTINATION bin)
 

@@ -105,5 +105,31 @@ I will try to achieve that with a single file: `./src/simple-tests.h`
 The goal here is to add dependencies to be able to open a window and hopefully some OpenGL.
 NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. [Link](https://github.com/cbrdev28/tryOpenGL/pull/2) to the pull request.
 
-- Add glfw dependency...
-- Add glad dependency...
+- Add [glfw](https://github.com/glfw/glfw) dependency
+  - By trying to use `FetchContent` in `CMakeLists.txt`
+  - And then `target_link_libraries(...)`
+- Add [glad](https://glad.dav1d.de/) dependency
+  - Open their [web-site](https://glad.dav1d.de/)
+    - Make sure the language is set to C++
+    - In the API section select an OpenGL version of at least 3.3
+    - Make sure the profile is set to Core
+    - Make sure the Generate a loader option is ticked
+    - Click Generate to produce the resulting library files
+  - GLAD should have provided a zip file with: two include folders & a single `glad.c` file
+    - Copy the `glad.c` file in `./src/`
+    - Copy each folder from the `include` to `./src/includ/`
+  - I need to update our `CMakeLists.txt` to include these dependencies
+    - For `glad.c`:
+    ```
+    add_executable(tryOpenGL main.cc "src/glad.c")
+    ```
+    - For the 2 includes, trying:
+    ```
+    target_include_directories(
+      tryOpenGL
+      PUBLIC
+      "src/include"
+    )
+    ```
+- I added `#include <glad/glad.h>` in `simple.tests.h`
+  - And was able to run: `./scripts/cbr-test.sh`

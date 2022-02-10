@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+#include <glad/glad.h>
+
 /**
  * A simple helper class to parse arguments and run some tests
  */

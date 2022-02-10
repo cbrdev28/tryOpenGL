@@ -101,14 +101,17 @@ class SimpleTests {
     }
     glfwMakeContextCurrent(window);
 
+    GLFWframebuffersizefun callback = glfwSetFramebufferSizeCallback(window, SimpleTests::framebuffer_size_callback);
+    if (callback == NULL) {
+      // Only warning for now, since it seems to be working anyway
+      std::cout << "Warning: glfwSetFramebufferSizeCallback: " <<  callback << std::endl;
+    }
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
       std::cout << "Failed to gladLoadGLLoader" << std::endl;
       glfwTerminate();
       return -1;
     }
-
-    glViewport(0, 0, 800, 600);
-    // TODO: Add callback: framebuffer_size_callback
 
     auto start = std::chrono::system_clock::now();
     std::cout << "Hello first window" << std::endl;
@@ -130,5 +133,13 @@ class SimpleTests {
 
     glfwTerminate();
     return 0;
+  }
+
+  /**
+   * Callback for glfwSetFramebufferSizeCallback
+   */
+  static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    // std::cout << "DEBUG: framebuffer_size_callback " << width << "/" << height << std::endl;
+    glViewport(0, 0, width, height);
   }
 };

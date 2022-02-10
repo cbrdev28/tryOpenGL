@@ -14,6 +14,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 0.9.9.8
+    UPDATE_DISCONNECTED YES
+)
+FetchContent_MakeAvailable(glm)
+
 add_executable(tryOpenGL main.cc "src/glad.c")
 
 target_include_directories(
@@ -26,6 +34,7 @@ target_link_libraries(
     tryOpenGL 
     PRIVATE
     glfw
+    glm
 )
 
 install(TARGETS tryOpenGL DESTINATION bin)

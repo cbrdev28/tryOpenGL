@@ -6,8 +6,8 @@
  * - TODO: and more stuff that I will forget to document
  */
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <string.h>
 
 #include <chrono>
@@ -97,7 +97,7 @@ class SimpleTests {
     }
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
       std::cout << "Failed to gladLoadGLLoader" << std::endl;
       glfwTerminate();
       return -1;

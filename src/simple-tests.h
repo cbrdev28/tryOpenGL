@@ -118,6 +118,8 @@ class SimpleTests {
       return -1;
     }
 
+    glEnable(GL_DEPTH_TEST);
+
     // Shaders
     // Vertex shader
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -156,17 +158,28 @@ class SimpleTests {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    // clang-format off
     // Set up vertex data
     float vertices[] = {
-        // first triangle
-        0.5f, 0.5f, 0.0f,   // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, 0.5f, 0.0f,  // top left
-        // second triangle
-        0.5f, -0.5f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f, 0.5f, 0.0f    // top left
+      // first triangle
+      0.5f, 0.5f, 0.0f,   // top right
+      0.5f, -0.5f, 0.0f,  // bottom right
+      -0.5f, 0.5f, 0.0f,  // top left
+      // second triangle
+      0.5f, -0.5f, 0.0f,   // bottom right
+      -0.5f, -0.5f, 0.0f,  // bottom left
+      -0.5f, 0.5f, 0.0f,    // top left
+
+      // Cbr second rectangle
+      -0.5f, -0.5f, 0.0f,
+      -0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, 0.0f,
     };
+    // clang-format om
 
     // Buffer(s) and configure vertex attributes
     unsigned int VBO, VAO;
@@ -195,7 +208,7 @@ class SimpleTests {
       SimpleTests::processInput(window);
 
       glClearColor(0.3f, 0.4f, 0.2f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       // Activate shader
       glUseProgram(shaderProgram);
@@ -203,8 +216,11 @@ class SimpleTests {
       glm::mat4 model = glm::mat4(1.0f);
       glm::mat4 view = glm::mat4(1.0f);
       glm::mat4 projection = glm::mat4(1.0f);
-      model =
-          glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+      // Rotation model
+      model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+      // Static model
+      // model =
+      //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
       view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
       projection = glm::perspective(glm::radians(45.0f),
                                     (float)800.0 / (float)600.0, 0.1f, 100.0f);
@@ -217,7 +233,7 @@ class SimpleTests {
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       // Render
       glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 6);
+      glDrawArrays(GL_TRIANGLES, 0, 12);
 
       glfwSwapBuffers(window);
       glfwPollEvents();

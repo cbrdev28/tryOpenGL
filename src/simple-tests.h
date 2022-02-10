@@ -5,11 +5,10 @@
  * - TODO: "--test version": to print the version number
  */
 
+#include <glad/glad.h>
 #include <string.h>
 
 #include <iostream>
-
-#include <glad/glad.h>
 
 /**
  * A simple helper class to parse arguments and run some tests
@@ -58,7 +57,8 @@ class SimpleTests {
     }
     // Refactor needed if we add more tests
     // Check if we ONLY have "--test first-window"
-    if (argc > MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0 && strcmp(argv[2], FIRST_WINDOW_TEST_ARG) == 0) {
+    if (argc > MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0 &&
+        strcmp(argv[2], FIRST_WINDOW_TEST_ARG) == 0) {
       return FirstWindowTest();
     }
 
@@ -74,5 +74,8 @@ class SimpleTests {
   /**
    * Run the first window test to print "Hello first window"
    */
-  static int FirstWindowTest() { std::cout << "Hello first window" << std::endl; return 0; }
+  static int FirstWindowTest() {
+    std::cout << "Hello first window" << std::endl;
+    return 0;
+  }
 };

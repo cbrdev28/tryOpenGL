@@ -282,9 +282,11 @@ class SimpleTests {
       "uniform mat4 model;\n"
       "uniform mat4 view;\n"
       "uniform mat4 projection;\n"
+      "out vec3 posVec;\n"
       "void main()\n"
       "{\n"
       "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+      "   posVec = aPos;\n"
       "}\0";
   /**
    * Fragment shader source
@@ -292,8 +294,9 @@ class SimpleTests {
   static constexpr const char* fragmentShaderSource =
       "#version 330 core\n"
       "out vec4 FragColor;\n"
+      "in vec3 posVec;\n"
       "void main()\n"
       "{\n"
-      "   FragColor = vec4(0.8f, 0.7f, 0.4f, 1.0f);\n"
+      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) + vec4(posVec, 1.0f);\n"
       "}\n\0";
 };

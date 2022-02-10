@@ -34,16 +34,22 @@ enable_testing()
 # Test 1: does the program run
 add_test(NAME Runs COMMAND tryOpenGL)
 
-# Test 2: does the program print "Hello world" 
+# Test 2: does the program run with --test
+add_test(NAME RunsTests COMMAND tryOpenGL --test)
+
+# Test 3: does the program print "Hello world" 
 add_test(NAME PrintsHelloWorld COMMAND tryOpenGL)
 set_tests_properties(
     PrintsHelloWorld
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello world"
 )
 
-# Test 3: does the program print "Hello tests" with "--test" 
-add_test(NAME PrintsHelloTests COMMAND tryOpenGL "--test")
+# Test 4: does the program print "Hello tests" with --test
+add_test(NAME PrintsHelloTests COMMAND tryOpenGL --test)
 set_tests_properties(
     PrintsHelloTests
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello tests"
 )
+
+# This test should fail:
+# add_test(NAME RunsTestOpenGL COMMAND tryOpenGL --test opengl)

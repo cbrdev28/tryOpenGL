@@ -133,3 +133,4 @@ NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. 
     ```
 - I added `#include <glad/glad.h>` in `simple.tests.h`
   - And was able to run: `./scripts/cbr-test.sh`
+- TODO: check to update install steps for `cmake` with new dependencies & includes

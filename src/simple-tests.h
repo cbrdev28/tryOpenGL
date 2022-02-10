@@ -122,6 +122,8 @@ class SimpleTests {
         std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
     while (!glfwWindowShouldClose(window) && elapsed_seconds < 3) {
+      SimpleTests::processInput(window);
+
       glClearColor(0.3f, 0.4f, 0.2f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
@@ -145,5 +147,14 @@ class SimpleTests {
     // std::cout << "DEBUG: framebuffer_size_callback " << width << "/" <<
     // height << std::endl;
     glViewport(0, 0, width, height);
+  }
+
+  /**
+   * Helper function to check if any key/input has been pressed by users
+   */
+  static void processInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+      glfwSetWindowShouldClose(window, true);
+    }
   }
 };

@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include <iostream>
+#include <chrono>
 
 /**
  * A simple helper class to parse arguments and run some tests
@@ -76,7 +77,15 @@ class SimpleTests {
    * Run the first window test to print "Hello first window"
    */
   static int FirstWindowTest() {
+    auto start = std::chrono::system_clock::now();
     std::cout << "Hello first window" << std::endl;
+    auto end = std::chrono::system_clock::now();
+    auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+
+    while (elapsed_seconds < 3) {
+      end = std::chrono::system_clock::now();
+      elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+    }
     return 0;
   }
 };

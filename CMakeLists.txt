@@ -51,5 +51,8 @@ set_tests_properties(
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello tests"
 )
 
+# Test 5: does the program run --test first-window
+add_test(NAME RunsTestFirstWindow COMMAND tryOpenGL --test first-window)
+
 # This test should fail:
 # add_test(NAME RunsTestOpenGL COMMAND tryOpenGL --test opengl)

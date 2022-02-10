@@ -21,6 +21,7 @@ class SimpleTests {
    */
   static const int MIN_ARG_FOR_TEST = 2;
   static constexpr const char* TEST_ARG = "--test";
+  static constexpr const char* FIRST_WINDOW_TEST_ARG = "first-window";
 
   /**
    * Check if arguments from main function include "--test"
@@ -55,6 +56,12 @@ class SimpleTests {
       SelfTest();
       return 0;
     }
+    // Refactor needed if we add more tests
+    // Check if we ONLY have "--test first-window"
+    if (argc > MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0 && strcmp(argv[2], FIRST_WINDOW_TEST_ARG) == 0) {
+      return FirstWindowTest();
+    }
+
     return -1;
   }
 
@@ -63,4 +70,9 @@ class SimpleTests {
    * Run the self test to print "Hello tests"
    */
   static void SelfTest() { std::cout << "Hello tests" << std::endl; }
+
+  /**
+   * Run the first window test to print "Hello first window"
+   */
+  static int FirstWindowTest() { std::cout << "Hello first window" << std::endl; return 0; }
 };

@@ -2,7 +2,8 @@
  * This file is meant to do a simple parsing of the args
  * to check if we have:
  * - "--test": to print the self test "Hello tests"
- * - TODO: "--test version": to print the version number
+ * - TODO: "--test first-window": to play with glfw, opengl, ...
+ * - TODO: and more stuff that I will forget to document
  */
 
 #include <glad/glad.h>

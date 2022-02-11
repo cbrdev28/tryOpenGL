@@ -238,6 +238,13 @@ class SimpleTests {
     };
     // clang-format on
 
+    unsigned int numberOfTiles = 5;
+    glm::vec3 tilePositions[] = {
+        glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.0f, -1.0f, 0.0f),
+    };
+
     // Buffer(s) and configure vertex attributes
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -262,6 +269,7 @@ class SimpleTests {
         std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
     while (!glfwWindowShouldClose(window) && elapsed_seconds < 3) {
+      // while (!glfwWindowShouldClose(window)) {
       // Logic to compute per-frame time
       float currentFrame = static_cast<float>(glfwGetTime());
       global_deltaTime = currentFrame - global_lastFrame;
@@ -300,7 +308,15 @@ class SimpleTests {
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       // Render
       glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 6 * 5);
+      for (unsigned int i = 0; i < numberOfTiles; i++) {
+        model = glm::mat4(1.0f);
+
+        model = glm::rotate(model, glm::radians(-75.0f),
+                            glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, tilePositions[i]);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 6 * 5);
+      }
 
       glfwSwapBuffers(window);
       glfwPollEvents();

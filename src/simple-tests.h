@@ -1,3 +1,6 @@
+#ifndef __SIMPLE_TESTS_H__
+#define __SIMPLE_TESTS_H__
+
 /**
  * This file is meant to do a simple parsing of the args
  * to check if we have:
@@ -478,3 +481,5 @@ class SimpleTests {
       "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) * vec4(posVec, 1.0f);\n"
       "}\n\0";
 };
+
+#endif

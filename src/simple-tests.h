@@ -20,6 +20,19 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
+/*
+ * Global variables for the camera
+ */
+glm::vec3 global_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 global_cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 global_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+/**
+ * Some timing variables to stabilize camera speed
+ */
+float global_deltaTime = 0.0f;  // Time between current frame and last framce
+float global_lastFrame = 0.0f;
+
 /**
  * A simple helper class to parse arguments and run some tests
  */
@@ -235,6 +248,11 @@ class SimpleTests {
         std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
     while (!glfwWindowShouldClose(window) && elapsed_seconds < 3) {
+      // Logic to compute per-frame time
+      float currentFrame = static_cast<float>(glfwGetTime());
+      global_deltaTime = currentFrame - global_lastFrame;
+      global_lastFrame = currentFrame;
+
       SimpleTests::processInput(window);
 
       glClearColor(0.3f, 0.4f, 0.2f, 1.0f);
@@ -245,15 +263,17 @@ class SimpleTests {
       // Create transformations matrix
       glm::mat4 model = glm::mat4(1.0f);
       glm::mat4 view = glm::mat4(1.0f);
+      view =
+          glm::lookAt(global_cameraPos, global_cameraPos + global_cameraFront,
+                      global_cameraUp);
       glm::mat4 projection = glm::mat4(1.0f);
       // Rotation model
-      model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
-                          glm::vec3(0.5f, 1.0f, 0.0f));
+      // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
+      //                     glm::vec3(0.5f, 1.0f, 0.0f));
       // Static model
-      // model =
-      //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f,
-      //     0.0f));
-      view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+      model =
+          glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+      // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
       projection = glm::perspective(glm::radians(45.0f),
                                     (float)800.0 / (float)600.0, 0.1f, 100.0f);
       // Pass matrix to shaders
@@ -302,6 +322,25 @@ class SimpleTests {
   static void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
       glfwSetWindowShouldClose(window, true);
+    }
+
+    float cameraSpeed =
+        static_cast<float>(2.5 * global_deltaTime);  // adjust accordingly
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+      global_cameraPos += cameraSpeed * global_cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+      global_cameraPos -= cameraSpeed * global_cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+      global_cameraPos -=
+          glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
+          cameraSpeed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+      global_cameraPos +=
+          glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
+          cameraSpeed;
     }
   }
 

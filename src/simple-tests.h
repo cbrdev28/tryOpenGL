@@ -37,6 +37,10 @@ float global_lastX = 800.0f / 2.0f;
 float global_lastY = 600.0f / 2.0f;
 float global_fov = 45.0f;
 
+// CBR: to draw different things dynamically with keyboard pressed
+bool global_cbrFlag = true;
+glm::vec3 global_cbrHorizontalOffset = glm::vec3(0.0f, 0.0f, 0.0f);
+
 /**
  * Some timing variables to stabilize camera speed
  */
@@ -245,6 +249,12 @@ class SimpleTests {
         glm::vec3(0.0f, -1.0f, 0.0f),
     };
 
+    glm::vec3 tilePositionsOther[] = {
+        glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(3.0f, 0.0f, 0.0f),
+        glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.0f, 3.0f, 0.0f),
+        glm::vec3(0.0f, -3.0f, 0.0f),
+    };
+
     // Buffer(s) and configure vertex attributes
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -308,12 +318,37 @@ class SimpleTests {
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       // Render
       glBindVertexArray(VAO);
+
+      // Debug: when I print "x" it seems to range from 100/-100
+      // But once I comment this out, my check seems to need 1000/-1000
+      // instead... std::cout << "Horizontal offset: x = " <<
+      // global_cbrHorizontalOffset.x
+      //           << " / y = " << global_cbrHorizontalOffset.y
+      //           << " / z = " << global_cbrHorizontalOffset.z << std::endl;
+
+      if (global_cbrHorizontalOffset.x > 1000.0 ||
+          global_cbrHorizontalOffset.x < -1000.0) {
+        global_cbrFlag = false;
+      } else {
+        global_cbrFlag = true;
+      }
+
       for (unsigned int i = 0; i < numberOfTiles; i++) {
         model = glm::mat4(1.0f);
 
+        // if (global_cbrFlag) {
+        //   model = glm::rotate(model, glm::radians(-75.0f),
+        //                       glm::vec3(1.0f, 0.0f, 0.0f));
+        // } else {
+        //   model =
+        //       glm::rotate(model, (float)glfwGetTime() * glm::radians(-75.0f),
+        //                   glm::vec3(1.0f, 0.0f, 0.0f));
+        // }
+
         model = glm::rotate(model, glm::radians(-75.0f),
                             glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::translate(model, tilePositions[i]);
+        model = glm::translate(
+            model, global_cbrFlag ? tilePositions[i] : tilePositionsOther[i]);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 6 * 5);
       }
@@ -362,11 +397,17 @@ class SimpleTests {
       global_cameraPos -= cameraSpeed * global_cameraFront;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+      // CBR keep track of x position
+      global_cbrHorizontalOffset -=
+          glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
       global_cameraPos -=
           glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
           cameraSpeed;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+      // CBR keep track of x position
+      global_cbrHorizontalOffset +=
+          glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
       global_cameraPos +=
           glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
           cameraSpeed;

@@ -161,23 +161,53 @@ class SimpleTests {
     // clang-format off
     // Set up vertex data
     float vertices[] = {
+      // Top rectangle
       // first triangle
-      0.5f, 0.5f, 0.0f,   // top right
-      0.5f, -0.5f, 0.0f,  // bottom right
-      -0.5f, 0.5f, 0.0f,  // top left
+      0.5f, 0.5f, 0.1f,   // top right
+      0.5f, -0.5f, 0.1f,  // bottom right
+      -0.5f, 0.5f, 0.1f,  // top left
       // second triangle
-      0.5f, -0.5f, 0.0f,   // bottom right
-      -0.5f, -0.5f, 0.0f,  // bottom left
-      -0.5f, 0.5f, 0.0f,    // top left
+      0.5f, -0.5f, 0.1f,   // bottom right
+      -0.5f, -0.5f, 0.1f,  // bottom left
+      -0.5f, 0.5f, 0.1f,    // top left
 
-      // Cbr second rectangle
-      -0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, 0.0f,
+      // Front rectangle
+      -0.5f, -0.5f, 0.1f,
+      -0.5f, -0.5f, -0.1f,
+      0.5f, -0.5f, 0.1f,
 
-      -0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, 0.0f,
+      -0.5f, -0.5f, -0.1f,
+      0.5f, -0.5f, -0.1f,
+      0.5f, -0.5f, 0.1f,
+
+      // Left side rectangle
+      -0.5f, -0.5f, 0.1f,
+      -0.5f, -0.5f, -0.1f,
+      -0.5f, 0.5f, 0.1f,
+
+      -0.5f, -0.5f, -0.1f,
+      -0.5f, 0.5f, -0.1f,
+      -0.5f, 0.5f, 0.1f,
+
+      // Right side rectangle
+      0.5f, -0.5f, 0.1f,
+      0.5f, -0.5f, -0.1f,
+      0.5f, 0.5f, 0.1f,
+
+      0.5f, -0.5f, -0.1f,
+      0.5f, 0.5f, -0.1f,
+      0.5f, 0.5f, 0.1f,
+
+      // Back rectangle
+      0.5f, 0.5f, 0.1f,
+      0.5f, 0.5f, -0.1f,
+      -0.5f, 0.5f, 0.1f,
+
+      0.5f, 0.5f, -0.1f,
+      -0.5f, 0.5f, -0.1f,
+      -0.5f, 0.5f, 0.1f,
+
+      // No Bottom rectangle
     };
     // clang-format om
 
@@ -233,7 +263,7 @@ class SimpleTests {
       glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
       // Render
       glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 12);
+      glDrawArrays(GL_TRIANGLES, 0, 6 * 5);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -297,6 +327,6 @@ class SimpleTests {
       "in vec3 posVec;\n"
       "void main()\n"
       "{\n"
-      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) + vec4(posVec, 1.0f);\n"
+      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) * vec4(posVec, 1.0f);\n"
       "}\n\0";
 };

@@ -27,6 +27,16 @@ glm::vec3 global_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 global_cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 global_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+bool global_firstMouseInteraction = true;
+float global_yaw =
+    -90.0f;  // yaw is initialized to -90.0 degrees since a yaw of 0.0 results
+             // in a direction vector pointing to the right so we initially
+             // rotate a bit to the left.
+float global_pitch = 0.0f;
+float global_lastX = 800.0f / 2.0f;
+float global_lastY = 600.0f / 2.0f;
+float global_fov = 45.0f;
+
 /**
  * Some timing variables to stabilize camera speed
  */
@@ -124,6 +134,10 @@ class SimpleTests {
       std::cout << "Warning: glfwSetFramebufferSizeCallback: " << callback
                 << std::endl;
     }
+
+    glfwSetCursorPosCallback(window, SimpleTests::mouse_callback);
+    // Tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
       std::cout << "Failed to gladLoadGLLoader" << std::endl;
@@ -271,10 +285,11 @@ class SimpleTests {
       // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
       //                     glm::vec3(0.5f, 1.0f, 0.0f));
       // Static model
-      model =
-          glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+      // model =
+      //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f,
+      //     0.0f));
       // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-      projection = glm::perspective(glm::radians(45.0f),
+      projection = glm::perspective(glm::radians(global_fov),
                                     (float)800.0 / (float)600.0, 0.1f, 100.0f);
       // Pass matrix to shaders
       unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
@@ -296,8 +311,6 @@ class SimpleTests {
           std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
     }
 
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);
@@ -342,6 +355,43 @@ class SimpleTests {
           glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
           cameraSpeed;
     }
+  }
+
+  /**
+   * Callback for mouse positioning
+   */
+  static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (global_firstMouseInteraction) {
+      global_lastX = xpos;
+      global_lastY = ypos;
+      global_firstMouseInteraction = false;
+    }
+
+    float xoffset = xpos - global_lastX;
+    float yoffset = global_lastY -
+                    ypos;  // Reversed since y-coordinates go from bottom to top
+    global_lastX = xpos;
+    global_lastY = ypos;
+
+    float sensitivity = 0.1f;  // Change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    global_yaw += xoffset;
+    global_pitch += yoffset;
+
+    // Make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (global_pitch > 89.0f) global_pitch = 89.0f;
+    if (global_pitch < -89.0f) global_pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(global_yaw)) * cos(glm::radians(global_pitch));
+    front.y = sin(glm::radians(global_pitch));
+    front.z = sin(glm::radians(global_yaw)) * cos(glm::radians(global_pitch));
+    global_cameraFront = glm::normalize(front);
   }
 
   /**

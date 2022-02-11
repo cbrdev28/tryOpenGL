@@ -209,7 +209,7 @@ class SimpleTests {
 
       // No Bottom rectangle
     };
-    // clang-format om
+    // clang-format on
 
     // Buffer(s) and configure vertex attributes
     unsigned int VBO, VAO;
@@ -247,10 +247,12 @@ class SimpleTests {
       glm::mat4 view = glm::mat4(1.0f);
       glm::mat4 projection = glm::mat4(1.0f);
       // Rotation model
-      model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+      model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
+                          glm::vec3(0.5f, 1.0f, 0.0f));
       // Static model
       // model =
-      //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+      //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f,
+      //     0.0f));
       view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
       projection = glm::perspective(glm::radians(45.0f),
                                     (float)800.0 / (float)600.0, 0.1f, 100.0f);

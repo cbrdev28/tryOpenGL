@@ -281,7 +281,7 @@ class SimpleTests {
     auto elapsed_seconds =
         std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
-    while (!glfwWindowShouldClose(window) && elapsed_seconds < 3) {
+    while (!glfwWindowShouldClose(window) && elapsed_seconds < 2) {
       // while (!glfwWindowShouldClose(window)) {
       // Logic to compute per-frame time
       float currentFrame = static_cast<float>(glfwGetTime());

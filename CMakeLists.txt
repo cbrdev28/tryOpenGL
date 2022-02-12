@@ -49,28 +49,22 @@ target_link_libraries(
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()
-# Test 1: does the program run
-add_test(NAME Runs COMMAND tryOpenGL)
 
-# Test 2: does the program run with --test
+# Test 1: does the program run with --test
 add_test(NAME RunsTests COMMAND tryOpenGL --test)
 
-# Test 3: does the program print "Hello world" 
-add_test(NAME PrintsHelloWorld COMMAND tryOpenGL)
-set_tests_properties(
-    PrintsHelloWorld
-    PROPERTIES PASS_REGULAR_EXPRESSION "Hello world"
-)
-
-# Test 4: does the program print "Hello tests" with --test
+# Test 2: does the program print "Hello tests" with --test
 add_test(NAME PrintsHelloTests COMMAND tryOpenGL --test)
 set_tests_properties(
     PrintsHelloTests
     PROPERTIES PASS_REGULAR_EXPRESSION "Hello tests"
 )
 
-# Test 5: does the program run --test first-window
+# Test 2: does the program run --test first-window
 add_test(NAME RunsTestFirstWindow COMMAND tryOpenGL --test first-window)
 
-# This test should fail:
+# Enable this test to run the program
+# add_test(NAME Runs COMMAND tryOpenGL)
+
+# Example of failure when running with --test:
 # add_test(NAME RunsTestOpenGL COMMAND tryOpenGL --test opengl)

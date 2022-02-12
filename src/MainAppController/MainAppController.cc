@@ -4,12 +4,11 @@
 
 #include "MainAppController.h"
 
-#include <iostream>
+#include <fmt/core.h>
 
 // Constructor
 MainAppController::MainAppController(const int argc,
                                      const char* const* const argv)
     : _argc(argc), _argv(argv) {
-  std::cout << "MainAppController(...): argc = " << _argc
-            << ", argv = " << _argv << std::endl;
+  fmt::print("MainAppController(...)");
 };

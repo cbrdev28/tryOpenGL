@@ -12,5 +12,11 @@ MainAppController::MainAppController(const int argc, const char* const* const ar
 
 int MainAppController::run() {
   fmt::print("run()\n");
+  int functionResult = this->init();
+  return functionResult;
+}
+
+int MainAppController::init() {
+  fmt::print("init()\n");
   return 0;
 }

@@ -28,6 +28,12 @@ class MainAppController {
   const int _argc;
   const char* const* const _argv;
   WindowManager _windowManager;
+
+  /**
+   * Initialize the app & managers
+   * @return -1 if an error occurred, 0 otherwise
+   */
+  int init();
 };
 
 #endif

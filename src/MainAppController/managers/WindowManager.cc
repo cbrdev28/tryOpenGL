@@ -6,4 +6,9 @@
 
 #include <fmt/core.h>
 
-WindowManager::WindowManager() { fmt::print("WindowManager()\n"); }
+WindowManager::WindowManager() { fmt::print("WindowManager::WindowManager()\n"); }
+
+int WindowManager::init() {
+  fmt::print("WindowManager::init()");
+  return 0;
+}

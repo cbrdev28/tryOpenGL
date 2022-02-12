@@ -18,5 +18,6 @@ int MainAppController::run() {
 
 int MainAppController::init() {
   fmt::print("init()\n");
-  return 0;
+  int functionResult = this->_windowManager.init();
+  return functionResult;
 }

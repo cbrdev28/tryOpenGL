@@ -7,6 +7,12 @@
 class WindowManager {
  public:
   WindowManager();
+
+  /**
+   * Initialize window manager
+   * @return -1 if an error occurred, 0 otherwise
+   */
+  int init();
 };
 
 #endif

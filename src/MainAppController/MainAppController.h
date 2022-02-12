@@ -7,11 +7,21 @@
  */
 class MainAppController {
  public:
+  /**
+   * Constructor
+   * @param argc the argc from main function
+   * @param argv the argv from main function
+   */
   MainAppController(const int argc, const char* const* const argv);
+
   // Get rid of constructor we don't plan to use (leaning purpose)
   // Copy constructor
   MainAppController(MainAppController const& other) = delete;
 
+  /**
+   * Run the main application
+   * @return -1 if an error occured, 0 otherwise
+   */
   int run();
 
  private:

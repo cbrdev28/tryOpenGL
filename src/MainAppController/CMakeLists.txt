@@ -1,4 +1,4 @@
-add_library(MainAppController MainAppController.cc)
+add_library(MainAppController MainAppController.cc "managers/WindowManager.cc")
 
 target_link_libraries(
     MainAppController 

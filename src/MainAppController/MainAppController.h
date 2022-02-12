@@ -1,10 +1,10 @@
 #ifndef __MAIN_APP_CONTROLLER_H__
 #define __MAIN_APP_CONTROLLER_H__
 
+#include "managers/WindowManager.h"
 /**
  * This file is the main app controller: the first entry in our app.
  */
-
 class MainAppController {
  public:
   MainAppController(const int argc, const char* const* const argv);
@@ -17,6 +17,7 @@ class MainAppController {
  private:
   const int _argc;
   const char* const* const _argv;
+  WindowManager _windowManager;
 };
 
 #endif

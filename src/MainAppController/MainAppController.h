@@ -20,7 +20,7 @@ class MainAppController {
 
   /**
    * Run the main application
-   * @return -1 if an error occured, 0 otherwise
+   * @return -1 if an error occurred, 0 otherwise
    */
   int run();
 

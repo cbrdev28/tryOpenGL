@@ -82,7 +82,7 @@ class SimpleTests {
    * Parse argv & argc to determine which test to run
    * @param argc the argc from main function
    * @param argv the argv from main function
-   * @return 0 if a test was run, -1 if an error occured or no test found
+   * @return 0 if a test was run, -1 if an error occurred or no test found
    */
   static int ParseArgAndRun(int argc, char** argv) {
     if (argc < MIN_ARG_FOR_TEST) {

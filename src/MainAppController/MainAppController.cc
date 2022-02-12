@@ -7,8 +7,6 @@
 #include <fmt/core.h>
 
 // Constructor
-MainAppController::MainAppController(const int argc,
-                                     const char* const* const argv)
-    : _argc(argc), _argv(argv) {
+MainAppController::MainAppController(const int argc, const char* const* const argv) : _argc(argc), _argv(argv) {
   fmt::print("MainAppController(...)");
 };

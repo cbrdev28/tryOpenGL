@@ -10,6 +10,5 @@ int main(int argc, char** argv) {
   }
 
   const MainAppController mainAppController = MainAppController(argc, argv);
-  std::cout << "Hello world" << std::endl;
   return 0;
 }

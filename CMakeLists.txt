@@ -22,12 +22,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
+add_subdirectory("src/MainAppController")
+
 add_executable(tryOpenGL main.cc "src/glad.c")
 
 target_include_directories(
     tryOpenGL
     PUBLIC
     "src/include"
+    "src/MainAppController"
 )
 
 target_link_libraries(
@@ -35,6 +38,12 @@ target_link_libraries(
     PRIVATE
     glfw
     glm
+)
+
+target_link_libraries(
+    tryOpenGL
+    PUBLIC
+    MainAppController
 )
 
 install(TARGETS tryOpenGL DESTINATION bin)

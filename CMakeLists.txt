@@ -71,8 +71,8 @@ set_tests_properties(
 # Test 2: does the program run --test first-window
 add_test(NAME RunsTestFirstWindow COMMAND tryOpenGL --test first-window)
 
-# Enable this test to run the program
-# add_test(NAME Runs COMMAND tryOpenGL)
+# Enable/Disable this test to run the program
+add_test(NAME Runs COMMAND tryOpenGL)
 
 # Example of failure when running with --test:
 # add_test(NAME RunsTestOpenGL COMMAND tryOpenGL --test opengl)

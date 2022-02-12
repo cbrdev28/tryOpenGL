@@ -8,5 +8,10 @@
 
 // Constructor
 MainAppController::MainAppController(const int argc, const char* const* const argv) : _argc(argc), _argv(argv) {
-  fmt::print("MainAppController(...)");
+  fmt::print("MainAppController(...)\n");
 };
+
+int MainAppController::run() {
+  fmt::print("run()\n");
+  return 0;
+}

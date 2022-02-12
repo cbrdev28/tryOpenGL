@@ -9,6 +9,7 @@ int main(int argc, char** argv) {
     return SimpleTests::ParseArgAndRun(argc, argv);
   }
 
-  const MainAppController mainAppController = MainAppController(argc, argv);
-  return 0;
+  MainAppController mainAppController = MainAppController(argc, argv);
+  const int mainAppResult = mainAppController.run();
+  return mainAppResult;
 }

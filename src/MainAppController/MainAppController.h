@@ -8,9 +8,11 @@
 class MainAppController {
  public:
   MainAppController(const int argc, const char* const* const argv);
-  // Explicit get rid of constructor we don't plan to use (leaning purpose)
+  // Get rid of constructor we don't plan to use (leaning purpose)
   // Copy constructor
   MainAppController(MainAppController const& other) = delete;
+
+  int run();
 
  private:
   const int _argc;

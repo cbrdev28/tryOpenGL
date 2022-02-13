@@ -39,18 +39,16 @@ int MainAppController::init() {
 
 MainAppController* MainAppController::renderLoop() {
   fmt::print("renderLoop()\n");
+
   GLFWwindow* window = _windowManager.getWindow();
-  /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
     _inputManager.processKeyboardInput();
 
     /* Render here */
+    // TODO: move this in WorldManager
     glClear(GL_COLOR_BUFFER_BIT);
 
-    /* Swap front and back buffers */
     glfwSwapBuffers(window);
-
-    /* Poll for and process events */
     glfwPollEvents();
   }
   return this;

@@ -4,7 +4,8 @@
 #include "WindowManager.h"
 
 /**
- * Input manager for glfw to handle keyboard & mouse
+ * Input manager for glfw to handle keyboard & mouse.
+ * It requires a WindowManager previously initialized.
  */
 class InputManager {
  public:
@@ -17,6 +18,11 @@ class InputManager {
    * @return InputManager*
    */
   InputManager* init();
+
+  /**
+   * Simple keyboard input process
+   */
+  void processKeyboardInput();
 
  private:
   WindowManager& _windowManager;

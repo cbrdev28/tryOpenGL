@@ -30,6 +30,8 @@ InputManager* InputManager::init() {
   return this;
 }
 
+void InputManager::processKeyboardInput() { fmt::print("InputManager::processKeyboardInput()\n"); }
+
 void InputManager::mouseCallback(GLFWwindow* window, double xPos, double yPos) {
   fmt::print("InputManager::mouseCallback(...)\n");
   // Debug

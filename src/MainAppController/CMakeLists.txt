@@ -1,4 +1,10 @@
-add_library(MainAppController MainAppController.cc "../glad.c" "managers/WindowManager.cc")
+add_library(
+    MainAppController
+    MainAppController.cc
+    "../glad.c"
+    "managers/WindowManager.cc"
+    "managers/InputManager.cc"
+)
 
 include(FetchContent)
 FetchContent_Declare(

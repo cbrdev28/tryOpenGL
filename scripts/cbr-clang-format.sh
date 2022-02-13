@@ -9,5 +9,5 @@ REPO_DIR="${SCRIPT_DIR}/.."
 
 pushd ${REPO_DIR}
 # This command may need to be refactored when adding more files
-clang-format --style=file --verbose -i ./*.cc ./src/*.h ./src/MainAppController/*.cc ./src/MainAppController/*.h ./src/MainAppController/managers/*.cc ./src/MainAppController/managers/*.h
+clang-format --style=file --verbose -i ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h ./src/MainAppController/managers/*.cc ./src/MainAppController/managers/*.h
 popd

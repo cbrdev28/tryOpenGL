@@ -32,20 +32,12 @@ FetchContent_MakeAvailable(fmt)
 
 add_subdirectory("src/MainAppController")
 
-add_executable(tryOpenGL main.cc "src/glad.c")
+add_executable(tryOpenGL main.cc)
 
 target_include_directories(
     tryOpenGL
     PUBLIC
-    "src/include"
     "src/MainAppController"
-)
-
-target_link_libraries(
-    tryOpenGL 
-    PRIVATE
-    glfw
-    glm
 )
 
 target_link_libraries(
@@ -54,22 +46,11 @@ target_link_libraries(
     MainAppController
 )
 
+# NOTE: I don't know if I should update the install steps
+# with the MainAppController library
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()
-
-# Test 1: does the program run with --test
-add_test(NAME RunsTests COMMAND tryOpenGL --test)
-
-# Test 2: does the program print "Hello tests" with --test
-add_test(NAME PrintsHelloTests COMMAND tryOpenGL --test)
-set_tests_properties(
-    PrintsHelloTests
-    PROPERTIES PASS_REGULAR_EXPRESSION "Hello tests"
-)
-
-# Test 2: does the program run --test first-window
-add_test(NAME RunsTestFirstWindow COMMAND tryOpenGL --test first-window)
 
 # Enable/Disable this test to run the program
 add_test(NAME Runs COMMAND tryOpenGL)

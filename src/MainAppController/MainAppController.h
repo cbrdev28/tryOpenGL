@@ -3,6 +3,7 @@
 
 #include "managers/InputManager.h"
 #include "managers/WindowManager.h"
+#include "managers/WorldManager.h"
 
 /**
  * This file is the main app controller: the first entry in our app.
@@ -31,6 +32,7 @@ class MainAppController {
   const char* const* const _argv;
   WindowManager _windowManager;
   InputManager _inputManager;
+  WorldManager _worldManager;
 
   /**
    * Initialize the app & managers

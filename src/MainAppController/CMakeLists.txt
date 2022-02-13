@@ -4,6 +4,7 @@ add_library(
     "../glad.c"
     "managers/WindowManager.cc"
     "managers/InputManager.cc"
+    "managers/WorldManager.cc"
 )
 
 include(FetchContent)

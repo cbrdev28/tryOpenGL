@@ -30,6 +30,7 @@ int MainAppController::init() {
   try {
     this->_windowManager.init();
     this->_inputManager.init();
+    this->_worldManager.init();
   } catch (int error) {
     return -1;
   }

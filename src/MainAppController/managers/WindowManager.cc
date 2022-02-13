@@ -89,5 +89,5 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
 }
 
 void WindowManager::errorCallback(int code, const char* description) {
-  fmt::print("WindowManager::errorCallback(...): code = {} / description = {}\n", code, description);
+  fmt::print("WindowManager::errorCallback(...):\ncode = {}\ndescription = {}\n", code, description);
 }

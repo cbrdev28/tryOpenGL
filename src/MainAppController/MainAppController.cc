@@ -41,6 +41,8 @@ MainAppController* MainAppController::renderLoop() {
   GLFWwindow* window = _windowManager.getWindow();
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
+    _inputManager.processKeyboardInput();
+
     /* Render here */
     glClear(GL_COLOR_BUFFER_BIT);
 

@@ -31,7 +31,8 @@ InputManager* InputManager::init() {
 }
 
 void InputManager::processKeyboardInput() {
-  fmt::print("InputManager::processKeyboardInput()\n");
+  // Debug
+  // fmt::print("InputManager::processKeyboardInput()\n");
 
   GLFWwindow* window = _windowManager.getWindow();
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

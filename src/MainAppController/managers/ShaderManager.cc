@@ -33,7 +33,7 @@ ShaderManager::~ShaderManager() {
 
 ShaderManager& ShaderManager::init() {
   fmt::print("ShaderManager::init()\n");
-  // Compile & link shaders...
+
   this->compileVertex();
   this->compileFragment();
   this->link();
@@ -68,13 +68,14 @@ ShaderManager& ShaderManager::compileFragment() {
 
 ShaderManager& ShaderManager::compile(const unsigned int shaderID) {
   fmt::print("ShaderManager::compile()\n");
-  // Should not happen
+
   if (shaderID == 0) {
     fmt::print("Invalid shaderID\n");
     throw -1;
   }
+
   glCompileShader(shaderID);
-  // Check for shader compile errors
+
   int success;
   char infoLog[512];
   glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);

@@ -39,6 +39,13 @@ WindowManager* WindowManager::init() {
   // For Apple
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
+  GLFWerrorfun errorCallback = glfwSetErrorCallback(WindowManager::errorCallback);
+  if (errorCallback == NULL) {
+    // Only warning
+    auto formattedPointer = fmt::ptr(errorCallback);
+    fmt::print("Warning glfwSetErrorCallback(...): {}\n", formattedPointer);
+  }
+
   GLFWwindow* window =
       glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", NULL, NULL);
   if (window == NULL) {
@@ -55,11 +62,11 @@ WindowManager* WindowManager::init() {
     throw -1;
   }
 
-  GLFWframebuffersizefun callback =
+  GLFWframebuffersizefun fsCallback =
       glfwSetFramebufferSizeCallback(this->_window, WindowManager::framebufferSizeCallback);
-  if (callback == NULL) {
+  if (fsCallback == NULL) {
     // Only warning for now, since it seems to be working anyway
-    auto formattedPointer = fmt::ptr(callback);
+    auto formattedPointer = fmt::ptr(fsCallback);
     fmt::print("Warning glfwSetFramebufferSizeCallback(...): {}\n", formattedPointer);
   }
   return this;
@@ -79,4 +86,8 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
   WindowManager::height = height;
   // Debug: to be tested
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
+}
+
+void WindowManager::errorCallback(int code, const char* description) {
+  fmt::print("WindowManager::errorCallback(...): code = {} / description = {}\n", code, description);
 }

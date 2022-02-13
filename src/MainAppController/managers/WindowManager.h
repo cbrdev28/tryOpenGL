@@ -38,6 +38,7 @@ class WindowManager {
    * Callback
    */
   static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void errorCallback(int code, const char* description);
 };
 
 #endif

@@ -84,7 +84,7 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
 
   WindowManager::width = width;
   WindowManager::height = height;
-  // Debug: to be tested
+  // Debug
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
 }
 

@@ -25,8 +25,8 @@ InputManager* InputManager::init() {
   }
 
   // NOTE: this may need to be moved in some function
-  // Tell GLFW to capture our mouse
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // Uncomment to tell GLFW to capture our mouse
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   return this;
 }
 
@@ -40,7 +40,6 @@ void InputManager::processKeyboardInput() {
 }
 
 void InputManager::mouseCallback(GLFWwindow* window, double xPos, double yPos) {
-  fmt::print("InputManager::mouseCallback(...)\n");
   // Debug
-  fmt::print("InputManager::mouseCallback(...): x = {} / y = {}\n", xPos, yPos);
+  // fmt::print("InputManager::mouseCallback(...): x = {} / y = {}\n", xPos, yPos);
 }

@@ -50,7 +50,6 @@ WindowManager* WindowManager::init() {
       glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", NULL, NULL);
   if (window == NULL) {
     fmt::print("Failed to glfwCreateWindow(...)\n");
-    glfwTerminate();
     throw -1;
   }
   this->_window = window;
@@ -58,7 +57,6 @@ WindowManager* WindowManager::init() {
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     fmt::print("Failed to gladLoadGLLoader(...)\n");
-    glfwTerminate();
     throw -1;
   }
 

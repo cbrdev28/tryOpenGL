@@ -21,5 +21,20 @@ int WindowManager::init() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // For Apple
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+  GLFWwindow* window = glfwCreateWindow(1024, 768, "WindowManager", NULL, NULL);
+  if (window == NULL) {
+    fmt::print("Failed to glfwCreateWindow(...)\n");
+    glfwTerminate();
+    return -1;
+  }
+  // TODO: store window
+  //   glfwMakeContextCurrent(window);
+
+  //   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+  //     fmt::print("Failed to gladLoadGLLoader(...)\n");
+  //     glfwTerminate();
+  //     return -1;
+  //   }
   return 0;
 }

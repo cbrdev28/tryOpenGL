@@ -26,4 +26,9 @@ class WindowManager {
   GLFWwindow* _window;
 };
 
+/**
+ * Callback
+ */
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
 #endif

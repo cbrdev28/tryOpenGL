@@ -6,7 +6,7 @@
 
 #include <fmt/core.h>
 
-WindowManager::WindowManager() { fmt::print("WindowManager::WindowManager()\n"); }
+WindowManager::WindowManager() : _window(nullptr) { fmt::print("WindowManager::WindowManager()\n"); }
 
 WindowManager* WindowManager::init() {
   fmt::print("WindowManager::init()\n");
@@ -28,13 +28,13 @@ WindowManager* WindowManager::init() {
     glfwTerminate();
     throw -1;
   }
-  // TODO: store window
-  //   glfwMakeContextCurrent(window);
+  this->_window = window;
+  glfwMakeContextCurrent(this->_window);
 
-  //   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-  //     fmt::print("Failed to gladLoadGLLoader(...)\n");
-  //     glfwTerminate();
-  //     throw -1;
-  //   }
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    fmt::print("Failed to gladLoadGLLoader(...)\n");
+    glfwTerminate();
+    throw -1;
+  }
   return this;
 }

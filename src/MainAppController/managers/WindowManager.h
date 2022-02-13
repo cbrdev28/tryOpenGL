@@ -21,6 +21,9 @@ class WindowManager {
    * @return WindowManager*
    */
   WindowManager* init();
+
+ private:
+  GLFWwindow* _window;
 };
 
 #endif

@@ -15,11 +15,12 @@ class WindowManager {
   WindowManager();
 
   /**
-   * Initialize window manager: glfw, glad
+   * Initialize window manager: glfw, glad.
    * Create a window
-   * @return -1 if an error occurred, 0 otherwise
+   * @throw -1
+   * @return WindowManager*
    */
-  int init();
+  WindowManager* init();
 };
 
 #endif

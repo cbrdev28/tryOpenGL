@@ -70,6 +70,8 @@ WindowManager* WindowManager::init() {
   return this;
 }
 
+GLFWwindow* WindowManager::getWindow() { return this->_window; }
+
 /**
  * Private
  */

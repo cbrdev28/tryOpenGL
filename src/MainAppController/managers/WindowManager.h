@@ -29,6 +29,8 @@ class WindowManager {
    */
   WindowManager* init();
 
+  GLFWwindow* getWindow();
+
  private:
   GLFWwindow* _window;
   static int width;

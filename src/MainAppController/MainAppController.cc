@@ -21,6 +21,7 @@ int MainAppController::init() {
   fmt::print("init()\n");
   try {
     this->_windowManager.init();
+    this->_inputManager.init();
   } catch (int error) {
     return -1;
   }

@@ -15,6 +15,18 @@ InputManager::InputManager(WindowManager& windowManager) : _windowManager(window
 
 InputManager* InputManager::init() {
   fmt::print("InputManager::init()\n");
+
+  GLFWwindow* window = _windowManager.getWindow();
+  GLFWcursorposfun cpCallback = glfwSetCursorPosCallback(window, InputManager::mouseCallback);
+  if (cpCallback == NULL) {
+    // Only warning
+    auto formattedPointer = fmt::ptr(cpCallback);
+    fmt::print("Warning glfwSetCursorPosCallback(...): {}\n", formattedPointer);
+  }
+
+  // NOTE: this may need to be moved in some function
+  // Tell GLFW to capture our mouse
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   return this;
 }
 

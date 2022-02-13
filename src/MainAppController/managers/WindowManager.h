@@ -4,6 +4,12 @@
  * Window manager for glfw
  */
 
+// Disable clang-format because we must include glad before GLFW
+// clang-format off
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+// clang-format on
+
 class WindowManager {
  public:
   WindowManager();

@@ -27,13 +27,17 @@ WorldManager& WorldManager::init() {
   return *this;
 }
 
+// NOTE: this function is called during the render loop!
 WorldManager& WorldManager::render() {
   // fmt::print("WorldManager::render()\n");
   const float neonPinkR = 255 / 255.0f;
   const float neonPinkG = 68 / 255.0f;
   const float neonPinkB = 205 / 255.0f;
-  glClearColor(neonPinkR, neonPinkG, neonPinkB, 1.0f);
 
+  glClearColor(neonPinkR, neonPinkG, neonPinkB, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // TODO: activate shader
+  // glUseProgram(shaderProgram);
   return *this;
 }

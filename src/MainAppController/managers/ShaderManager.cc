@@ -16,7 +16,8 @@ ShaderManager::ShaderManager(const char* vertexShaderSrc, const char* fragmentSh
     : _vertexShaderSrc(vertexShaderSrc),
       _fragmentShaderSrc(fragmentShaderSrc),
       _vertexShaderID(0),
-      _fragmentShaderID(0) {
+      _fragmentShaderID(0),
+      _shaderProgramID(0) {
   fmt::print("ShaderManager::ShaderManager(...)\n");
 };
 
@@ -28,6 +29,10 @@ ShaderManager::~ShaderManager() {
   }
   if (_fragmentShaderID != 0) {
     glDeleteShader(_fragmentShaderID);
+  }
+
+  if (_shaderProgramID != 0) {
+    glDeleteProgram(_shaderProgramID);
   }
 }
 
@@ -89,5 +94,25 @@ ShaderManager& ShaderManager::compile(const unsigned int shaderID) {
 
 ShaderManager& ShaderManager::link() {
   fmt::print("ShaderManager::link()\n");
+
+  _shaderProgramID = glCreateProgram();
+  if (_shaderProgramID == 0) {
+    fmt::print("Failed to glCreateProgram()\n");
+    throw -1;
+  }
+  glAttachShader(_shaderProgramID, _vertexShaderID);
+  glAttachShader(_shaderProgramID, _fragmentShaderID);
+  glLinkProgram(_shaderProgramID);
+
+  int success;
+  char infoLog[512];
+  glGetProgramiv(_shaderProgramID, GL_LINK_STATUS, &success);
+  if (!success) {
+    glGetProgramInfoLog(_shaderProgramID, 512, NULL, infoLog);
+    fmt::print("Failed to link shaders:\n{}\n", infoLog);
+    throw -1;
+  }
+  glDeleteShader(_vertexShaderID);
+  glDeleteShader(_fragmentShaderID);
   return *this;
 }

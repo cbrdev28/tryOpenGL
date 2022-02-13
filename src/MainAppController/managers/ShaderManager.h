@@ -22,6 +22,7 @@ class ShaderManager {
 
   unsigned int _vertexShaderID;
   unsigned int _fragmentShaderID;
+  unsigned int _shaderProgramID;
 
   /**
    * Compile vertex shader

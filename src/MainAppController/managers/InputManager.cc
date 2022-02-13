@@ -17,3 +17,9 @@ InputManager* InputManager::init() {
   fmt::print("InputManager::init()\n");
   return this;
 }
+
+void InputManager::mouseCallback(GLFWwindow* window, double xPos, double yPos) {
+  fmt::print("InputManager::mouseCallback(...)\n");
+  // Debug
+  fmt::print("InputManager::mouseCallback(...): x = {} / y = {}\n", xPos, yPos);
+}

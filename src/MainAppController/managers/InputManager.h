@@ -20,6 +20,8 @@ class InputManager {
 
  private:
   WindowManager& _windowManager;
+
+  static void mouseCallback(GLFWwindow* window, double xPos, double yPos);
 };
 
 #endif

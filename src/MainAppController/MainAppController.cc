@@ -13,8 +13,16 @@ MainAppController::MainAppController(const int argc, const char* const* const ar
 
 int MainAppController::run() {
   fmt::print("run()\n");
-  int functionResult = this->init();
-  return functionResult;
+  int initialized = this->init();
+  if (initialized != 0) {
+    return -1;
+  }
+  try {
+    this->renderLoop();
+  } catch (int error) {
+    return -1;
+  }
+  return 0;
 }
 
 int MainAppController::init() {
@@ -26,4 +34,9 @@ int MainAppController::init() {
     return -1;
   }
   return 0;
+}
+
+MainAppController* MainAppController::renderLoop() {
+  fmt::print("renderLoop()\n");
+  return this;
 }

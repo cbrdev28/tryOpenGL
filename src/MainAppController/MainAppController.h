@@ -37,6 +37,13 @@ class MainAppController {
    * @return -1 if an error occurred, 0 otherwise
    */
   int init();
+
+  /**
+   * Start a basic render loop
+   * @return MainAppController*
+   * @throw -1
+   */
+  MainAppController* renderLoop();
 };
 
 #endif

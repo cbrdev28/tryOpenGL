@@ -20,6 +20,9 @@ class ShaderManager {
   const char* _vertexShaderSrc;
   const char* _fragmentShaderSrc;
 
+  unsigned int _vertexShaderID;
+  unsigned int _fragmentShaderID;
+
   /**
    * Compile vertex shader
    * @return ShaderManager&
@@ -39,7 +42,7 @@ class ShaderManager {
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& compile();
+  ShaderManager& compile(const unsigned int shaderID);
 
   /**
    * Link shaders & check for errors.

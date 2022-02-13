@@ -5,6 +5,7 @@ add_library(
     "managers/WindowManager.cc"
     "managers/InputManager.cc"
     "managers/WorldManager.cc"
+    "managers/ShaderManager.cc"
 )
 
 include(FetchContent)

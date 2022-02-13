@@ -12,9 +12,18 @@
 
 #include <fmt/core.h>
 
+WorldManager::WorldManager()
+    : _shaderManager(ShaderManager(ShaderManager::vertexShaderSource, ShaderManager::fragmentShaderSource)) {
+  fmt::print("WorldManager::WorldManager(...)\n");
+}
+
 WorldManager& WorldManager::init() {
   fmt::print("WorldManager::init()\n");
   glEnable(GL_DEPTH_TEST);
+
+  // Init shader manager to load, compile & link default shaders
+  _shaderManager.init();
+
   return *this;
 }
 

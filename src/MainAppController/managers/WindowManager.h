@@ -23,7 +23,7 @@ class WindowManager {
 
   /**
    * Initialize window manager: glfw, glad.
-   * Create a window
+   * Create a window & set callbacks: framebuffer size & error
    * @throw -1
    * @return WindowManager*
    */

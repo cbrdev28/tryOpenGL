@@ -10,6 +10,14 @@ class InputManager {
  public:
   InputManager(WindowManager& windowManager);
 
+  /**
+   * Initialize input manager.
+   * Set mouse callback...
+   * @throw -1
+   * @return InputManager*
+   */
+  InputManager* init();
+
  private:
   WindowManager& _windowManager;
 };

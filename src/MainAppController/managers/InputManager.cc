@@ -12,3 +12,8 @@ InputManager::InputManager(WindowManager& windowManager) : _windowManager(window
   auto formattedRef = fmt::ptr(&_windowManager);
   fmt::print("InputManager::InputManager(...): _windowManager = {}\n", formattedRef);
 };
+
+InputManager* InputManager::init() {
+  fmt::print("InputManager::init()\n");
+  return this;
+}

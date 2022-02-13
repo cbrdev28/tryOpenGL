@@ -13,6 +13,19 @@
 class WindowManager {
  public:
   WindowManager();
+  ~WindowManager();
+
+  /**
+   * Constants
+   */
+  static const int defaultWidth = 1024;
+  static const int defaultHeight = 768;
+
+  /**
+   * Do not access these directly. Internal usage only.
+   */
+  static int width;
+  static int height;
 
   /**
    * Initialize window manager: glfw, glad.

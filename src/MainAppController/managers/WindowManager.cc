@@ -7,7 +7,20 @@
 #include <fmt/core.h>
 #include <fmt/format.h>
 
+// Initialize static class variables
+int WindowManager::width = WindowManager::defaultWidth;
+int WindowManager::height = WindowManager::defaultHeight;
+
 WindowManager::WindowManager() : _window(nullptr) { fmt::print("WindowManager::WindowManager()\n"); }
+
+WindowManager::~WindowManager() {
+  fmt::print("WindowManager::~WindowManager()\n");
+  if (_window != nullptr) {
+    fmt::print("WindowManager::~WindowManager(): glfwTerminate()...\n");
+    glfwTerminate();
+    _window = nullptr;
+  }
+}
 
 /**
  * Public
@@ -26,7 +39,8 @@ WindowManager* WindowManager::init() {
   // For Apple
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-  GLFWwindow* window = glfwCreateWindow(1024, 768, "WindowManager", NULL, NULL);
+  GLFWwindow* window =
+      glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", NULL, NULL);
   if (window == NULL) {
     fmt::print("Failed to glfwCreateWindow(...)\n");
     glfwTerminate();
@@ -59,6 +73,9 @@ WindowManager* WindowManager::init() {
  */
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
+
+  WindowManager::width = width;
+  WindowManager::height = height;
   // Debug: to be tested
-  // fmt::print("framebufferSizeCallback w = {}, h = {}", width, height);
+  // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
 }

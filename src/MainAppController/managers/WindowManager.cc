@@ -55,7 +55,8 @@ WindowManager* WindowManager::init() {
     throw -1;
   }
 
-  GLFWframebuffersizefun callback = glfwSetFramebufferSizeCallback(this->_window, framebufferSizeCallback);
+  GLFWframebuffersizefun callback =
+      glfwSetFramebufferSizeCallback(this->_window, WindowManager::framebufferSizeCallback);
   if (callback == NULL) {
     // Only warning for now, since it seems to be working anyway
     auto formattedPointer = fmt::ptr(callback);
@@ -71,7 +72,7 @@ WindowManager* WindowManager::init() {
 /**
  * Callback
  */
-void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 
   WindowManager::width = width;

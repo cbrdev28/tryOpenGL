@@ -22,12 +22,6 @@ class WindowManager {
   static const int defaultHeight = 768;
 
   /**
-   * Do not access these directly. Internal usage only.
-   */
-  static int width;
-  static int height;
-
-  /**
    * Initialize window manager: glfw, glad.
    * Create a window
    * @throw -1
@@ -37,11 +31,13 @@ class WindowManager {
 
  private:
   GLFWwindow* _window;
-};
+  static int width;
+  static int height;
 
-/**
- * Callback
- */
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+  /**
+   * Callback
+   */
+  static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+};
 
 #endif

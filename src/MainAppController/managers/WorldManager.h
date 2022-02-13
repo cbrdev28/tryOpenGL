@@ -12,6 +12,13 @@ class WorldManager {
    * @throw -1
    */
   WorldManager& init();
+
+  /**
+   * Render world
+   * @return WorldManager&
+   * @throw -1
+   */
+  WorldManager& render();
 };
 
 #endif

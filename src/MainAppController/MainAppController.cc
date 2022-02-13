@@ -44,9 +44,7 @@ MainAppController* MainAppController::renderLoop() {
   while (!glfwWindowShouldClose(window)) {
     _inputManager.processKeyboardInput();
 
-    /* Render here */
-    // TODO: move this in WorldManager
-    glClear(GL_COLOR_BUFFER_BIT);
+    _worldManager.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

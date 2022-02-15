@@ -1,12 +1,7 @@
-#include <iostream>
+#include <MainAppController.h>
 
-#include "src/simple-tests.h"
-
-int main(int argc, char **argv) {
-  if (SimpleTests::ArgHasTest(argc, argv) == true) {
-    return SimpleTests::ParseArgAndRun(argc, argv);
-  }
-
-  std::cout << "Hello world" << std::endl;
-  return 0;
+int main(int argc, char** argv) {
+  MainAppController mainAppController = MainAppController(argc, argv);
+  const int mainAppResult = mainAppController.run();
+  return mainAppResult;
 }

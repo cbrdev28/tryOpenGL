@@ -8,8 +8,9 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 REPO_DIR="${SCRIPT_DIR}/.."
 BUILD_DIR="${REPO_DIR}/build"
 
-# Run our build script
+# Run our format & build scripts
 pushd ${SCRIPT_DIR}
+./cbr-clang-format.sh
 ./cbr-build.sh
 popd
 

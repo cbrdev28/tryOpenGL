@@ -1,3 +1,6 @@
+#ifndef __SIMPLE_TESTS_H__
+#define __SIMPLE_TESTS_H__
+
 /**
  * This file is meant to do a simple parsing of the args
  * to check if we have:
@@ -28,10 +31,9 @@ glm::vec3 global_cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 global_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 bool global_firstMouseInteraction = true;
-float global_yaw =
-    -90.0f;  // yaw is initialized to -90.0 degrees since a yaw of 0.0 results
-             // in a direction vector pointing to the right so we initially
-             // rotate a bit to the left.
+float global_yaw = -90.0f;  // yaw is initialized to -90.0 degrees since a yaw of 0.0 results
+                            // in a direction vector pointing to the right so we initially
+                            // rotate a bit to the left.
 float global_pitch = 0.0f;
 float global_lastX = 800.0f / 2.0f;
 float global_lastY = 600.0f / 2.0f;
@@ -80,7 +82,7 @@ class SimpleTests {
    * Parse argv & argc to determine which test to run
    * @param argc the argc from main function
    * @param argv the argv from main function
-   * @return 0 if a test was run, -1 if an error occured or no test found
+   * @return 0 if a test was run, -1 if an error occurred or no test found
    */
   static int ParseArgAndRun(int argc, char** argv) {
     if (argc < MIN_ARG_FOR_TEST) {
@@ -94,8 +96,7 @@ class SimpleTests {
     }
     // Refactor needed if we add more tests
     // Check if we ONLY have "--test first-window"
-    if (argc > MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0 &&
-        strcmp(argv[2], FIRST_WINDOW_TEST_ARG) == 0) {
+    if (argc > MIN_ARG_FOR_TEST && strcmp(argv[1], TEST_ARG) == 0 && strcmp(argv[2], FIRST_WINDOW_TEST_ARG) == 0) {
       return FirstWindowTest();
     }
 
@@ -131,12 +132,10 @@ class SimpleTests {
     }
     glfwMakeContextCurrent(window);
 
-    GLFWframebuffersizefun callback = glfwSetFramebufferSizeCallback(
-        window, SimpleTests::framebuffer_size_callback);
+    GLFWframebuffersizefun callback = glfwSetFramebufferSizeCallback(window, SimpleTests::framebuffer_size_callback);
     if (callback == NULL) {
       // Only warning for now, since it seems to be working anyway
-      std::cout << "Warning: glfwSetFramebufferSizeCallback: " << callback
-                << std::endl;
+      std::cout << "Warning: glfwSetFramebufferSizeCallback: " << callback << std::endl;
     }
 
     glfwSetCursorPosCallback(window, SimpleTests::mouse_callback);
@@ -172,8 +171,7 @@ class SimpleTests {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
       glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-      std::cout << "Failed to compile fragment shader:\n"
-                << infoLog << std::endl;
+      std::cout << "Failed to compile fragment shader:\n" << infoLog << std::endl;
     }
     // Link shaders
     unsigned int shaderProgram = glCreateProgram();
@@ -244,15 +242,13 @@ class SimpleTests {
 
     unsigned int numberOfTiles = 5;
     glm::vec3 tilePositions[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
-        glm::vec3(0.0f, -1.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),  glm::vec3(-1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f),
     };
 
     glm::vec3 tilePositionsOther[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),  glm::vec3(3.0f, 0.0f, 0.0f),
-        glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.0f, 3.0f, 0.0f),
-        glm::vec3(0.0f, -3.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 0.0f, 0.0f),  glm::vec3(-3.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(0.0f, -3.0f, 0.0f),
     };
 
     // Buffer(s) and configure vertex attributes
@@ -264,8 +260,7 @@ class SimpleTests {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-                          (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // Uncomment this call to draw in wireframe polygons.
@@ -275,10 +270,9 @@ class SimpleTests {
     auto start = std::chrono::system_clock::now();
     std::cout << "Hello first window" << std::endl;
     auto end = std::chrono::system_clock::now();
-    auto elapsed_seconds =
-        std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+    auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
-    while (!glfwWindowShouldClose(window) && elapsed_seconds < 3) {
+    while (!glfwWindowShouldClose(window) && elapsed_seconds < 2) {
       // while (!glfwWindowShouldClose(window)) {
       // Logic to compute per-frame time
       float currentFrame = static_cast<float>(glfwGetTime());
@@ -295,9 +289,7 @@ class SimpleTests {
       // Create transformations matrix
       glm::mat4 model = glm::mat4(1.0f);
       glm::mat4 view = glm::mat4(1.0f);
-      view =
-          glm::lookAt(global_cameraPos, global_cameraPos + global_cameraFront,
-                      global_cameraUp);
+      view = glm::lookAt(global_cameraPos, global_cameraPos + global_cameraFront, global_cameraUp);
       glm::mat4 projection = glm::mat4(1.0f);
       // Rotation model
       // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
@@ -307,8 +299,7 @@ class SimpleTests {
       //     glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f,
       //     0.0f));
       // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-      projection = glm::perspective(glm::radians(global_fov),
-                                    (float)800.0 / (float)600.0, 0.1f, 100.0f);
+      projection = glm::perspective(glm::radians(global_fov), (float)800.0 / (float)600.0, 0.1f, 100.0f);
       // Pass matrix to shaders
       unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
       unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
@@ -326,8 +317,7 @@ class SimpleTests {
       //           << " / y = " << global_cbrHorizontalOffset.y
       //           << " / z = " << global_cbrHorizontalOffset.z << std::endl;
 
-      if (global_cbrHorizontalOffset.x > 1000.0 ||
-          global_cbrHorizontalOffset.x < -1000.0) {
+      if (global_cbrHorizontalOffset.x > 1000.0 || global_cbrHorizontalOffset.x < -1000.0) {
         global_cbrFlag = false;
       } else {
         global_cbrFlag = true;
@@ -345,10 +335,8 @@ class SimpleTests {
         //                   glm::vec3(1.0f, 0.0f, 0.0f));
         // }
 
-        model = glm::rotate(model, glm::radians(-75.0f),
-                            glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::translate(
-            model, global_cbrFlag ? tilePositions[i] : tilePositionsOther[i]);
+        model = glm::rotate(model, glm::radians(-75.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, global_cbrFlag ? tilePositions[i] : tilePositionsOther[i]);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 6 * 5);
       }
@@ -358,8 +346,7 @@ class SimpleTests {
 
       // End of rendering, for testing we only run it for 3 seconds
       end = std::chrono::system_clock::now();
-      elapsed_seconds =
-          std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+      elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
     }
 
     glDeleteVertexArrays(1, &VAO);
@@ -373,8 +360,7 @@ class SimpleTests {
   /**
    * Callback for glfwSetFramebufferSizeCallback
    */
-  static void framebuffer_size_callback(GLFWwindow* window, int width,
-                                        int height) {
+  static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     // std::cout << "DEBUG: framebuffer_size_callback " << width << "/" <<
     // height << std::endl;
     glViewport(0, 0, width, height);
@@ -388,8 +374,7 @@ class SimpleTests {
       glfwSetWindowShouldClose(window, true);
     }
 
-    float cameraSpeed =
-        static_cast<float>(2.5 * global_deltaTime);  // adjust accordingly
+    float cameraSpeed = static_cast<float>(2.5 * global_deltaTime);  // adjust accordingly
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
       global_cameraPos += cameraSpeed * global_cameraFront;
     }
@@ -398,19 +383,13 @@ class SimpleTests {
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
       // CBR keep track of x position
-      global_cbrHorizontalOffset -=
-          glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
-      global_cameraPos -=
-          glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
-          cameraSpeed;
+      global_cbrHorizontalOffset -= glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
+      global_cameraPos -= glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) * cameraSpeed;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
       // CBR keep track of x position
-      global_cbrHorizontalOffset +=
-          glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
-      global_cameraPos +=
-          glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) *
-          cameraSpeed;
+      global_cbrHorizontalOffset += glm::normalize(glm::cross(global_cameraFront, global_cameraUp));
+      global_cameraPos += glm::normalize(glm::cross(global_cameraFront, global_cameraUp)) * cameraSpeed;
     }
   }
 
@@ -428,8 +407,7 @@ class SimpleTests {
     }
 
     float xoffset = xpos - global_lastX;
-    float yoffset = global_lastY -
-                    ypos;  // Reversed since y-coordinates go from bottom to top
+    float yoffset = global_lastY - ypos;  // Reversed since y-coordinates go from bottom to top
     global_lastX = xpos;
     global_lastY = ypos;
 
@@ -478,3 +456,5 @@ class SimpleTests {
       "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) * vec4(posVec, 1.0f);\n"
       "}\n\0";
 };
+
+#endif

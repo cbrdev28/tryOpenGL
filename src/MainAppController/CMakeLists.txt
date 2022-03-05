@@ -5,7 +5,7 @@ add_library(
     "managers/InputManager.cc"
     "managers/WorldManager.cc"
     "managers/ShaderManager.cc"
-    "managers/MatrixHelper.cc"
+    "helpers/MatrixHelper.cc"
 )
 
 include(FetchContent)
@@ -54,4 +54,5 @@ target_include_directories(
     "../../lib/include"
     "common"
     "listeners"
+    "helpers"
 )

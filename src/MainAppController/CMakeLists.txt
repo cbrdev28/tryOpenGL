@@ -52,4 +52,5 @@ target_include_directories(
     SYSTEM
     PUBLIC
     "../../lib/include"
+    "common"
 )

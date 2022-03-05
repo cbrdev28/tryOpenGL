@@ -1,18 +1,13 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
-// Disable clang-format because we must include glad before GLFW
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-
 #include <fmt/core.h>
 #include <fmt/format.h>
 
 #include <vector>
 
 #include "WindowListener.h"
+#include "openGLHeaders.h"
 
 /**
  * Window manager for glfw

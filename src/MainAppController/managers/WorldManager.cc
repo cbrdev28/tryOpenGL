@@ -8,7 +8,6 @@
 
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
     : windowManager_(windowManager), inputManager_(inputManager) {
-  fmt::print("WorldManager::WorldManager(...)\n");
   const auto* formattedRef = fmt::ptr(&windowManager_);
   fmt::print("WorldManager::WorldManager(...): windowManager_ = {}\n", formattedRef);
 
@@ -17,32 +16,31 @@ WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputMana
 }
 
 auto WorldManager::init() -> WorldManager& {
-  fmt::print("WorldManager::init()\n");
-  glEnable(GL_DEPTH_TEST);
+  GLCall(glEnable(GL_DEPTH_TEST));
   // Init shader manager to load, compile & link default shaders
   shaderManager_.init();
 
   // Init VAO & VBO
   const int numberOfVertexObject = 1;
-  glGenVertexArrays(numberOfVertexObject, &VAO_);
+  GLCall(glGenVertexArrays(numberOfVertexObject, &VAO_));
   const int numberOfBuffer = 1;
-  glGenBuffers(numberOfBuffer, &VBO_);
-  glBindVertexArray(VAO_);
+  GLCall(glGenBuffers(numberOfBuffer, &VBO_));
+  GLCall(glBindVertexArray(VAO_));
 
   // Setup verticles to be drawn
   const auto verticles =
       WorldManager::tileVerticles(WorldManager::tileDeltaX, WorldManager::tileDeltaY, WorldManager::tileHeightZ);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-  glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * verticles.size()), verticles.data(),
-               GL_STATIC_DRAW);
+  GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO_));
+  GLCall(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * verticles.size()), verticles.data(),
+                      GL_STATIC_DRAW));
 
   const GLuint vertexIndex = 0;
   const GLint vertexSize = 3;
   GLCall(glVertexAttribPointer(vertexIndex, vertexSize, GL_FLOAT, GL_FALSE, vertexSize * sizeof(float), nullptr));
-  glEnableVertexAttribArray(vertexIndex);
+  GLCall(glEnableVertexAttribArray(vertexIndex));
 
   // Enable shader to init camera matrix
-  glUseProgram(shaderManager_.getShaderProgramID());
+  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
   // Set default "look at" camera
   matrixHelper_.updateView(cameraPosition_ + cameraPositionOffset_, cameraPosition_ + cameraTarget_, up_);
   // Set perspective
@@ -67,13 +65,12 @@ auto WorldManager::init() -> WorldManager& {
 
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
-  // fmt::print("WorldManager::render()\n");
   updateDeltaTimeFrame_(glfwGetTime());
 
-  glClearColor(WorldManager::neonPinkR, WorldManager::neonPinkG, WorldManager::neonPinkB, 1.0F);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  GLCall(glClearColor(WorldManager::neonPinkR, WorldManager::neonPinkG, WorldManager::neonPinkB, 1.0F));
+  GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-  glUseProgram(shaderManager_.getShaderProgramID());
+  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
   // Update view matrix for camera movement
   shaderManager_.setViewMatrix(matrixHelper_.view);
   // Update projection matrix for window size change & aspect ratio
@@ -97,7 +94,7 @@ auto WorldManager::render() -> WorldManager& {
   // }
 
   // Render
-  glBindVertexArray(VAO_);
+  GLCall(glBindVertexArray(VAO_));
   // Draw static tile made of 5 panels (each panel is made of 2 triangles, so 6 coordinates)
   const GLint startingIndex = 0;
   const GLsizei numberOfPanel = 5;

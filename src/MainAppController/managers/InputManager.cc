@@ -7,21 +7,13 @@
 #include <fmt/format.h>
 
 InputManager::InputManager(WindowManager& windowManager) : windowManager_(windowManager) {
-  fmt::print("InputManager::InputManager(...)\n");
   const auto* formattedRef = fmt::ptr(&windowManager_);
   fmt::print("InputManager::InputManager(...): windowManager_ = {}\n", formattedRef);
 };
 
 auto InputManager::init() -> InputManager& {
-  fmt::print("InputManager::init()\n");
-
   GLFWwindow* window = windowManager_.getWindow();
-  GLFWcursorposfun cpCallback = glfwSetCursorPosCallback(window, InputManager::mouseCallback);
-  if (cpCallback == nullptr) {
-    // Only warning
-    const auto* formattedPointer = fmt::ptr(cpCallback);
-    fmt::print("Warning glfwSetCursorPosCallback(...): {}\n", formattedPointer);
-  }
+  glfwSetCursorPosCallback(window, InputManager::mouseCallback);
 
   // NOTE: this may need to be moved in some function
   // Uncomment to tell GLFW to capture our mouse

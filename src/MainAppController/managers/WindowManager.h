@@ -11,7 +11,7 @@
  */
 class WindowManager {
  public:
-  WindowManager();
+  WindowManager() = default;
   ~WindowManager();
 
   WindowManager(const WindowManager& other) = delete;

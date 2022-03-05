@@ -9,6 +9,8 @@
 
 #include <fmt/core.h>
 
+#include <cassert>
+
 #define ASSERT(x) assert(x);
 #define GLCall(x) \
   clearError();   \

@@ -38,7 +38,7 @@ auto WorldManager::init() -> WorldManager& {
 
   const GLuint vertexIndex = 0;
   const GLint vertexSize = 3;
-  glVertexAttribPointer(vertexIndex, vertexSize, GL_FLOAT, GL_FALSE, vertexSize * sizeof(float), nullptr);
+  GLCall(glVertexAttribPointer(vertexIndex, vertexSize, GL_FLOAT, GL_FALSE, vertexSize * sizeof(float), nullptr));
   glEnableVertexAttribArray(vertexIndex);
 
   // Enable shader to init camera matrix
@@ -89,7 +89,7 @@ auto WorldManager::render() -> WorldManager& {
     const GLint startingIndex = 0;
     const GLsizei numberOfPanel = 5;
     const GLsizei numberOfCoordinatesForPanel = 6;
-    glDrawArrays(GL_TRIANGLES, startingIndex, numberOfPanel * numberOfCoordinatesForPanel);
+    GLCall(glDrawArrays(GL_TRIANGLES, startingIndex, numberOfPanel * numberOfCoordinatesForPanel));
   }
   return *this;
 }

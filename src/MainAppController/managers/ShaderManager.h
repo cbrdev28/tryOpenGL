@@ -1,5 +1,17 @@
-#ifndef __SHADER_MANAGER_H__
-#define __SHADER_MANAGER_H__
+#ifndef SHADER_MANAGER_H_
+#define SHADER_MANAGER_H_
+
+// Disable clang-format because we must include glad before GLFW
+// clang-format off
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+// clang-format on
+
+#include <fmt/core.h>
+
+#include <array>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 /**
  * Shader manager helper
@@ -9,41 +21,76 @@ class ShaderManager {
   ShaderManager(const char* vertexShaderSrc, const char* fragmentShaderSrc);
   ~ShaderManager();
 
+  ShaderManager(const ShaderManager& other) = delete;
+  ShaderManager(ShaderManager&& other) = delete;
+  auto operator=(const ShaderManager& other) -> ShaderManager& = delete;
+  auto operator=(ShaderManager&& other) -> ShaderManager& = delete;
+
   /**
    * Initialize shaders: create, compile, link
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& init();
+  auto init() -> ShaderManager&;
+
+  [[nodiscard]] auto getShaderProgramID() const -> unsigned int { return shaderProgramID_; };
+
+  /**
+   * Helper to directly set the model matrix in the vertex shader
+   * @param modelMatrix the model matrix
+   * @return ShaderManager&
+   * @throw -1
+   */
+  auto setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager&;
+
+  /**
+   * Helper to directly set the view matrix in the vertex shader
+   * @param viewMatrix the view matrix
+   * @return ShaderManager&
+   * @throw -1
+   */
+  auto setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager&;
+
+  /**
+   * Helper to directly set the projection matrix in the vertex shader
+   * @param projectionMatrix the projection matrix
+   * @return ShaderManager&
+   * @throw -1
+   */
+  auto setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager&;
 
  private:
-  const char* _vertexShaderSrc;
-  const char* _fragmentShaderSrc;
+  const char* vertexShaderSrc_{vertexShaderSource};
+  const char* fragmentShaderSrc_{fragmentShaderSource};
 
-  unsigned int _vertexShaderID;
-  unsigned int _fragmentShaderID;
-  unsigned int _shaderProgramID;
+  unsigned int vertexShaderID_{0};
+  unsigned int fragmentShaderID_{0};
+  unsigned int shaderProgramID_{0};
+
+  GLint modelMatrixUniformLocation_{-1};
+  GLint viewMatrixUniformLocation_{-1};
+  GLint projectionMatrixUniformLocation_{-1};
 
   /**
    * Compile vertex shader
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& compileVertex();
+  auto compileVertex() -> ShaderManager&;
 
   /**
    * Compile fragment shader
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& compileFragment();
+  auto compileFragment() -> ShaderManager&;
 
   /**
    * Compile a shader & check for errors
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& compile(const unsigned int shaderID);
+  auto compile(unsigned int shaderID) -> ShaderManager&;
 
   /**
    * Link shaders & check for errors.
@@ -51,7 +98,14 @@ class ShaderManager {
    * @return ShaderManager&
    * @throw -1
    */
-  ShaderManager& link();
+  auto link() -> ShaderManager&;
+
+  /**
+   * Load matrix uniform locations from shader
+   * @return ShaderManager&
+   * @throw -1
+   */
+  auto loadMatrixUniformLocations() -> ShaderManager&;
 
   // For now we hardcode our shader sources & make them available
  public:
@@ -70,6 +124,7 @@ class ShaderManager {
       "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
       "   posVec = aPos;\n"
       "}\0";
+
   /**
    * Fragment shader source
    */
@@ -79,7 +134,7 @@ class ShaderManager {
       "in vec3 posVec;\n"
       "void main()\n"
       "{\n"
-      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) * vec4(posVec, 1.0f);\n"
+      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) + vec4(posVec, 1.0f);\n"
       "}\n\0";
 };
 

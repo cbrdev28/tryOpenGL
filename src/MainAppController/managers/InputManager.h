@@ -1,6 +1,12 @@
-#ifndef __INPUT_MANAGER_H__
-#define __INPUT_MANAGER_H__
+#ifndef INPUT_MANAGER_H_
+#define INPUT_MANAGER_H_
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+
+#include <vector>
+
+#include "KeyboardListener.h"
 #include "WindowManager.h"
 
 /**
@@ -9,23 +15,33 @@
  */
 class InputManager {
  public:
-  InputManager(WindowManager& windowManager);
+  explicit InputManager(WindowManager& windowManager);
 
   /**
    * Initialize input manager.
    * Set mouse callback...
    * @throw -1
-   * @return InputManager*
+   * @return InputManager&
    */
-  InputManager* init();
+  auto init() -> InputManager&;
 
   /**
    * Simple keyboard input process
    */
   void processKeyboardInput();
 
+  /**
+   * Add keyboard listener
+   * @return InputManager&
+   */
+  auto addKeyboardListener(KeyboardListener* listener) -> InputManager& {
+    listeners_.emplace_back(listener);
+    return *this;
+  }
+
  private:
-  WindowManager& _windowManager;
+  WindowManager& windowManager_;
+  std::vector<KeyboardListener*> listeners_{};
 
   static void mouseCallback(GLFWwindow* window, double xPos, double yPos);
 };

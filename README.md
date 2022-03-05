@@ -117,7 +117,7 @@ NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. 
     - Click Generate to produce the resulting library files
   - GLAD should have provided a zip file with: two include folders & a single `glad.c` file
     - Copy the `glad.c` file in `./src/`
-    - Copy each folder from the `include` to `./src/includ/`
+    - Copy each folder from the `include` to `./src/include/`
   - I need to update our `CMakeLists.txt` to include these dependencies
     - For `glad.c`:
     ```
@@ -134,3 +134,12 @@ NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. 
 - I added `#include <glad/glad.h>` in `simple.tests.h`
   - And was able to run: `./scripts/cbr-test.sh`
 - TODO: check to update install steps for `cmake` with new dependencies & includes
+
+### Experimenting with clang-tidy
+
+- Install [extra dependency](https://packages.msys2.org/package/mingw-w64-x86_64-clang-tools-extra):
+  - `pacman -S mingw-w64-x86_64-clang-tools-extra`
+  - Verify with: `clang-tidy --version`
+- Basically, I added:
+  - A config/rule file: `.clang-tidy`
+  - A script to run clang-tidy: `./scripts/cbr-clang-tidy.sh`

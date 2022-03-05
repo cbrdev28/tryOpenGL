@@ -1,31 +1,33 @@
 /**
  * Window manager for glfw
  */
-
 #include "WindowManager.h"
 
-#include <fmt/core.h>
-#include <fmt/format.h>
-
 // Initialize static class variables
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::width = WindowManager::defaultWidth;
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::height = WindowManager::defaultHeight;
 
-WindowManager::WindowManager() : _window(nullptr) { fmt::print("WindowManager::WindowManager()\n"); }
+// Init to empty
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+std::vector<WindowListener*> WindowManager::listeners_ = {};
+
+WindowManager::WindowManager() { fmt::print("WindowManager::WindowManager()\n"); }
 
 WindowManager::~WindowManager() {
   fmt::print("WindowManager::~WindowManager()\n");
-  if (_window != nullptr) {
+  if (window_ != nullptr) {
     fmt::print("WindowManager::~WindowManager(): glfwTerminate()...\n");
     glfwTerminate();
-    _window = nullptr;
+    window_ = nullptr;
   }
 }
 
 /**
  * Public
  */
-WindowManager* WindowManager::init() {
+auto WindowManager::init() -> WindowManager& {
   fmt::print("WindowManager::init()\n");
 
   int initialized = glfwInit();
@@ -40,37 +42,37 @@ WindowManager* WindowManager::init() {
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
   GLFWerrorfun errorCallback = glfwSetErrorCallback(WindowManager::errorCallback);
-  if (errorCallback == NULL) {
+  if (errorCallback == nullptr) {
     // Only warning
-    auto formattedPointer = fmt::ptr(errorCallback);
+    const auto* formattedPointer = fmt::ptr(errorCallback);
     fmt::print("Warning glfwSetErrorCallback(...): {}\n", formattedPointer);
   }
 
   GLFWwindow* window =
-      glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", NULL, NULL);
-  if (window == NULL) {
+      glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", nullptr, nullptr);
+  if (window == nullptr) {
     fmt::print("Failed to glfwCreateWindow(...)\n");
     throw -1;
   }
-  this->_window = window;
-  glfwMakeContextCurrent(this->_window);
+  window_ = window;
+  glfwMakeContextCurrent(window_);
 
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+  // NOLINTNEXTLINE(google-readability-casting, cppcoreguidelines-pro-type-cstyle-cast)
+  if (gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress)) == 0) {
     fmt::print("Failed to gladLoadGLLoader(...)\n");
     throw -1;
   }
 
-  GLFWframebuffersizefun fsCallback =
-      glfwSetFramebufferSizeCallback(this->_window, WindowManager::framebufferSizeCallback);
-  if (fsCallback == NULL) {
+  GLFWframebuffersizefun fsCallback = glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
+  if (fsCallback == nullptr) {
     // Only warning for now, since it seems to be working anyway
-    auto formattedPointer = fmt::ptr(fsCallback);
+    const auto* formattedPointer = fmt::ptr(fsCallback);
     fmt::print("Warning glfwSetFramebufferSizeCallback(...): {}\n", formattedPointer);
   }
-  return this;
+  return *this;
 }
 
-GLFWwindow* WindowManager::getWindow() { return this->_window; }
+auto WindowManager::getWindow() const -> GLFWwindow* { return window_; }
 
 /**
  * Private
@@ -79,13 +81,20 @@ GLFWwindow* WindowManager::getWindow() { return this->_window; }
 /**
  * Callback
  */
-void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width, int height) {
   glViewport(0, 0, width, height);
 
   WindowManager::width = width;
   WindowManager::height = height;
+
+  for (WindowListener* listener : WindowManager::listeners_) {
+    listener->onResize(width, height);
+  }
+
   // Debug
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
+  // const auto testSize = WindowManager::listeners_.size();
+  // fmt::print("framebufferSizeCallback testSize = {}", testSize);
 }
 
 void WindowManager::errorCallback(int code, const char* description) {

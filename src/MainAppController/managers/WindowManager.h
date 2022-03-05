@@ -1,8 +1,5 @@
-#ifndef __WINDOW_MANAGER_H__
-#define __WINDOW_MANAGER_H__
-/**
- * Window manager for glfw
- */
+#ifndef WINDOW_MANAGER_H_
+#define WINDOW_MANAGER_H_
 
 // Disable clang-format because we must include glad before GLFW
 // clang-format off
@@ -10,10 +7,25 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+
+#include <vector>
+
+#include "WindowListener.h"
+
+/**
+ * Window manager for glfw
+ */
 class WindowManager {
  public:
   WindowManager();
   ~WindowManager();
+
+  WindowManager(const WindowManager& other) = delete;
+  WindowManager(WindowManager&& other) = delete;
+  auto operator=(const WindowManager& other) -> WindowManager& = delete;
+  auto operator=(WindowManager&& other) -> WindowManager& = delete;
 
   /**
    * Constants
@@ -25,16 +37,31 @@ class WindowManager {
    * Initialize window manager: glfw, glad.
    * Create a window & set callbacks: framebuffer size & error
    * @throw -1
-   * @return WindowManager*
+   * @return WindowManager&
    */
-  WindowManager* init();
+  auto init() -> WindowManager&;
 
-  GLFWwindow* getWindow();
+  [[nodiscard]] auto getWindow() const -> GLFWwindow*;
+
+  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+  [[nodiscard]] auto getWidth() const -> int { return WindowManager::width; };
+  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+  [[nodiscard]] auto getHeight() const -> int { return WindowManager::height; };
+
+  auto addWindowListener(WindowListener* listener) -> WindowManager& {
+    WindowManager::listeners_.emplace_back(listener);
+    return *this;
+  }
 
  private:
-  GLFWwindow* _window;
+  GLFWwindow* window_{nullptr};
+
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int width;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int height;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  static std::vector<WindowListener*> listeners_;
 
   /**
    * Callback

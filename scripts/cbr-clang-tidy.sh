@@ -1,18 +1,13 @@
 #!/bin/bash
 set -e
-echo "CBR ctest"
+echo "CBR clang-tidy"
 
 # From:
 # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 REPO_DIR="${SCRIPT_DIR}/.."
-BUILD_DIR="${REPO_DIR}/build"
 
-# Run our format & build scripts
-pushd ${SCRIPT_DIR}
-./cbr-build.sh
-popd
-
-pushd ${BUILD_DIR}
-ctest -VV
+pushd ${REPO_DIR}
+# This command may need to be refactored when adding more files
+clang-tidy -p ./build ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h ./src/MainAppController/managers/*.cc ./src/MainAppController/managers/*.h
 popd

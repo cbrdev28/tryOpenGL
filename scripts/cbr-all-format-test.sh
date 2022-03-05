@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "CBR ctest"
+echo "CBR all format & test"
 
 # From:
 # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
@@ -10,6 +10,8 @@ BUILD_DIR="${REPO_DIR}/build"
 
 # Run our format & build scripts
 pushd ${SCRIPT_DIR}
+./cbr-clang-format.sh
+./cbr-clang-tidy.sh
 ./cbr-build.sh
 popd
 

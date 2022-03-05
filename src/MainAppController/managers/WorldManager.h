@@ -1,7 +1,8 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
-#include <vector>
+// TODO(cbr): re-work when learning batch rendering
+// #include <vector>
 
 #include "InputManager.h"
 #include "KeyboardListener.h"
@@ -132,15 +133,16 @@ class WorldManager : public WindowListener, KeyboardListener {
   unsigned int VBO_{0};
   unsigned int VAO_{0};
 
-  // Store position vectors
-  std::vector<glm::vec3> positionVectors_{glm::vec3(0.0F, 0.0F, 0.0F)};
-
   // Our first helper function to build verticles for a tile
   static auto tileVerticles(float deltaX, float deltaY, float height) -> std::vector<float>;
 
+  // TODO(cbr): re-work when learning batch rendering
+  // Store position vectors
+  // std::vector<glm::vec3> positionVectors_{glm::vec3(0.0F, 0.0F, 0.0F)};
+
   // Our first helper function to position tiles
-  static auto tilePositions(unsigned int numberOfTiles, float width = WorldManager::tileWidth,
-                            float length = WorldManager::tileLength) -> std::vector<glm::vec3>;
+  // static auto tilePositions(unsigned int numberOfTiles, float width = WorldManager::tileWidth,
+  //                           float length = WorldManager::tileLength) -> std::vector<glm::vec3>;
 };
 
 #endif

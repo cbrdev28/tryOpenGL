@@ -54,9 +54,10 @@ auto WorldManager::init() -> WorldManager& {
       .setViewMatrix(matrixHelper_.view)
       .setProjectionMatrix(matrixHelper_.projection);
 
+  // TODO(cbr): re-work when learning batch rendering
   // Preload/store vertices positions to re-use during render
-  const unsigned int numberOfTiles = 9;
-  positionVectors_ = WorldManager::tilePositions(numberOfTiles);
+  // const unsigned int numberOfTiles = 9;
+  // positionVectors_ = WorldManager::tilePositions(numberOfTiles);
 
   // Subscribe as listener
   windowManager_.addWindowListener(this);
@@ -73,24 +74,35 @@ auto WorldManager::render() -> WorldManager& {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glUseProgram(shaderManager_.getShaderProgramID());
+  // Update view matrix for camera movement
   shaderManager_.setViewMatrix(matrixHelper_.view);
+  // Update projection matrix for window size change & aspect ratio
   shaderManager_.setProjectionMatrix(matrixHelper_.projection);
 
+  // TODO(cbr): re-work when learning batch rendering
   // Loop over positions and update model matrix
-  for (auto aPosition : positionVectors_) {
-    // Positioning objects using the model matrix
-    glm::mat4 model = matrixHelper_.model;
-    model = glm::translate(model, aPosition);
-    shaderManager_.setModelMatrix(model);
+  // for (auto aPosition : positionVectors_) {
+  //   // Positioning objects using the model matrix
+  //   glm::mat4 model = matrixHelper_.model;
+  //   model = glm::translate(model, aPosition);
+  //   shaderManager_.setModelMatrix(model);
 
-    // Render
-    glBindVertexArray(VAO_);
-    // Draw static tile made of 5 panels (each panel is made of 2 triangles, so 6 coordinates)
-    const GLint startingIndex = 0;
-    const GLsizei numberOfPanel = 5;
-    const GLsizei numberOfCoordinatesForPanel = 6;
-    GLCall(glDrawArrays(GL_TRIANGLES, startingIndex, numberOfPanel * numberOfCoordinatesForPanel));
-  }
+  //   // Render
+  //   glBindVertexArray(VAO_);
+  //   // Draw static tile made of 5 panels (each panel is made of 2 triangles, so 6 coordinates)
+  //   const GLint startingIndex = 0;
+  //   const GLsizei numberOfPanel = 5;
+  //   const GLsizei numberOfCoordinatesForPanel = 6;
+  //   GLCall(glDrawArrays(GL_TRIANGLES, startingIndex, numberOfPanel * numberOfCoordinatesForPanel));
+  // }
+
+  // Render
+  glBindVertexArray(VAO_);
+  // Draw static tile made of 5 panels (each panel is made of 2 triangles, so 6 coordinates)
+  const GLint startingIndex = 0;
+  const GLsizei numberOfPanel = 5;
+  const GLsizei numberOfCoordinatesForPanel = 6;
+  GLCall(glDrawArrays(GL_TRIANGLES, startingIndex, numberOfPanel * numberOfCoordinatesForPanel));
   return *this;
 }
 
@@ -178,16 +190,17 @@ auto WorldManager::tileVerticles(float deltaX, float deltaY, float height) -> st
   return verticles;
 }
 
+// TODO(cbr): re-work when learning batch rendering
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-auto WorldManager::tilePositions(unsigned int numberOfTiles, float width, float length) -> std::vector<glm::vec3> {
-  auto positions = std::vector<glm::vec3>{};
-  const auto mid = static_cast<int>(numberOfTiles / 2);
-  for (int i = 0; i < numberOfTiles; i++) {
-    for (int j = 0; j < numberOfTiles; j++) {
-      const auto posX = static_cast<float>(i - mid) * width;
-      const auto posY = static_cast<float>(j - mid) * length;
-      positions.emplace_back(glm::vec3(posX, posY, 0.0F));
-    }
-  }
-  return positions;
-}
+// auto WorldManager::tilePositions(unsigned int numberOfTiles, float width, float length) -> std::vector<glm::vec3> {
+//   auto positions = std::vector<glm::vec3>{};
+//   const auto mid = static_cast<int>(numberOfTiles / 2);
+//   for (int i = 0; i < numberOfTiles; i++) {
+//     for (int j = 0; j < numberOfTiles; j++) {
+//       const auto posX = static_cast<float>(i - mid) * width;
+//       const auto posY = static_cast<float>(j - mid) * length;
+//       positions.emplace_back(glm::vec3(posX, posY, 0.0F));
+//     }
+//   }
+//   return positions;
+// }

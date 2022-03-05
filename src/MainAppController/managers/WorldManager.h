@@ -1,12 +1,6 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
-// Disable clang-format because we must include glad before GLFW
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-
 #include <fmt/core.h>
 #include <fmt/format.h>
 
@@ -21,6 +15,8 @@
 #include "ShaderManager.h"
 #include "WindowListener.h"
 #include "WindowManager.h"
+#include "openGLHeaders.h"
+
 
 /**
  * World manager to define what to draw & how to interact.

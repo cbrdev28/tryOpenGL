@@ -1,17 +1,14 @@
 #ifndef SHADER_MANAGER_H_
 #define SHADER_MANAGER_H_
 
-// Disable clang-format because we must include glad before GLFW
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-
 #include <fmt/core.h>
 
 #include <array>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "openGLHeaders.h"
+
 
 /**
  * Shader manager helper

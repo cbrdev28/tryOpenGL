@@ -1,9 +1,7 @@
 #ifndef MATRIX_HELPER_H_
 #define MATRIX_HELPER_H_
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glmHeaders.h"
 
 /**
  * Helper to deal with: model, view & projection matrix

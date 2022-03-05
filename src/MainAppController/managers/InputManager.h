@@ -1,9 +1,6 @@
 #ifndef INPUT_MANAGER_H_
 #define INPUT_MANAGER_H_
 
-#include <fmt/core.h>
-#include <fmt/format.h>
-
 #include <vector>
 
 #include "KeyboardListener.h"

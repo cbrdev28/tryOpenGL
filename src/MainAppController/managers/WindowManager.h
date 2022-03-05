@@ -1,9 +1,6 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
-#include <fmt/core.h>
-#include <fmt/format.h>
-
 #include <vector>
 
 #include "WindowListener.h"

@@ -5,6 +5,8 @@ constexpr int SHADER_INFO_LOG = 512;
 
 #include "ShaderManager.h"
 
+#include <fmt/core.h>
+
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 ShaderManager::ShaderManager(const char* vertexShaderSrc, const char* fragmentShaderSrc)
     : vertexShaderSrc_(vertexShaderSrc), fragmentShaderSrc_(fragmentShaderSrc) {

@@ -1,14 +1,8 @@
 #ifndef SHADER_MANAGER_H_
 #define SHADER_MANAGER_H_
 
-#include <fmt/core.h>
-
-#include <array>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include "glmHeaders.h"
 #include "openGLHeaders.h"
-
 
 /**
  * Shader manager helper

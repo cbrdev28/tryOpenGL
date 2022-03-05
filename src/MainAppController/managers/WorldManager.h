@@ -1,12 +1,6 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
-#include <fmt/core.h>
-#include <fmt/format.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
 #include "InputManager.h"
@@ -15,8 +9,8 @@
 #include "ShaderManager.h"
 #include "WindowListener.h"
 #include "WindowManager.h"
+#include "glmHeaders.h"
 #include "openGLHeaders.h"
-
 
 /**
  * World manager to define what to draw & how to interact.

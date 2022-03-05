@@ -3,6 +3,9 @@
  */
 #include "WorldManager.h"
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
     : windowManager_(windowManager), inputManager_(inputManager) {
   fmt::print("WorldManager::WorldManager(...)\n");

@@ -16,7 +16,12 @@ auto WorldManager::init() -> WorldManager& {
 
   // Init shader manager to load, compile & link default shaders
   shaderManager_.init();
-  // Vertex Buffer & Index Buffer
+
+  // Vertex Buffer & Index Buffer & Vertex Array WIP
+  unsigned int vao = 0;
+  GLCall(glGenVertexArrays(1, &vao));
+  GLCall(glBindVertexArray(vao));
+
   vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
                                         basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());
 

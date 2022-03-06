@@ -4,6 +4,8 @@
 #include "WorldManager.h"
 
 #include <Renderer.h>
+#include <VertexArray.h>
+#include <VertexBufferLayout.h>
 #include <basicBackgroundColor.h>
 #include <basicSquare.h>
 
@@ -17,18 +19,13 @@ auto WorldManager::init() -> WorldManager& {
   // Init shader manager to load, compile & link default shaders
   shaderManager_.init();
 
-  // Vertex Buffer & Index Buffer & Vertex Array WIP
-  unsigned int vao = 0;
-  GLCall(glGenVertexArrays(1, &vao));
-  GLCall(glBindVertexArray(vao));
-
+  vao_ = std::make_unique<VertexArray>();
   vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
                                         basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());
 
-  // Update to use Vertex Array
-  GLCall(glEnableVertexAttribArray(0));
-  GLCall(glVertexAttribPointer(0, basicSquareVertexSize, GL_FLOAT, GL_FALSE,
-                               basicSquareVertexSize * basicSquareVerticesSizeOf, nullptr));
+  VertexBufferLayout layout;
+  layout.pushFloat(basicSquareVertexSize);
+  vao_->addBuffer(*vbo_, layout);
 
   ibo_ = std::make_unique<IndexBuffer>(basicSquareIndices.data(), basicSquareIndices.size());
 
@@ -62,6 +59,8 @@ auto WorldManager::render() -> WorldManager& {
   // Update projection matrix for window size change & aspect ratio
   shaderManager_.setProjectionMatrix(matrixHelper_.projection);
 
+  // ibo_->bind();
+  // vao_->bind();
   // Draw one tile from indices
   GLCall(glDrawElements(GL_TRIANGLES, basicSquareIndices.size(), GL_UNSIGNED_INT, nullptr));
   return *this;

@@ -9,6 +9,7 @@ add_library(
     "common/Renderer.cc"
     "common/VertexBuffer.cc"
     "common/IndexBuffer.cc"
+    "common/VertexArray.cc"
 )
 
 include(FetchContent)

@@ -6,6 +6,7 @@
 #include <KeyboardListener.h>
 #include <MatrixHelper.h>
 #include <ShaderManager.h>
+#include <VertexArray.h>
 #include <VertexBuffer.h>
 #include <WindowListener.h>
 #include <WindowManager.h>
@@ -50,6 +51,7 @@ class WorldManager : public WindowListener, KeyboardListener {
 
   std::unique_ptr<VertexBuffer> vbo_;
   std::unique_ptr<IndexBuffer> ibo_;
+  std::unique_ptr<VertexArray> vao_;
 
   /**
    * Frame timestamps

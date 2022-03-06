@@ -42,7 +42,8 @@ auto WorldManager::init() -> WorldManager& {
   // Enable shader to init camera matrix
   GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
   // Set default "look at" camera
-  matrixHelper_.updateView(cameraPosition_ + cameraPositionOffset_, cameraPosition_ + cameraTarget_, up_);
+  matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
+                           basicCameraUp);
   // Set perspective
   matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
                                  static_cast<float>(windowManager_.getHeight()));
@@ -85,13 +86,15 @@ auto WorldManager::render() -> WorldManager& {
 void WorldManager::onMoveForward() {
   const auto yAxis = glm::vec3(0.0F, 1.0F, 0.0F);
   cameraPosition_ = cameraPosition_ + yAxis * getCameraSpeedByFrame_();
-  matrixHelper_.updateView(cameraPosition_ + cameraPositionOffset_, cameraPosition_ + cameraTarget_, up_);
+  matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
+                           basicCameraUp);
 }
 
 void WorldManager::onMoveBackward() {
   const auto yAxis = glm::vec3(0.0F, 1.0F, 0.0F);
   cameraPosition_ = cameraPosition_ - yAxis * getCameraSpeedByFrame_();
-  matrixHelper_.updateView(cameraPosition_ + cameraPositionOffset_, cameraPosition_ + cameraTarget_, up_);
+  matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
+                           basicCameraUp);
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)

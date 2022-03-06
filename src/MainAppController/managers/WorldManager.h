@@ -10,6 +10,7 @@
 #include "ShaderManager.h"
 #include "WindowListener.h"
 #include "WindowManager.h"
+#include "basicCamera.h"
 #include "glmHeaders.h"
 #include "openGLHeaders.h"
 
@@ -19,19 +20,6 @@
 class WorldManager : public WindowListener, KeyboardListener {
  public:
   explicit WorldManager(WindowManager& windowManager, InputManager& inputManager);
-
-  /**
-   * How far the camera will look from the Z axis.
-   * Meaning, "how high" the camera will be.
-   * Used with the view matrix.
-   */
-  static constexpr const float cameraZDelta = 2.0F;
-  /**
-   * How far the camera will look from the Y axis.
-   * Meaning, "how behind" the camera will be.
-   * Used with the view matrix.
-   */
-  static constexpr const float cameraYDelta = 4.0F;
 
   static constexpr const float neonPinkR = 255.0F / 255.0F;
   static constexpr const float neonPinkG = 68.0F / 255.0F;
@@ -84,18 +72,8 @@ class WorldManager : public WindowListener, KeyboardListener {
     return static_cast<float>(speedByFrame);
   }
 
-  /**
-   * Camera vectors
-   */
   // The position of the camera itself is by default a bit away from the z axis.
-  glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, WorldManager::cameraZDelta);
-  // By default, we look at things from higher (Z axis) and from behind (Y axis)
-  // Each time we apply this offset when setting the camera position
-  const glm::vec3 cameraPositionOffset_ = glm::vec3(0.0F, -WorldManager::cameraYDelta, WorldManager::cameraZDelta);
-  // The position of where the camera looks at (its target), by default the origin-ish.
-  glm::vec3 cameraTarget_ = glm::vec3(0.0F, 0.0F, -1.0F);
-  // Define a vector which points up
-  glm::vec3 up_ = glm::vec3(0.0F, 1.0F, 0.0F);
+  glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, basicCameraZDelta);
 
   unsigned int VBO_{0};
   // unsigned int IBO_{0};

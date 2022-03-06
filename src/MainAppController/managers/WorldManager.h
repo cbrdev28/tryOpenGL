@@ -21,10 +21,6 @@ class WorldManager : public WindowListener, KeyboardListener {
  public:
   explicit WorldManager(WindowManager& windowManager, InputManager& inputManager);
 
-  static constexpr const float neonPinkR = 255.0F / 255.0F;
-  static constexpr const float neonPinkG = 68.0F / 255.0F;
-  static constexpr const float neonPinkB = 205.0F / 255.0F;
-
   /**
    * Initialize world manager: shader...
    * @return WorldManager&

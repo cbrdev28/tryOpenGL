@@ -6,6 +6,7 @@
 #include <fmt/core.h>
 #include <fmt/format.h>
 
+#include "basicBackgroundColor.h"
 #include "basicSquare.h"
 
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
@@ -62,7 +63,7 @@ auto WorldManager::init() -> WorldManager& {
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
 
-  GLCall(glClearColor(WorldManager::neonPinkR, WorldManager::neonPinkG, WorldManager::neonPinkB, 1.0F));
+  GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
   GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
   GLCall(glUseProgram(shaderManager_.getShaderProgramID()));

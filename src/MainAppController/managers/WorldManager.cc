@@ -27,18 +27,19 @@ auto WorldManager::init() -> WorldManager& {
   const int numberOfBuffer = 1;
   GLCall(glGenBuffers(numberOfBuffer, &VBO_));
   GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO_));
-  GLCall(glBufferData(GL_ARRAY_BUFFER, basicSquareSizeOf * basicSquareVertices.size(), basicSquareVertices.data(),
-                      GL_STATIC_DRAW));
+  GLCall(glBufferData(GL_ARRAY_BUFFER, basicSquareVerticesSizeOf * basicSquareIndicedVertices.size(),
+                      basicSquareIndicedVertices.data(), GL_STATIC_DRAW));
 
   const GLuint vertexIndex = 0;  // Match with layout = 0 in our shader
   GLCall(glEnableVertexAttribArray(vertexIndex));
   GLCall(glVertexAttribPointer(vertexIndex, basicSquareVertexSize, GL_FLOAT, GL_FALSE,
-                               basicSquareVertexSize * basicSquareSizeOf, nullptr));
+                               basicSquareVertexSize * basicSquareVerticesSizeOf, nullptr));
 
   // Setup IBO: Index Buffer Object
-  // GLCall(glGenBuffers(numberOfBuffer, &IBO_));
-  // GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_));
-  // GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, indices, GL_STATIC_DRAW));
+  GLCall(glGenBuffers(numberOfBuffer, &IBO_));
+  GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_));
+  GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, basicSquareIndicesSizeOf * basicSquareIndices.size(),
+                      basicSquareIndices.data(), GL_STATIC_DRAW));
 
   // Enable shader to init camera matrix
   GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
@@ -73,10 +74,7 @@ auto WorldManager::render() -> WorldManager& {
   shaderManager_.setProjectionMatrix(matrixHelper_.projection);
 
   // Draw one tile from indices
-  // GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-  // Draw one tile/rectangle
-  GLCall(glDrawArrays(GL_TRIANGLES, 0, basicSquareVertices.size()));
+  GLCall(glDrawElements(GL_TRIANGLES, basicSquareIndices.size(), GL_UNSIGNED_INT, nullptr));
 
   return *this;
 }

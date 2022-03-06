@@ -72,7 +72,7 @@ class WorldManager : public WindowListener, KeyboardListener {
   glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, basicCameraZDelta);
 
   unsigned int VBO_{0};
-  // unsigned int IBO_{0};
+  unsigned int IBO_{0};
 };
 
 #endif

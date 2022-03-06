@@ -7,12 +7,12 @@
  * The delta from the origin on the X axis for a tile.
  * Meaning, the width of a tile is this value mutliplied by 2.
  */
-static constexpr const float tileDeltaX = 0.5F;
+const float tileDeltaX = 0.5F;
 /**
  * The delta from the origin on the Y axis for a tile.
  * Meaning, the length of a tile is this value mutliplied by 2.
  */
-static constexpr const float tileDeltaY = 0.5F;
+const float tileDeltaY = 0.5F;
 /**
  * The depth on the Z axis for a tile.
  * Meaning, how far down/deep a tile goes underground.
@@ -20,20 +20,39 @@ static constexpr const float tileDeltaY = 0.5F;
  */
 // static constexpr const float tileDepthZ = 0.2F;
 
-static const std::vector<float> basicSquareVertices = {
+// NOTE: this should not be used anymore (keeping as reference)
+const std::vector<float> basicSquareVertices = {
     // clang-format off
-    -tileDeltaX, -tileDeltaY,
-    tileDeltaX, -tileDeltaY,
-    tileDeltaX, tileDeltaY,
+    -tileDeltaX, -tileDeltaY, // Bottom left
+    tileDeltaX, -tileDeltaY, // Bottom right
+    tileDeltaX, tileDeltaY, // Top right
 
-    tileDeltaX, tileDeltaY,
-    -tileDeltaX, tileDeltaY,
-    -tileDeltaX, -tileDeltaY
+    tileDeltaX, tileDeltaY, // Top right
+    -tileDeltaX, tileDeltaY, // Top left
+    -tileDeltaX, -tileDeltaY // Bottom left
+    // clang-format on
+};
+
+const std::vector<float> basicSquareIndicedVertices = {
+    // clang-format off
+    -tileDeltaX, -tileDeltaY, // Bottom left: indice = 0
+    tileDeltaX, -tileDeltaY, // Bottom right: indice = 1
+    tileDeltaX, tileDeltaY, // Top right: indice = 2
+    -tileDeltaX, tileDeltaY, // Top left: indice = 3
+    // clang-format on
+};
+
+const std::vector<unsigned int> basicSquareIndices = {
+    // clang-format off
+    0, 1, 2,
+    2, 3, 0,
     // clang-format on
 };
 
 // Each vertex for a basic square is made of 2 float values
-static const auto basicSquareVertexSize = 2;
-static const auto basicSquareSizeOf = sizeof(float);
+const auto basicSquareVertexSize = 2;
+const auto basicSquareVerticesSizeOf = sizeof(float);
+
+const auto basicSquareIndicesSizeOf = sizeof(unsigned int);
 
 #endif

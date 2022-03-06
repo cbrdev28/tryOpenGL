@@ -13,7 +13,6 @@ WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputMana
     : windowManager_(windowManager), inputManager_(inputManager) {
   const auto* formattedRef = fmt::ptr(&windowManager_);
   fmt::print("WorldManager::WorldManager(...): windowManager_ = {}\n", formattedRef);
-
   formattedRef = fmt::ptr(&inputManager_);
   fmt::print("WorldManager::WorldManager(...): inputManager_ = {}\n", formattedRef);
 }
@@ -40,15 +39,14 @@ auto WorldManager::init() -> WorldManager& {
   GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, basicSquareIndicesSizeOf * basicSquareIndices.size(),
                       basicSquareIndices.data(), GL_STATIC_DRAW));
 
-  // Enable shader to init camera matrix
-  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
-  // Set default "look at" camera
+  // Set our default "look at" camera in the view matrix
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
-  // Set perspective
+  // Set perspective in the projection matrix
   matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
                                  static_cast<float>(windowManager_.getHeight()));
   // Set matrix in shader
+  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
   shaderManager_.setModelMatrix(matrixHelper_.model)
       .setViewMatrix(matrixHelper_.view)
       .setProjectionMatrix(matrixHelper_.projection);
@@ -62,7 +60,6 @@ auto WorldManager::init() -> WorldManager& {
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
-
   GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
   GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
@@ -74,7 +71,6 @@ auto WorldManager::render() -> WorldManager& {
 
   // Draw one tile from indices
   GLCall(glDrawElements(GL_TRIANGLES, basicSquareIndices.size(), GL_UNSIGNED_INT, nullptr));
-
   return *this;
 }
 
@@ -82,15 +78,13 @@ auto WorldManager::render() -> WorldManager& {
  * Overrides
  */
 void WorldManager::onMoveForward() {
-  const auto yAxis = glm::vec3(0.0F, 1.0F, 0.0F);
-  cameraPosition_ = cameraPosition_ + yAxis * getCameraSpeedByFrame_();
+  cameraPosition_ = cameraPosition_ + basicCameraYAxis * getCameraSpeedByFrame_();
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
 }
 
 void WorldManager::onMoveBackward() {
-  const auto yAxis = glm::vec3(0.0F, 1.0F, 0.0F);
-  cameraPosition_ = cameraPosition_ - yAxis * getCameraSpeedByFrame_();
+  cameraPosition_ = cameraPosition_ - basicCameraYAxis * getCameraSpeedByFrame_();
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
 }
@@ -100,4 +94,17 @@ void WorldManager::onResize(int width, int height) {
   const auto windowWidth = static_cast<float>(width);
   const auto windowHeight = static_cast<float>(height);
   matrixHelper_.updateProjection(windowWidth, windowHeight);
+}
+
+// Called during render
+auto WorldManager::updateDeltaTimeFrame_(double currentTimeFrame) -> WorldManager& {
+  deltaTimeFrame_ = currentTimeFrame - lastTimeFrame_;
+  lastTimeFrame_ = currentTimeFrame;
+  return *this;
+}
+
+// Helper function called when moving camera
+[[nodiscard]] auto WorldManager::getCameraSpeedByFrame_() const -> float {
+  const double speedByFrame = basicCameraSpeed * deltaTimeFrame_;
+  return static_cast<float>(speedByFrame);
 }

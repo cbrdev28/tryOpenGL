@@ -49,10 +49,8 @@ const std::vector<unsigned int> basicSquareIndices = {
     // clang-format on
 };
 
-// Each vertex for a basic square is made of 2 float values
-const auto basicSquareVertexSize = 2;
+const auto basicSquareVertexSize = 2;  // Each vertex for a basic square is made of 2 float values
 const auto basicSquareVerticesSizeOf = sizeof(float);
-
 const auto basicSquareIndicesSizeOf = sizeof(unsigned int);
 
 #endif

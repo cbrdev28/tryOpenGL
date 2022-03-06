@@ -14,7 +14,14 @@ const float basicCameraZDelta = 2.0F;
  * Meaning, "how behind" the camera will be.
  * Used with the view matrix.
  */
-const float basicCameraYDelta = 4.0F;
+const float basicCameraYDelta = 2.0F;
+/**
+ * How fast the camera will move
+ */
+const double basicCameraSpeed = 1.0F;
+
+// Pre-defined vector as helper when moving camera forward/backward
+const auto basicCameraYAxis = glm::vec3(0.0F, 1.0F, 0.0F);
 
 // By default, we look at things from higher (Z axis) and from behind (Y axis)
 // Each time we apply this offset when setting the camera position

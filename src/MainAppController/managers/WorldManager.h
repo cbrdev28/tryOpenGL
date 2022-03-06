@@ -1,9 +1,6 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
-// TODO(cbr): re-work when learning batch rendering
-// #include <vector>
-
 #include "InputManager.h"
 #include "KeyboardListener.h"
 #include "MatrixHelper.h"
@@ -56,20 +53,11 @@ class WorldManager : public WindowListener, KeyboardListener {
   // Time between last frame & current frame
   double deltaTimeFrame_ = 0.0F;
   // Called during render
-  auto updateDeltaTimeFrame_(double currentTimeFrame) -> WorldManager& {
-    deltaTimeFrame_ = currentTimeFrame - lastTimeFrame_;
-    lastTimeFrame_ = currentTimeFrame;
-    return *this;
-  }
-  // Helper for camera speed
-  const double defaultCameraSpeed = 1.0F;
-  [[nodiscard]] auto getCameraSpeedByFrame_() const -> float {
-    const double speedByFrame = defaultCameraSpeed * deltaTimeFrame_;
-    return static_cast<float>(speedByFrame);
-  }
+  auto updateDeltaTimeFrame_(double currentTimeFrame) -> WorldManager&;
+  [[nodiscard]] auto getCameraSpeedByFrame_() const -> float;
 
-  // The position of the camera itself is by default a bit away from the z axis.
-  glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, basicCameraZDelta);
+  // Keep track of camera position
+  glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, 0.0F);
 
   unsigned int VBO_{0};
   unsigned int IBO_{0};

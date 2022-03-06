@@ -1,10 +1,14 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
+#include <memory>
+
+#include "IndexBuffer.h"
 #include "InputManager.h"
 #include "KeyboardListener.h"
 #include "MatrixHelper.h"
 #include "ShaderManager.h"
+#include "VertexBuffer.h"
 #include "WindowListener.h"
 #include "WindowManager.h"
 #include "basicCamera.h"
@@ -44,6 +48,9 @@ class WorldManager : public WindowListener, KeyboardListener {
   ShaderManager shaderManager_{ShaderManager::vertexShaderSource, ShaderManager::fragmentShaderSource};
   MatrixHelper matrixHelper_;
 
+  std::unique_ptr<VertexBuffer> vbo_;
+  std::unique_ptr<IndexBuffer> ibo_;
+
   /**
    * Frame timestamps
    */
@@ -57,9 +64,6 @@ class WorldManager : public WindowListener, KeyboardListener {
 
   // Keep track of camera position
   glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, 0.0F);
-
-  unsigned int VBO_{0};
-  unsigned int IBO_{0};
 };
 
 #endif

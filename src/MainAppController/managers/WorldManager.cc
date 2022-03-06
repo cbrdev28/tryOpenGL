@@ -3,42 +3,29 @@
  */
 #include "WorldManager.h"
 
-#include <fmt/core.h>
-#include <fmt/format.h>
-
 #include "Renderer.h"
 #include "basicBackgroundColor.h"
 #include "basicSquare.h"
 
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
-    : windowManager_(windowManager), inputManager_(inputManager) {
-  const auto* formattedRef = fmt::ptr(&windowManager_);
-  fmt::print("WorldManager::WorldManager(...): windowManager_ = {}\n", formattedRef);
-  formattedRef = fmt::ptr(&inputManager_);
-  fmt::print("WorldManager::WorldManager(...): inputManager_ = {}\n", formattedRef);
-}
+    : windowManager_(windowManager), inputManager_(inputManager) {}
 
 auto WorldManager::init() -> WorldManager& {
-  GLCall(glEnable(GL_DEPTH_TEST));
+  // Restore line below when using 3D again
+  // GLCall(glEnable(GL_DEPTH_TEST));
+
   // Init shader manager to load, compile & link default shaders
   shaderManager_.init();
+  // Vertex Buffer & Index Buffer
+  vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
+                                        basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());
 
-  // Setup VBO: Vertex Buffer Object
-  const int numberOfBuffer = 1;
-  GLCall(glGenBuffers(numberOfBuffer, &VBO_));
-  GLCall(glBindBuffer(GL_ARRAY_BUFFER, VBO_));
-  GLCall(glBufferData(GL_ARRAY_BUFFER, basicSquareVerticesSizeOf * basicSquareIndicedVertices.size(),
-                      basicSquareIndicedVertices.data(), GL_STATIC_DRAW));
-
+  // Update to use Vertex Array
   GLCall(glEnableVertexAttribArray(0));
   GLCall(glVertexAttribPointer(0, basicSquareVertexSize, GL_FLOAT, GL_FALSE,
                                basicSquareVertexSize * basicSquareVerticesSizeOf, nullptr));
 
-  // Setup IBO: Index Buffer Object
-  GLCall(glGenBuffers(numberOfBuffer, &IBO_));
-  GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_));
-  GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, basicSquareIndicesSizeOf * basicSquareIndices.size(),
-                      basicSquareIndices.data(), GL_STATIC_DRAW));
+  ibo_ = std::make_unique<IndexBuffer>(basicSquareIndices.data(), basicSquareIndices.size());
 
   // Set our default "look at" camera in the view matrix
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,

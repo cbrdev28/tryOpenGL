@@ -7,6 +7,8 @@ add_library(
     "managers/ShaderManager.cc"
     "helpers/MatrixHelper.cc"
     "common/Renderer.cc"
+    "common/VertexBuffer.cc"
+    "common/IndexBuffer.cc"
 )
 
 include(FetchContent)

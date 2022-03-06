@@ -21,28 +21,6 @@ class WorldManager : public WindowListener, KeyboardListener {
   explicit WorldManager(WindowManager& windowManager, InputManager& inputManager);
 
   /**
-   * The delta from the origin on the X axis for a tile.
-   * Meaning, the width of a tile is this value mutliplied by 2.
-   */
-  static constexpr const float tileDeltaX = 0.5F;
-  /**
-   * The delta from the origin on the Y axis for a tile.
-   * Meaning, the length of a tile is this value mutliplied by 2.
-   */
-  static constexpr const float tileDeltaY = 0.5F;
-  /**
-   * The height on the Z axis for a tile.
-   * Meaning, the height of a tile is this value.
-   * Because each of our tile will always start from 0 on Z axis.
-   */
-  static constexpr const float tileHeightZ = 0.1F;
-  /**
-   * The angle of each tiles to rotate them around the X axis.
-   * The idea is to build a floor of tiles.
-   * Used with the model matrix.
-   */
-  static constexpr const float tileAngle = glm::radians(-55.0F);
-  /**
    * How far the camera will look from the Z axis.
    * Meaning, "how high" the camera will be.
    * Used with the view matrix.
@@ -54,16 +32,6 @@ class WorldManager : public WindowListener, KeyboardListener {
    * Used with the view matrix.
    */
   static constexpr const float cameraYDelta = 4.0F;
-  /**
-   * Basically the width of a tile, based on its delta X.
-   * Used to position each tile to build a floor.
-   */
-  static constexpr const float tileWidth = WorldManager::tileDeltaX * 2.0F;
-  /**
-   * Basically the length of a tile, based on its delta Y.
-   * Used to position each tile to build a floor.
-   */
-  static constexpr const float tileLength = WorldManager::tileDeltaY * 2.0F;
 
   static constexpr const float neonPinkR = 255.0F / 255.0F;
   static constexpr const float neonPinkG = 68.0F / 255.0F;
@@ -129,20 +97,8 @@ class WorldManager : public WindowListener, KeyboardListener {
   // Define a vector which points up
   glm::vec3 up_ = glm::vec3(0.0F, 1.0F, 0.0F);
 
-  // For now we only have one VBO & VAO, otherwise these should be arrays instead
   unsigned int VBO_{0};
-  unsigned int VAO_{0};
-
-  // Our first helper function to build verticles for a tile
-  static auto tileVerticles(float deltaX, float deltaY, float height) -> std::vector<float>;
-
-  // TODO(cbr): re-work when learning batch rendering
-  // Store position vectors
-  // std::vector<glm::vec3> positionVectors_{glm::vec3(0.0F, 0.0F, 0.0F)};
-
-  // Our first helper function to position tiles
-  // static auto tilePositions(unsigned int numberOfTiles, float width = WorldManager::tileWidth,
-  //                           float length = WorldManager::tileLength) -> std::vector<glm::vec3>;
+  // unsigned int IBO_{0};
 };
 
 #endif

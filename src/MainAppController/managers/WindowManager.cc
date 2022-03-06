@@ -5,6 +5,7 @@
 
 #include <fmt/core.h>
 
+
 // Initialize static class variables
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::width = WindowManager::defaultWidth;
@@ -31,9 +32,9 @@ auto WindowManager::init() -> WindowManager& {
     fmt::print("Failed to glfwInit()\n");
     throw -1;
   }
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // For Apple
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 

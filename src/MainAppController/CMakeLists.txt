@@ -55,4 +55,5 @@ target_include_directories(
     "common"
     "listeners"
     "helpers"
+    "models"
 )

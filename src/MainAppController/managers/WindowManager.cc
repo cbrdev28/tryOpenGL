@@ -5,6 +5,8 @@
 
 #include <fmt/core.h>
 
+#include "Renderer.h"
+
 // Initialize static class variables
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::width = WindowManager::defaultWidth;

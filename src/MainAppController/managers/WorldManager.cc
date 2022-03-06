@@ -6,6 +6,7 @@
 #include <fmt/core.h>
 #include <fmt/format.h>
 
+#include "Renderer.h"
 #include "basicBackgroundColor.h"
 #include "basicSquare.h"
 

@@ -9,7 +9,6 @@
 #include "WindowManager.h"
 #include "basicCamera.h"
 #include "glmHeaders.h"
-#include "openGLHeaders.h"
 
 /**
  * World manager to define what to draw & how to interact.

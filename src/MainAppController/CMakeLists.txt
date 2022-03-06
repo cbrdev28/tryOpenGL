@@ -6,6 +6,7 @@ add_library(
     "managers/WorldManager.cc"
     "managers/ShaderManager.cc"
     "helpers/MatrixHelper.cc"
+    "common/Renderer.cc"
 )
 
 include(FetchContent)

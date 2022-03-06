@@ -36,7 +36,7 @@ auto WorldManager::init() -> WorldManager& {
   matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
                                  static_cast<float>(windowManager_.getHeight()));
   // Set matrix in shader
-  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
+  shaderManager_.bind();
   shaderManager_.setModelMatrix(matrixHelper_.model)
       .setViewMatrix(matrixHelper_.view)
       .setProjectionMatrix(matrixHelper_.projection);
@@ -53,7 +53,7 @@ auto WorldManager::render() -> WorldManager& {
   GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
   GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-  GLCall(glUseProgram(shaderManager_.getShaderProgramID()));
+  shaderManager_.bind();
   // Update view matrix for camera movement
   shaderManager_.setViewMatrix(matrixHelper_.view);
   // Update projection matrix for window size change & aspect ratio

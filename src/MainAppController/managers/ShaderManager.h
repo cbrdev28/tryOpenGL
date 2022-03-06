@@ -24,7 +24,8 @@ class ShaderManager {
    */
   auto init() -> ShaderManager&;
 
-  [[nodiscard]] auto getShaderProgramID() const -> unsigned int { return shaderProgramID_; };
+  void bind() const;
+  void unBind() const;
 
   /**
    * Helper to directly set the model matrix in the vertex shader

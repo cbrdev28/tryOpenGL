@@ -30,6 +30,12 @@ auto ShaderManager::init() -> ShaderManager& {
   return *this;
 }
 
+void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
+
+void ShaderManager::unBind() const {
+  // TODO(cbr): implement
+}
+
 // NOLINTNEXTLINE(readability-make-member-function-const)
 auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
   GLsizei matrixCount = 1;

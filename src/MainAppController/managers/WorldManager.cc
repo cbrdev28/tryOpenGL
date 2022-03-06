@@ -30,9 +30,8 @@ auto WorldManager::init() -> WorldManager& {
   GLCall(glBufferData(GL_ARRAY_BUFFER, basicSquareVerticesSizeOf * basicSquareIndicedVertices.size(),
                       basicSquareIndicedVertices.data(), GL_STATIC_DRAW));
 
-  const GLuint vertexIndex = 0;  // Match with layout = 0 in our shader
-  GLCall(glEnableVertexAttribArray(vertexIndex));
-  GLCall(glVertexAttribPointer(vertexIndex, basicSquareVertexSize, GL_FLOAT, GL_FALSE,
+  GLCall(glEnableVertexAttribArray(0));
+  GLCall(glVertexAttribPointer(0, basicSquareVertexSize, GL_FLOAT, GL_FALSE,
                                basicSquareVertexSize * basicSquareVerticesSizeOf, nullptr));
 
   // Setup IBO: Index Buffer Object

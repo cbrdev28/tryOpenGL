@@ -1,9 +1,9 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-#include <cassert>
+#include <openGLHeaders.h>
 
-#include "openGLHeaders.h"
+#include <cassert>
 
 #define ASSERT(x) assert(x);
 

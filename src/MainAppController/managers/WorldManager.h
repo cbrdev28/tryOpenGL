@@ -1,18 +1,18 @@
 #ifndef WORLD_MANAGER_H_
 #define WORLD_MANAGER_H_
 
-#include <memory>
+#include <IndexBuffer.h>
+#include <InputManager.h>
+#include <KeyboardListener.h>
+#include <MatrixHelper.h>
+#include <ShaderManager.h>
+#include <VertexBuffer.h>
+#include <WindowListener.h>
+#include <WindowManager.h>
+#include <basicCamera.h>
+#include <glmHeaders.h>
 
-#include "IndexBuffer.h"
-#include "InputManager.h"
-#include "KeyboardListener.h"
-#include "MatrixHelper.h"
-#include "ShaderManager.h"
-#include "VertexBuffer.h"
-#include "WindowListener.h"
-#include "WindowManager.h"
-#include "basicCamera.h"
-#include "glmHeaders.h"
+#include <memory>
 
 /**
  * World manager to define what to draw & how to interact.

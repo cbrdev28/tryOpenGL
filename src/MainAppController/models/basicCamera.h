@@ -1,7 +1,7 @@
 #ifndef BASIC_CAMERA_H_
 #define BASIC_CAMERA_H_
 
-#include "glmHeaders.h"
+#include <glmHeaders.h>
 
 /**
  * How far the camera will look from the Z axis.

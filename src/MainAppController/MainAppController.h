@@ -1,9 +1,9 @@
 #ifndef MAIN_APP_CONTROLLER_H_
 #define MAIN_APP_CONTROLLER_H_
 
-#include "managers/InputManager.h"
-#include "managers/WindowManager.h"
-#include "managers/WorldManager.h"
+#include <InputManager.h>
+#include <WindowManager.h>
+#include <WorldManager.h>
 
 /**
  * This file is the main app controller: the first entry in our app.

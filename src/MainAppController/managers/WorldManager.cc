@@ -3,9 +3,9 @@
  */
 #include "WorldManager.h"
 
-#include "Renderer.h"
-#include "basicBackgroundColor.h"
-#include "basicSquare.h"
+#include <Renderer.h>
+#include <basicBackgroundColor.h>
+#include <basicSquare.h>
 
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
     : windowManager_(windowManager), inputManager_(inputManager) {}

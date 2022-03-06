@@ -1,8 +1,8 @@
 #ifndef SHADER_MANAGER_H_
 #define SHADER_MANAGER_H_
 
-#include "glmHeaders.h"
-#include "openGLHeaders.h"
+#include <glmHeaders.h>
+#include <openGLHeaders.h>
 
 /**
  * Shader manager helper

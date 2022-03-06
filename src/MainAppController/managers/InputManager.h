@@ -1,10 +1,10 @@
 #ifndef INPUT_MANAGER_H_
 #define INPUT_MANAGER_H_
 
-#include <vector>
+#include <KeyboardListener.h>
+#include <WindowManager.h>
 
-#include "KeyboardListener.h"
-#include "WindowManager.h"
+#include <vector>
 
 /**
  * Input manager for glfw to handle keyboard & mouse.

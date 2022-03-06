@@ -1,10 +1,10 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
-#include <vector>
+#include <WindowListener.h>
+#include <openGLHeaders.h>
 
-#include "WindowListener.h"
-#include "openGLHeaders.h"
+#include <vector>
 
 /**
  * Window manager for glfw

@@ -1,7 +1,7 @@
 #ifndef MATRIX_HELPER_H_
 #define MATRIX_HELPER_H_
 
-#include "glmHeaders.h"
+#include <glmHeaders.h>
 
 /**
  * Helper to deal with: model, view & projection matrix

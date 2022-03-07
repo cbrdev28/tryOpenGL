@@ -4,7 +4,6 @@
 #include "WorldManager.h"
 
 #include <Renderer.h>
-#include <VertexArray.h>
 #include <VertexBufferLayout.h>
 #include <basicBackgroundColor.h>
 #include <basicSquare.h>
@@ -50,7 +49,7 @@ auto WorldManager::init() -> WorldManager& {
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
   GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
-  GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+  GLCall(glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT*/));
 
   shaderManager_.bind();
   // Update view matrix for camera movement

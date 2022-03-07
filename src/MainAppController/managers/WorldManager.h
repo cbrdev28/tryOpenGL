@@ -53,9 +53,6 @@ class WorldManager : public WindowListener, KeyboardListener {
   std::unique_ptr<IndexBuffer> ibo_;
   std::unique_ptr<VertexArray> vao_;
 
-  /**
-   * Frame timestamps
-   */
   // Keep track of last frame timestamp
   double lastTimeFrame_ = 0.0F;
   // Time between last frame & current frame

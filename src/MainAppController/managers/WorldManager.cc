@@ -13,37 +13,36 @@ WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputMana
     : windowManager_(windowManager), inputManager_(inputManager) {}
 
 auto WorldManager::init() -> WorldManager& {
-  // Restore line below when using 3D again
   // GLCall(glEnable(GL_DEPTH_TEST));
-
-  // Init shader manager to load, compile & link default shaders
   shaderManager_.init();
 
   vao_ = std::make_unique<VertexArray>();
   vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
                                         basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());
+  ibo_ = std::make_unique<IndexBuffer>(basicSquareIndices.data(), basicSquareIndices.size());
 
   VertexBufferLayout layout;
   layout.pushFloat(basicSquareVertexSize);
   vao_->addBuffer(*vbo_, layout);
 
-  ibo_ = std::make_unique<IndexBuffer>(basicSquareIndices.data(), basicSquareIndices.size());
-
   // Set our default "look at" camera in the view matrix
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
-  // Set perspective in the projection matrix
+  // Set perspective in the projection matrix based on screen size
   matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
                                  static_cast<float>(windowManager_.getHeight()));
-  // Set matrix in shader
   shaderManager_.bind();
   shaderManager_.setModelMatrix(matrixHelper_.model)
       .setViewMatrix(matrixHelper_.view)
       .setProjectionMatrix(matrixHelper_.projection);
 
-  // Subscribe as listener
   windowManager_.addWindowListener(this);
   inputManager_.addKeyboardListener(this);
+
+  vao_->unBind();
+  vbo_->unBind();
+  ibo_->unBind();
+  shaderManager_.unBind();
   return *this;
 }
 
@@ -59,8 +58,8 @@ auto WorldManager::render() -> WorldManager& {
   // Update projection matrix for window size change & aspect ratio
   shaderManager_.setProjectionMatrix(matrixHelper_.projection);
 
-  // ibo_->bind();
-  // vao_->bind();
+  vao_->bind();
+  ibo_->bind();
   // Draw one tile from indices
   GLCall(glDrawElements(GL_TRIANGLES, basicSquareIndices.size(), GL_UNSIGNED_INT, nullptr));
   return *this;

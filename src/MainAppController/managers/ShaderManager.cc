@@ -1,17 +1,20 @@
 /**
  * Shader manager helper
  */
-constexpr int SHADER_INFO_LOG = 512;
-
 #include "ShaderManager.h"
 
 #include <fmt/core.h>
 
+#include <array>
+#include <fstream>
+#include <sstream>
+
 #include "Renderer.h"
 
-// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-ShaderManager::ShaderManager(const char* vertexShaderSrc, const char* fragmentShaderSrc)
-    : vertexShaderSrc_(vertexShaderSrc), fragmentShaderSrc_(fragmentShaderSrc){};
+constexpr int SHADER_INFO_LOG = 512;
+
+// NOLINTNEXTLINE(modernize-pass-by-value)
+ShaderManager::ShaderManager(const std::string& filepath) : shaderFilePath_(filepath){};
 
 ShaderManager::~ShaderManager() {
   if (vertexShaderID_ != 0) {
@@ -26,15 +29,18 @@ ShaderManager::~ShaderManager() {
 }
 
 auto ShaderManager::init() -> ShaderManager& {
-  this->compileVertex().compileFragment().link().loadMatrixUniformLocations();
+  ShaderProgramSource shaderSources = parseShader();
+  this->compileVertex(shaderSources.vertexSource)
+      .compileFragment(shaderSources.fragmentSource)
+      .link()
+      .loadMatrixUniformLocations();
   return *this;
 }
 
 void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 
-void ShaderManager::unBind() const {
-  // TODO(cbr): implement
-}
+// NOLINTNEXTLINE clang-tidy(readability-convert-member-functions-to-static)
+void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
 
 // NOLINTNEXTLINE(readability-make-member-function-const)
 auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
@@ -61,24 +67,52 @@ auto ShaderManager::setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderMan
   return *this;
 }
 
-auto ShaderManager::compileVertex() -> ShaderManager& {
+auto ShaderManager::parseShader() -> ShaderProgramSource {
+  enum class ShaderType {
+    NONE = -1,
+    VERTEX = 0,
+    FRAGMENT = 1,
+  };
+
+  std::ifstream fileStream(shaderFilePath_);
+  std::string line;
+  std::array<std::stringstream, 2> streams;
+  ShaderType type = ShaderType::NONE;
+  while (std::getline(fileStream, line)) {
+    if (line.find("#shader") != std::string::npos) {
+      if (line.find("vertex") != std::string::npos) {
+        type = ShaderType::VERTEX;
+      } else if (line.find("fragment") != std::string::npos) {
+        type = ShaderType::FRAGMENT;
+      }
+    } else {
+      const auto streamIndex = static_cast<std::size_t>(type);
+      streams.at(streamIndex) << line << "\n";
+    }
+  }
+  return {streams[0].str(), streams[1].str()};
+}
+
+auto ShaderManager::compileVertex(const std::string& source) -> ShaderManager& {
   vertexShaderID_ = glCreateShader(GL_VERTEX_SHADER);
   if (vertexShaderID_ == 0) {
     fmt::print("Failed to glCreateShader(GL_VERTEX_SHADER)\n");
     throw -1;
   }
-  GLCall(glShaderSource(vertexShaderID_, 1, &vertexShaderSrc_, nullptr));
+  const char* src = source.c_str();
+  GLCall(glShaderSource(vertexShaderID_, 1, &src, nullptr));
   this->compile(vertexShaderID_);
   return *this;
 }
 
-auto ShaderManager::compileFragment() -> ShaderManager& {
+auto ShaderManager::compileFragment(const std::string& source) -> ShaderManager& {
   fragmentShaderID_ = glCreateShader(GL_FRAGMENT_SHADER);
   if (fragmentShaderID_ == 0) {
     fmt::print("Failed to glCreateShader(GL_FRAGMENT_SHADER)\n");
     throw -1;
   }
-  GLCall(glShaderSource(fragmentShaderID_, 1, &fragmentShaderSrc_, nullptr));
+  const char* src = source.c_str();
+  GLCall(glShaderSource(fragmentShaderID_, 1, &src, nullptr));
   this->compile(fragmentShaderID_);
   return *this;
 }

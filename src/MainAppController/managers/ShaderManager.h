@@ -4,12 +4,19 @@
 #include <glmHeaders.h>
 #include <openGLHeaders.h>
 
+#include <string>
+
+struct ShaderProgramSource {
+  std::string vertexSource;
+  std::string fragmentSource;
+};
+
 /**
  * Shader manager helper
  */
 class ShaderManager {
  public:
-  ShaderManager(const char* vertexShaderSrc, const char* fragmentShaderSrc);
+  explicit ShaderManager(const std::string& filepath);
   ~ShaderManager();
 
   ShaderManager(const ShaderManager& other) = delete;
@@ -52,8 +59,7 @@ class ShaderManager {
   auto setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager&;
 
  private:
-  const char* vertexShaderSrc_{vertexShaderSource};
-  const char* fragmentShaderSrc_{fragmentShaderSource};
+  std::string shaderFilePath_;
 
   unsigned int vertexShaderID_{0};
   unsigned int fragmentShaderID_{0};
@@ -64,18 +70,25 @@ class ShaderManager {
   GLint projectionMatrixUniformLocation_{-1};
 
   /**
+   * Parse shader from a file
+   * @return ShaderProgramSource
+   * @throw -1
+   */
+  auto parseShader() -> ShaderProgramSource;
+
+  /**
    * Compile vertex shader
    * @return ShaderManager&
    * @throw -1
    */
-  auto compileVertex() -> ShaderManager&;
+  auto compileVertex(const std::string& source) -> ShaderManager&;
 
   /**
    * Compile fragment shader
    * @return ShaderManager&
    * @throw -1
    */
-  auto compileFragment() -> ShaderManager&;
+  auto compileFragment(const std::string& source) -> ShaderManager&;
 
   /**
    * Compile a shader & check for errors
@@ -98,36 +111,6 @@ class ShaderManager {
    * @throw -1
    */
   auto loadMatrixUniformLocations() -> ShaderManager&;
-
-  // For now we hardcode our shader sources & make them available
- public:
-  /**
-   * Vertex shader source
-   */
-  static constexpr const char* vertexShaderSource =
-      "#version 330 core\n"
-      "layout (location = 0) in vec3 aPos;\n"
-      "uniform mat4 model;\n"
-      "uniform mat4 view;\n"
-      "uniform mat4 projection;\n"
-      "out vec3 posVec;\n"
-      "void main()\n"
-      "{\n"
-      "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
-      "   posVec = aPos;\n"
-      "}\0";
-
-  /**
-   * Fragment shader source
-   */
-  static constexpr const char* fragmentShaderSource =
-      "#version 330 core\n"
-      "out vec4 FragColor;\n"
-      "in vec3 posVec;\n"
-      "void main()\n"
-      "{\n"
-      "   FragColor = vec4(0.5f, 0.5f, 0.5f, 1.0f) + vec4(posVec, 1.0f);\n"
-      "}\n\0";
 };
 
 #endif

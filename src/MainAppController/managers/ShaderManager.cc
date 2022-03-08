@@ -3,8 +3,9 @@
  */
 #include "ShaderManager.h"
 
-#include <Renderer.h>
 #include <fmt/core.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 #include <array>
 #include <fstream>

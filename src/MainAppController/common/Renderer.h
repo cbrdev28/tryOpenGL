@@ -1,18 +1,17 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-#include <openGLHeaders.h>
+#include <IndexBuffer.h>
+#include <ShaderManager.h>
+#include <VertexArray.h>
 
-#include <cassert>
-
-#define ASSERT(x) assert(x);
-
-#define GLCall(x) \
-  clearError();   \
-  x;              \
-  ASSERT(checkAndLogError(#x, __FILE__, __LINE__));
-
-void clearError();
-auto checkAndLogError(const char* function, const char* file, int line) -> bool;
+/**
+ * Renderer class to issue OpenGL draw calls
+ */
+class Renderer {
+ public:
+  auto clear() -> Renderer&;
+  auto draw(const ShaderManager& shaders, const VertexArray& va, const IndexBuffer& ib) -> Renderer&;
+};
 
 #endif

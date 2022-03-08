@@ -5,6 +5,7 @@
 #include <InputManager.h>
 #include <KeyboardListener.h>
 #include <MatrixHelper.h>
+#include <Renderer.h>
 #include <ShaderManager.h>
 #include <VertexArray.h>
 #include <VertexBuffer.h>
@@ -52,6 +53,7 @@ class WorldManager : public WindowListener, KeyboardListener {
   std::unique_ptr<VertexBuffer> vbo_;
   std::unique_ptr<IndexBuffer> ibo_;
   std::unique_ptr<VertexArray> vao_;
+  Renderer renderer_;
 
   // Keep track of last frame timestamp
   double lastTimeFrame_ = 0.0F;

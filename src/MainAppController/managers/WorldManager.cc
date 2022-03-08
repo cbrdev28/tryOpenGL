@@ -3,13 +3,11 @@
  */
 #include "WorldManager.h"
 
-#include <Renderer.h>
 #include <VertexBufferLayout.h>
-#include <basicBackgroundColor.h>
 #include <basicSquare.h>
 
 WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
-    : windowManager_(windowManager), inputManager_(inputManager) {}
+    : windowManager_(windowManager), inputManager_(inputManager), renderer_() {}
 
 auto WorldManager::init() -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
@@ -48,8 +46,7 @@ auto WorldManager::init() -> WorldManager& {
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
-  GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
-  GLCall(glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT*/));
+  renderer_.clear();
 
   shaderManager_.bind();
   // Update view matrix for camera movement
@@ -57,10 +54,7 @@ auto WorldManager::render() -> WorldManager& {
   // Update projection matrix for window size change & aspect ratio
   shaderManager_.setProjectionMatrix(matrixHelper_.projection);
 
-  vao_->bind();
-  ibo_->bind();
-  // Draw one tile from indices
-  GLCall(glDrawElements(GL_TRIANGLES, basicSquareIndices.size(), GL_UNSIGNED_INT, nullptr));
+  renderer_.draw(shaderManager_, *vao_, *ibo_);
   return *this;
 }
 

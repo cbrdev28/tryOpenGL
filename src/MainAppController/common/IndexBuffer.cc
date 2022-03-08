@@ -1,6 +1,7 @@
 #include "IndexBuffer.h"
 
-#include <Renderer.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : count_(count) {
   ASSERT(sizeof(unsigned int) == sizeof(GLuint));

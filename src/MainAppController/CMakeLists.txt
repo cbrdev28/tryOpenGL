@@ -6,6 +6,7 @@ add_library(
     "managers/WorldManager.cc"
     "managers/ShaderManager.cc"
     "helpers/MatrixHelper.cc"
+    "helpers/openGLErrorHelpers.cc"
     "common/Renderer.cc"
     "common/VertexBuffer.cc"
     "common/IndexBuffer.cc"

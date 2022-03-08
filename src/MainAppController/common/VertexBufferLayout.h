@@ -1,7 +1,8 @@
 #ifndef VERTEX_BUFFER_LAYOUT_H_
 #define VERTEX_BUFFER_LAYOUT_H_
 
-#include <Renderer.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 #include <vector>
 

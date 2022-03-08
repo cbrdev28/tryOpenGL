@@ -3,8 +3,9 @@
  */
 #include "WindowManager.h"
 
-#include <Renderer.h>
 #include <fmt/core.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 // Initialize static class variables
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)

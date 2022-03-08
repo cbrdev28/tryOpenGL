@@ -1,16 +1,20 @@
 #include "Renderer.h"
 
-#include <fmt/core.h>
+#include <basicBackgroundColor.h>
 
-void clearError() {
-  while (glGetError() != GL_NO_ERROR) {
-  }
+/**
+ * Renderer class
+ */
+auto Renderer::clear() -> Renderer& {
+  GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
+  GLCall(glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT*/));
+  return *this;
 }
 
-auto checkAndLogError(const char* function, const char* file, int line) -> bool {
-  while (GLenum error = glGetError()) {
-    fmt::print("OpenGL ERROR {}: {}: {}: {}\n", error, function, file, line);
-    return false;
-  }
-  return true;
+auto Renderer::draw(const ShaderManager& shaders, const VertexArray& va, const IndexBuffer& ib) -> Renderer& {
+  shaders.bind();
+  va.bind();
+  ib.bind();
+  GLCall(glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr));
+  return *this;
 }

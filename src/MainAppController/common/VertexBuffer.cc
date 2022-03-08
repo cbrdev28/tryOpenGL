@@ -1,6 +1,7 @@
 #include "VertexBuffer.h"
 
-#include <Renderer.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
   GLCall(glGenBuffers(1, &identifier_));

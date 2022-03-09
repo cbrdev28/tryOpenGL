@@ -19,6 +19,7 @@ std::vector<WindowListener*> WindowManager::listeners_ = {};
 
 WindowManager::~WindowManager() {
   if (window_ != nullptr) {
+    glfwDestroyWindow(window_);
     glfwTerminate();
     window_ = nullptr;
   }

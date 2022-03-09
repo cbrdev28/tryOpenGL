@@ -2,6 +2,12 @@
 
 ImGuiManager::ImGuiManager(const WindowManager& windowManager) : windowManager_(windowManager) {}
 
+ImGuiManager::~ImGuiManager() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+}
+
 void ImGuiManager::init() {
   IMGUI_CHECKVERSION();
   imGuiContext_ = ImGui::CreateContext();

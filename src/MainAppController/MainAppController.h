@@ -1,9 +1,9 @@
-#ifndef __MAIN_APP_CONTROLLER_H__
-#define __MAIN_APP_CONTROLLER_H__
+#ifndef MAIN_APP_CONTROLLER_H_
+#define MAIN_APP_CONTROLLER_H_
 
-#include "managers/InputManager.h"
-#include "managers/WindowManager.h"
-#include "managers/WorldManager.h"
+#include <InputManager.h>
+#include <WindowManager.h>
+#include <WorldManager.h>
 
 /**
  * This file is the main app controller: the first entry in our app.
@@ -12,40 +12,40 @@ class MainAppController {
  public:
   /**
    * Constructor
-   * @param argc the argc from main function
-   * @param argv the argv from main function
    */
-  MainAppController(const int argc, const char* const* const argv);
+  MainAppController();
+  ~MainAppController() = default;
 
-  // Get rid of constructor we don't plan to use (leaning purpose)
+  // Get rid of constructor we don't plan to use (learning purpose)
   // Copy constructor
-  MainAppController(MainAppController const& other) = delete;
+  MainAppController(const MainAppController& other) = delete;
+  MainAppController(MainAppController&& other) = delete;
+  auto operator=(const MainAppController& other) -> MainAppController& = delete;
+  auto operator=(MainAppController&& other) -> MainAppController& = delete;
 
   /**
    * Run the main application
    * @return -1 if an error occurred, 0 otherwise
    */
-  int run();
+  auto run() -> int;
 
  private:
-  const int _argc;
-  const char* const* const _argv;
-  WindowManager _windowManager;
-  InputManager _inputManager;
-  WorldManager _worldManager;
+  WindowManager windowManager_;
+  InputManager inputManager_{windowManager_};
+  WorldManager worldManager_{windowManager_, inputManager_};
 
   /**
    * Initialize the app & managers
    * @return -1 if an error occurred, 0 otherwise
    */
-  int init();
+  auto init() -> int;
 
   /**
    * Start a basic render loop
-   * @return MainAppController*
+   * @return MainAppController&
    * @throw -1
    */
-  MainAppController* renderLoop();
+  auto renderLoop() -> MainAppController&;
 };
 
 #endif

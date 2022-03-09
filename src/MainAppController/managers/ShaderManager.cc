@@ -1,118 +1,185 @@
 /**
  * Shader manager helper
  */
-
-// Disable clang-format because we must include glad before GLFW
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-
 #include "ShaderManager.h"
 
 #include <fmt/core.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
-ShaderManager::ShaderManager(const char* vertexShaderSrc, const char* fragmentShaderSrc)
-    : _vertexShaderSrc(vertexShaderSrc),
-      _fragmentShaderSrc(fragmentShaderSrc),
-      _vertexShaderID(0),
-      _fragmentShaderID(0),
-      _shaderProgramID(0) {
-  fmt::print("ShaderManager::ShaderManager(...)\n");
-};
+#include <array>
+#include <fstream>
+#include <sstream>
+
+constexpr int SHADER_INFO_LOG = 512;
+
+// NOLINTNEXTLINE(modernize-pass-by-value)
+ShaderManager::ShaderManager(const std::string& filepath) : shaderFilePath_(filepath){};
 
 ShaderManager::~ShaderManager() {
-  fmt::print("ShaderManager::~ShaderManager()\n");
-
-  if (_vertexShaderID != 0) {
-    glDeleteShader(_vertexShaderID);
+  if (vertexShaderID_ != 0) {
+    GLCall(glDeleteShader(vertexShaderID_));
   }
-  if (_fragmentShaderID != 0) {
-    glDeleteShader(_fragmentShaderID);
+  if (fragmentShaderID_ != 0) {
+    GLCall(glDeleteShader(fragmentShaderID_));
   }
-
-  if (_shaderProgramID != 0) {
-    glDeleteProgram(_shaderProgramID);
+  if (shaderProgramID_ != 0) {
+    GLCall(glDeleteProgram(shaderProgramID_));
   }
 }
 
-ShaderManager& ShaderManager::init() {
-  fmt::print("ShaderManager::init()\n");
-
-  this->compileVertex();
-  this->compileFragment();
-  this->link();
+auto ShaderManager::init() -> ShaderManager& {
+  ShaderProgramSource shaderSources = parseShader();
+  this->compileVertex(shaderSources.vertexSource)
+      .compileFragment(shaderSources.fragmentSource)
+      .link()
+      .loadMatrixUniformLocations();
   return *this;
 }
 
-ShaderManager& ShaderManager::compileVertex() {
-  fmt::print("ShaderManager::compileVertex()\n");
+void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 
-  _vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-  if (_vertexShaderID == 0) {
+// NOLINTNEXTLINE clang-tidy(readability-convert-member-functions-to-static)
+void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
+
+// NOLINTNEXTLINE(readability-make-member-function-const)
+auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
+  GLsizei matrixCount = 1;
+  GLboolean transpose = GL_FALSE;
+  GLCall(glUniformMatrix4fv(modelMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(modelMatrix)));
+  return *this;
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const)
+auto ShaderManager::setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager& {
+  GLsizei matrixCount = 1;
+  GLboolean transpose = GL_FALSE;
+  GLCall(glUniformMatrix4fv(viewMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(viewMatrix)));
+  return *this;
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const)
+auto ShaderManager::setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager& {
+  GLsizei matrixCount = 1;
+  GLboolean transpose = GL_FALSE;
+  GLCall(
+      glUniformMatrix4fv(projectionMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(projectionMatrix)));
+  return *this;
+}
+
+auto ShaderManager::parseShader() -> ShaderProgramSource {
+  enum class ShaderType {
+    NONE = -1,
+    VERTEX = 0,
+    FRAGMENT = 1,
+  };
+
+  std::ifstream fileStream(shaderFilePath_);
+  std::string line;
+  std::array<std::stringstream, 2> streams;
+  ShaderType type = ShaderType::NONE;
+  while (std::getline(fileStream, line)) {
+    if (line.find("#shader") != std::string::npos) {
+      if (line.find("vertex") != std::string::npos) {
+        type = ShaderType::VERTEX;
+      } else if (line.find("fragment") != std::string::npos) {
+        type = ShaderType::FRAGMENT;
+      }
+    } else {
+      const auto streamIndex = static_cast<std::size_t>(type);
+      streams.at(streamIndex) << line << "\n";
+    }
+  }
+  return {streams[0].str(), streams[1].str()};
+}
+
+auto ShaderManager::compileVertex(const std::string& source) -> ShaderManager& {
+  vertexShaderID_ = glCreateShader(GL_VERTEX_SHADER);
+  if (vertexShaderID_ == 0) {
     fmt::print("Failed to glCreateShader(GL_VERTEX_SHADER)\n");
     throw -1;
   }
-  glShaderSource(_vertexShaderID, 1, &_vertexShaderSrc, NULL);
-  this->compile(_vertexShaderID);
+  const char* src = source.c_str();
+  GLCall(glShaderSource(vertexShaderID_, 1, &src, nullptr));
+  this->compile(vertexShaderID_);
   return *this;
 }
 
-ShaderManager& ShaderManager::compileFragment() {
-  fmt::print("ShaderManager::compileFragment()\n");
-
-  _fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-  if (_fragmentShaderID == 0) {
+auto ShaderManager::compileFragment(const std::string& source) -> ShaderManager& {
+  fragmentShaderID_ = glCreateShader(GL_FRAGMENT_SHADER);
+  if (fragmentShaderID_ == 0) {
     fmt::print("Failed to glCreateShader(GL_FRAGMENT_SHADER)\n");
     throw -1;
   }
-  glShaderSource(_fragmentShaderID, 1, &_fragmentShaderSrc, NULL);
-  this->compile(_fragmentShaderID);
+  const char* src = source.c_str();
+  GLCall(glShaderSource(fragmentShaderID_, 1, &src, nullptr));
+  this->compile(fragmentShaderID_);
   return *this;
 }
 
-ShaderManager& ShaderManager::compile(const unsigned int shaderID) {
-  fmt::print("ShaderManager::compile()\n");
-
+auto ShaderManager::compile(const unsigned int shaderID) -> ShaderManager& {
   if (shaderID == 0) {
     fmt::print("Invalid shaderID\n");
     throw -1;
   }
+  GLCall(glCompileShader(shaderID));
 
-  glCompileShader(shaderID);
+  int success = 0;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays, modernize-avoid-c-arrays)
+  char infoLog[SHADER_INFO_LOG];
 
-  int success;
-  char infoLog[512];
-  glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(shaderID, 512, NULL, infoLog);
+  GLCall(glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success));
+  if (success == 0) {
+    GLCall(glGetShaderInfoLog(shaderID, SHADER_INFO_LOG, nullptr, static_cast<GLchar*>(infoLog)));
     fmt::print("Failed to compile shader:\n{}\n", infoLog);
     throw -1;
   }
   return *this;
 }
 
-ShaderManager& ShaderManager::link() {
-  fmt::print("ShaderManager::link()\n");
-
-  _shaderProgramID = glCreateProgram();
-  if (_shaderProgramID == 0) {
+auto ShaderManager::link() -> ShaderManager& {
+  shaderProgramID_ = glCreateProgram();
+  if (shaderProgramID_ == 0) {
     fmt::print("Failed to glCreateProgram()\n");
     throw -1;
   }
-  glAttachShader(_shaderProgramID, _vertexShaderID);
-  glAttachShader(_shaderProgramID, _fragmentShaderID);
-  glLinkProgram(_shaderProgramID);
+  GLCall(glAttachShader(shaderProgramID_, vertexShaderID_));
+  GLCall(glAttachShader(shaderProgramID_, fragmentShaderID_));
+  GLCall(glLinkProgram(shaderProgramID_));
 
-  int success;
-  char infoLog[512];
-  glGetProgramiv(_shaderProgramID, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(_shaderProgramID, 512, NULL, infoLog);
+  int success = 0;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays, modernize-avoid-c-arrays)
+  char infoLog[SHADER_INFO_LOG];
+
+  GLCall(glGetProgramiv(shaderProgramID_, GL_LINK_STATUS, &success));
+  if (success == 0) {
+    GLCall(glGetProgramInfoLog(shaderProgramID_, SHADER_INFO_LOG, nullptr, static_cast<GLchar*>(infoLog)));
     fmt::print("Failed to link shaders:\n{}\n", infoLog);
     throw -1;
   }
-  glDeleteShader(_vertexShaderID);
-  glDeleteShader(_fragmentShaderID);
+  GLCall(glDeleteShader(vertexShaderID_));
+  GLCall(glDeleteShader(fragmentShaderID_));
+  return *this;
+}
+
+auto ShaderManager::loadMatrixUniformLocations() -> ShaderManager& {
+  modelMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "model");
+  if (modelMatrixUniformLocation_ == GL_INVALID_VALUE || modelMatrixUniformLocation_ == GL_INVALID_OPERATION) {
+    fmt::print("Failed to get uniform location for model matrix\n");
+    throw -1;
+  }
+
+  viewMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "view");
+  if (viewMatrixUniformLocation_ == GL_INVALID_VALUE || viewMatrixUniformLocation_ == GL_INVALID_OPERATION) {
+    fmt::print("Failed to get uniform location for view matrix\n");
+    throw -1;
+  }
+
+  projectionMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "projection");
+  if (projectionMatrixUniformLocation_ == GL_INVALID_VALUE ||
+      projectionMatrixUniformLocation_ == GL_INVALID_OPERATION) {
+    fmt::print("Failed to get uniform location for projection matrix\n");
+    throw -1;
+  }
   return *this;
 }

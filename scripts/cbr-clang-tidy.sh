@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "CBR clang-format"
+echo "CBR clang-tidy"
 
 # From:
 # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
@@ -9,8 +9,7 @@ REPO_DIR="${SCRIPT_DIR}/.."
 
 pushd ${REPO_DIR}
 # This command may need to be refactored when adding more files
-# And use a `find` to list files
-clang-format --style=file --verbose -i\
+clang-tidy -p ./build\
     ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
     ./src/MainAppController/common/*.cc ./src/MainAppController/common/*.h\
     ./src/MainAppController/helpers/*.cc ./src/MainAppController/helpers/*.h\

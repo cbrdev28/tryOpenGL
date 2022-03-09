@@ -1,19 +1,23 @@
-#ifndef __WINDOW_MANAGER_H__
-#define __WINDOW_MANAGER_H__
+#ifndef WINDOW_MANAGER_H_
+#define WINDOW_MANAGER_H_
+
+#include <WindowListener.h>
+#include <openGLHeaders.h>
+
+#include <vector>
+
 /**
  * Window manager for glfw
  */
-
-// Disable clang-format because we must include glad before GLFW
-// clang-format off
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-// clang-format on
-
 class WindowManager {
  public:
-  WindowManager();
+  WindowManager() = default;
   ~WindowManager();
+
+  WindowManager(const WindowManager& other) = delete;
+  WindowManager(WindowManager&& other) = delete;
+  auto operator=(const WindowManager& other) -> WindowManager& = delete;
+  auto operator=(WindowManager&& other) -> WindowManager& = delete;
 
   /**
    * Constants
@@ -25,16 +29,31 @@ class WindowManager {
    * Initialize window manager: glfw, glad.
    * Create a window & set callbacks: framebuffer size & error
    * @throw -1
-   * @return WindowManager*
+   * @return WindowManager&
    */
-  WindowManager* init();
+  auto init() -> WindowManager&;
 
-  GLFWwindow* getWindow();
+  [[nodiscard]] auto getWindow() const -> GLFWwindow*;
+
+  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+  [[nodiscard]] auto getWidth() const -> int { return WindowManager::width; };
+  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+  [[nodiscard]] auto getHeight() const -> int { return WindowManager::height; };
+
+  auto addWindowListener(WindowListener* listener) -> WindowManager& {
+    WindowManager::listeners_.emplace_back(listener);
+    return *this;
+  }
 
  private:
-  GLFWwindow* _window;
+  GLFWwindow* window_{nullptr};
+
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int width;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int height;
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  static std::vector<WindowListener*> listeners_;
 
   /**
    * Callback

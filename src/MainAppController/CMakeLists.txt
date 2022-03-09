@@ -1,11 +1,16 @@
 add_library(
     MainAppController
     MainAppController.cc
-    "../glad.c"
     "managers/WindowManager.cc"
     "managers/InputManager.cc"
     "managers/WorldManager.cc"
     "managers/ShaderManager.cc"
+    "helpers/MatrixHelper.cc"
+    "helpers/openGLErrorHelpers.cc"
+    "common/Renderer.cc"
+    "common/VertexBuffer.cc"
+    "common/IndexBuffer.cc"
+    "common/VertexArray.cc"
 )
 
 include(FetchContent)
@@ -17,6 +22,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
+set(FMT_SYSTEM_HEADERS ON CACHE INTERNAL "Expose headers with marking them as system.")
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
@@ -33,11 +39,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
-target_include_directories(
-    MainAppController
-    PUBLIC
-    "../include"
-)
+set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "NOT Build the GLFW example programs")
+set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "NOT Build the GLFW test programs")
+set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "NOT Build the GLFW documentation")
+set(GLFW_INSTALL OFF CACHE INTERNAL "NOT Generate installation target")
 
 target_link_libraries(
     MainAppController 
@@ -45,4 +50,16 @@ target_link_libraries(
     fmt::fmt
     glfw
     glm
+)
+
+target_include_directories(
+    MainAppController
+    SYSTEM
+    PUBLIC
+    "../../lib/include"
+    "managers"
+    "common"
+    "listeners"
+    "helpers"
+    "models"
 )

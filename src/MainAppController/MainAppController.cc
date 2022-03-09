@@ -6,12 +6,9 @@
 #include <fmt/core.h>
 
 // Constructor
-MainAppController::MainAppController(const int argc, const char* const* const argv)
-    : _argc(argc), _argv(argv), _inputManager(_windowManager) {
-  fmt::print("MainAppController(...)\n");
-};
+MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
-int MainAppController::run() {
+auto MainAppController::run() -> int {
   fmt::print("run()\n");
   int initialized = this->init();
   if (initialized != 0) {
@@ -25,29 +22,29 @@ int MainAppController::run() {
   return 0;
 }
 
-int MainAppController::init() {
+auto MainAppController::init() -> int {
   fmt::print("init()\n");
   try {
-    this->_windowManager.init();
-    this->_inputManager.init();
-    this->_worldManager.init();
+    windowManager_.init();
+    inputManager_.init();
+    worldManager_.init();
   } catch (int error) {
     return -1;
   }
   return 0;
 }
 
-MainAppController* MainAppController::renderLoop() {
+auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  GLFWwindow* window = _windowManager.getWindow();
-  while (!glfwWindowShouldClose(window)) {
-    _inputManager.processKeyboardInput();
+  GLFWwindow* window = windowManager_.getWindow();
+  while (glfwWindowShouldClose(window) == 0) {
+    inputManager_.processKeyboardInput();
 
-    _worldManager.render();
+    worldManager_.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-  return this;
+  return *this;
 }

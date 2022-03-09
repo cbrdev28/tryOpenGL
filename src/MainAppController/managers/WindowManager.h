@@ -35,9 +35,7 @@ class WindowManager {
 
   [[nodiscard]] auto getWindow() const -> GLFWwindow*;
 
-  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
   [[nodiscard]] auto getWidth() const -> int { return WindowManager::width; };
-  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
   [[nodiscard]] auto getHeight() const -> int { return WindowManager::height; };
 
   auto addWindowListener(WindowListener* listener) -> WindowManager& {

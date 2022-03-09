@@ -27,5 +27,4 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 
 void VertexArray::bind() const { GLCall(glBindVertexArray(identifier_)); }
 
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void VertexArray::unBind() const { GLCall(glBindVertexArray(0)); }

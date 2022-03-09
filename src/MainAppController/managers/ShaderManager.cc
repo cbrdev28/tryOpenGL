@@ -39,7 +39,6 @@ auto ShaderManager::init() -> ShaderManager& {
 
 void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
 
 // NOLINTNEXTLINE(readability-make-member-function-const)

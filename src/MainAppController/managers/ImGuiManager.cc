@@ -15,20 +15,17 @@ void ImGuiManager::init() {
   ImGui_ImplOpenGL3_Init("#version 130");
 }
 
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void ImGuiManager::renderFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 }
 
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void ImGuiManager::render() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void ImGuiManager::renderExample() {
   ImGui::Begin("Example");
   const float frameRatePerSecond = 1000.0F;

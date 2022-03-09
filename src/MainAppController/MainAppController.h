@@ -1,6 +1,7 @@
 #ifndef MAIN_APP_CONTROLLER_H_
 #define MAIN_APP_CONTROLLER_H_
 
+#include <ImGuiManager.h>
 #include <InputManager.h>
 #include <WindowManager.h>
 #include <WorldManager.h>
@@ -32,6 +33,7 @@ class MainAppController {
  private:
   WindowManager windowManager_;
   InputManager inputManager_{windowManager_};
+  ImGuiManager imGuiManager_{windowManager_};
   WorldManager worldManager_{windowManager_, inputManager_};
 
   /**

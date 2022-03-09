@@ -27,6 +27,7 @@ auto MainAppController::init() -> int {
   try {
     windowManager_.init();
     inputManager_.init();
+    imGuiManager_.init();
     worldManager_.init();
   } catch (int error) {
     return -1;
@@ -40,8 +41,12 @@ auto MainAppController::renderLoop() -> MainAppController& {
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
+    imGuiManager_.renderFrame();
 
     worldManager_.render();
+
+    imGuiManager_.renderExample();
+    imGuiManager_.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

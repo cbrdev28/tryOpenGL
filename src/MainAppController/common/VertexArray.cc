@@ -14,7 +14,7 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
   uintptr_t offset = 0;
   const auto& elements = layout.getElements();
   for (int i = 0; i < elements.size(); i++) {
-    // NOLINTNEXTLINE clang(-Wint-to-void-pointer-cast)
+    // NOLINTNEXTLINE(google-readability-casting, performance-no-int-to-ptr, cppcoreguidelines-pro-type-cstyle-cast)
     auto* glOffset = (GLvoid*)offset;
     const auto& element = elements[i];
 

@@ -2,6 +2,7 @@ add_library(
     MainAppController
     MainAppController.cc
     "managers/WindowManager.cc"
+    "managers/ImGuiManager.cc"
     "managers/InputManager.cc"
     "managers/WorldManager.cc"
     "managers/ShaderManager.cc"
@@ -44,12 +45,40 @@ set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "NOT Build the GLFW test programs")
 set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "NOT Build the GLFW documentation")
 set(GLFW_INSTALL OFF CACHE INTERNAL "NOT Generate installation target")
 
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG v1.87
+    UPDATE_DISCONNECTED YES
+)
+FetchContent_MakeAvailable(imgui)
+add_library(
+    imgui
+    STATIC
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_demo.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp
+)
+target_include_directories(
+    imgui
+    SYSTEM PUBLIC
+    ${imgui_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}/backends
+)
+target_link_libraries(imgui PUBLIC glfw)
+
 target_link_libraries(
     MainAppController 
     PUBLIC
     fmt::fmt
     glfw
     glm
+    imgui
 )
 
 target_include_directories(

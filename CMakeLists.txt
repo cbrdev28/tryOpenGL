@@ -13,6 +13,11 @@ add_subdirectory("lib")
 
 add_executable(tryOpenGL main.cc)
 
+target_compile_options(tryOpenGL PRIVATE -Wall)
+if(NOT MSVC)
+    target_compile_options(tryOpenGL PRIVATE -Wextra)
+endif()
+
 target_include_directories(
     tryOpenGL
     PUBLIC

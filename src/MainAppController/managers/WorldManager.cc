@@ -6,8 +6,8 @@
 #include <VertexBufferLayout.h>
 #include <basicSquare.h>
 
-WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager, Renderer& renderer)
-    : windowManager_(windowManager), inputManager_(inputManager), renderer_(renderer) {}
+WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
+    : windowManager_(windowManager), inputManager_(inputManager) {}
 
 auto WorldManager::init() -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));

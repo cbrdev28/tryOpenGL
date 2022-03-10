@@ -23,7 +23,7 @@
  */
 class WorldManager : public WindowListener, KeyboardListener {
  public:
-  explicit WorldManager(WindowManager& windowManager, InputManager& inputManager, Renderer& renderer);
+  explicit WorldManager(WindowManager& windowManager, InputManager& inputManager);
 
   /**
    * Initialize world manager: shader...
@@ -51,7 +51,7 @@ class WorldManager : public WindowListener, KeyboardListener {
  private:
   WindowManager& windowManager_;
   InputManager& inputManager_;
-  Renderer& renderer_;
+  Renderer renderer_;
   ShaderManager shaderManager_{"../res/shaders/basic.shader"};
   MatrixHelper matrixHelper_;
 

@@ -7,14 +7,14 @@
 namespace test {
 class TestWorldManager : public Test {
  public:
-  explicit TestWorldManager(WorldManager& worldManager);
+  explicit TestWorldManager();
 
   void onUpdate(float deltaTime) override;
   void onRender() override;
   void onImGuiRender() override;
 
  private:
-  WorldManager& worldManager_;
+  WorldManager worldManager_;
 };
 }  // namespace test
 #endif

@@ -2,7 +2,6 @@
 #define WORLD_MANAGER_H_
 
 #include <IndexBuffer.h>
-#include <InputManager.h>
 #include <KeyboardListener.h>
 #include <MatrixHelper.h>
 #include <Renderer.h>
@@ -12,7 +11,6 @@
 #include <WindowListener.h>
 #include <WindowManager.h>
 #include <basicBackgroundColor.h>
-#include <basicCamera.h>
 #include <glmHeaders.h>
 
 #include <memory>
@@ -23,8 +21,6 @@
  */
 class WorldManager : public WindowListener, KeyboardListener {
  public:
-  explicit WorldManager(WindowManager& windowManager, InputManager& inputManager);
-
   /**
    * Initialize world manager: shader...
    * @return WorldManager&
@@ -49,8 +45,6 @@ class WorldManager : public WindowListener, KeyboardListener {
   auto getBackGroundColor() -> std::vector<float>* { return &backgroundColor_; };
 
  private:
-  WindowManager& windowManager_;
-  InputManager& inputManager_;
   Renderer renderer_;
   ShaderManager shaderManager_{"../res/shaders/basic.shader"};
   MatrixHelper matrixHelper_;
@@ -58,6 +52,10 @@ class WorldManager : public WindowListener, KeyboardListener {
   std::unique_ptr<VertexBuffer> vbo_;
   std::unique_ptr<IndexBuffer> ibo_;
   std::unique_ptr<VertexArray> vao_;
+
+  // Keep track of window size to update projection matrix
+  float windowWidth_{WindowManager::defaultWidth};
+  float windowHeight_{WindowManager::defaultHeight};
 
   // Keep track of last frame timestamp
   double lastTimeFrame_ = 0.0F;

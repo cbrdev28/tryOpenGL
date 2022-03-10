@@ -38,8 +38,7 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  WorldManager world(windowManager_, inputManager_);
-  test::TestWorldManager testWorld(world);
+  test::TestWorldManager testWorld;
 
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {

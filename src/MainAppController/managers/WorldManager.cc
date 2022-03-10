@@ -4,10 +4,8 @@
 #include "WorldManager.h"
 
 #include <VertexBufferLayout.h>
+#include <basicCamera.h>
 #include <basicSquare.h>
-
-WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
-    : windowManager_(windowManager), inputManager_(inputManager) {}
 
 auto WorldManager::init() -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
@@ -26,15 +24,11 @@ auto WorldManager::init() -> WorldManager& {
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
   // Set perspective in the projection matrix based on screen size
-  matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
-                                 static_cast<float>(windowManager_.getHeight()));
+  matrixHelper_.updateProjection(windowWidth_, windowHeight_);
   shaderManager_.bind();
   shaderManager_.setModelMatrix(matrixHelper_.model)
       .setViewMatrix(matrixHelper_.view)
       .setProjectionMatrix(matrixHelper_.projection);
-
-  windowManager_.addWindowListener(this);
-  inputManager_.addKeyboardListener(this);
 
   vao_->unBind();
   vbo_->unBind();
@@ -42,6 +36,11 @@ auto WorldManager::init() -> WorldManager& {
   shaderManager_.unBind();
   return *this;
 }
+
+// void WorldManager::subscribeAsListener() {
+//   windowManager_.addWindowListener(this);
+//   inputManager_.addKeyboardListener(this);
+// }
 
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
@@ -75,9 +74,9 @@ void WorldManager::onMoveBackward() {
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 void WorldManager::onResize(int width, int height) {
-  const auto windowWidth = static_cast<float>(width);
-  const auto windowHeight = static_cast<float>(height);
-  matrixHelper_.updateProjection(windowWidth, windowHeight);
+  windowWidth_ = static_cast<float>(width);
+  windowHeight_ = static_cast<float>(height);
+  matrixHelper_.updateProjection(windowWidth_, windowHeight_);
 }
 
 // Called during render

@@ -74,6 +74,20 @@ target_include_directories(
 )
 target_link_libraries(imgui PUBLIC glfw)
 
+FetchContent_Declare(
+    GSL
+    GIT_REPOSITORY "https://github.com/microsoft/GSL"
+    GIT_TAG "v4.0.0"
+)
+
+FetchContent_MakeAvailable(GSL)
+
+target_link_libraries(
+    MainAppController
+    PRIVATE
+    GSL
+)
+
 target_link_libraries(
     MainAppController 
     PUBLIC

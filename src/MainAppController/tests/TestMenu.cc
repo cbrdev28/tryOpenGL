@@ -4,8 +4,6 @@
 
 namespace test {
 
-TestMenu::TestMenu(Test*& currentTest) : currentTest_(currentTest) {}
-
 void TestMenu::onUpdate(float deltaTime) {
   if (currentTest_ != nullptr) {
     currentTest_->onUpdate(deltaTime);
@@ -21,6 +19,7 @@ void TestMenu::onRender() {
 void TestMenu::onImGuiRender() {
   if (currentTest_ != nullptr) {
     if (ImGui::Button("Back")) {
+      delete currentTest_;
       currentTest_ = nullptr;
       return;
     }

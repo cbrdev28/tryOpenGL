@@ -3,6 +3,7 @@
  */
 #include "MainAppController.h"
 
+#include <TestMenu.h>
 #include <TestWorldManager.h>
 #include <fmt/core.h>
 
@@ -37,7 +38,8 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  test::TestWorldManager testWorld;
+  test::TestMenu testMenu;
+  testMenu.registerTest<test::TestWorldManager>("Test World");
 
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
@@ -45,9 +47,9 @@ auto MainAppController::renderLoop() -> MainAppController& {
     renderer_.clear();
     imGuiManager_.renderFrame();
 
-    testWorld.onUpdate(0.0F);
-    testWorld.onRender();
-    testWorld.onImGuiRender();
+    testMenu.onUpdate(0.0F);
+    testMenu.onRender();
+    testMenu.onImGuiRender();
 
     // imGuiManager_.renderExample();
     imGuiManager_.render();

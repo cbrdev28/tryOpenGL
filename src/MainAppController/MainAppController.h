@@ -3,8 +3,8 @@
 
 #include <ImGuiManager.h>
 #include <InputManager.h>
+#include <Renderer.h>
 #include <WindowManager.h>
-#include <WorldManager.h>
 
 /**
  * This file is the main app controller: the first entry in our app.
@@ -34,7 +34,7 @@ class MainAppController {
   WindowManager windowManager_;
   InputManager inputManager_{windowManager_};
   ImGuiManager imGuiManager_{windowManager_};
-  WorldManager worldManager_{windowManager_, inputManager_};
+  Renderer renderer_;
 
   /**
    * Initialize the app & managers

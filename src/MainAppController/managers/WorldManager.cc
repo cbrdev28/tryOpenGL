@@ -6,8 +6,8 @@
 #include <VertexBufferLayout.h>
 #include <basicSquare.h>
 
-WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
-    : windowManager_(windowManager), inputManager_(inputManager), renderer_() {}
+WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager, Renderer& renderer)
+    : windowManager_(windowManager), inputManager_(inputManager), renderer_(renderer) {}
 
 auto WorldManager::init() -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
@@ -46,7 +46,7 @@ auto WorldManager::init() -> WorldManager& {
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
-  renderer_.clear();
+  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
 
   shaderManager_.bind();
   // Update view matrix for camera movement

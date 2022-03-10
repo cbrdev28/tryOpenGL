@@ -3,6 +3,8 @@
  */
 #include "MainAppController.h"
 
+#include <TestWorldManager.h>
+#include <WorldManager.h>
 #include <fmt/core.h>
 
 // Constructor
@@ -28,7 +30,6 @@ auto MainAppController::init() -> int {
     windowManager_.init();
     inputManager_.init();
     imGuiManager_.init();
-    worldManager_.init();
   } catch (int error) {
     return -1;
   }
@@ -38,14 +39,20 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
+  WorldManager world(windowManager_, inputManager_, renderer_);
+  test::TestWorldManager testWorld(world);
+
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
+    renderer_.clear();
     imGuiManager_.renderFrame();
 
-    worldManager_.render();
+    testWorld.onUpdate(0.0F);
+    testWorld.onRender();
+    testWorld.onImGuiRender();
 
-    imGuiManager_.renderExample();
+    // imGuiManager_.renderExample();
     imGuiManager_.render();
 
     glfwSwapBuffers(window);

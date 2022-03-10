@@ -1,12 +1,9 @@
 #include "Renderer.h"
 
-#include <basicBackgroundColor.h>
-
 /**
  * Renderer class
  */
 auto Renderer::clear() -> Renderer& {
-  GLCall(glClearColor(basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB, 1.0F));
   GLCall(glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT*/));
   return *this;
 }

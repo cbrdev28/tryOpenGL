@@ -7,7 +7,7 @@
 namespace test {
 class TestWorldManager : public Test {
  public:
-  TestWorldManager();
+  explicit TestWorldManager(const TestContext& ctx);
 
   void onUpdate(float deltaTime) override;
   void onRender() override;

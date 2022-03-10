@@ -38,7 +38,7 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  test::TestMenu testMenu;
+  test::TestMenu testMenu({windowManager_, inputManager_});
   testMenu.registerTest<test::TestWorldManager>("Test World");
 
   GLFWwindow* window = windowManager_.getWindow();

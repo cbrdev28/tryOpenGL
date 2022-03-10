@@ -3,7 +3,7 @@
 #include <imgui.h>
 
 namespace test {
-TestWorldManager::TestWorldManager() { worldManager_.init(); }
+TestWorldManager::TestWorldManager(const TestContext& ctx) : Test(ctx) { worldManager_.init(); }
 
 void TestWorldManager::onUpdate(float deltaTime) {}
 void TestWorldManager::onRender() { worldManager_.render(); }

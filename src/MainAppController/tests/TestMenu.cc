@@ -27,7 +27,7 @@ void TestMenu::onImGuiRender() {
   } else {
     for (auto& test : tests_) {
       if (ImGui::Button(test.first.c_str())) {
-        currentTest_ = test.second();
+        currentTest_ = test.second(this->getTestContext());
       }
     }
   }

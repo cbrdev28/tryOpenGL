@@ -15,5 +15,6 @@ clang-tidy -p ./build\
     ./src/MainAppController/helpers/*.cc ./src/MainAppController/helpers/*.h\
     ./src/MainAppController/listeners/*.cc ./src/MainAppController/listeners/*.h\
     ./src/MainAppController/managers/*.cc ./src/MainAppController/managers/*.h\
-    ./src/MainAppController/models/*.cc ./src/MainAppController/models/*.h
+    ./src/MainAppController/models/*.cc ./src/MainAppController/models/*.h\
+    ./src/MainAppController/tests/*.cc ./src/MainAppController/tests/*.h
 popd

@@ -4,7 +4,6 @@
 #include "MainAppController.h"
 
 #include <TestWorldManager.h>
-#include <WorldManager.h>
 #include <fmt/core.h>
 
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };

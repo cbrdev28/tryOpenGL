@@ -12,6 +12,7 @@ add_library(
     "common/VertexBuffer.cc"
     "common/IndexBuffer.cc"
     "common/VertexArray.cc"
+    "tests/TestWorldManager.cc"
 )
 
 include(FetchContent)

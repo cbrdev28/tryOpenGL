@@ -7,7 +7,6 @@
 #include <WorldManager.h>
 #include <fmt/core.h>
 
-// Constructor
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
 auto MainAppController::run() -> int {

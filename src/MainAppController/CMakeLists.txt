@@ -91,4 +91,5 @@ target_include_directories(
     "listeners"
     "helpers"
     "models"
+    "tests"
 )

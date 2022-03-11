@@ -49,7 +49,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);
   shader_->setUniformMat4("u_view", identityMatrix);
-  shader_->setUniformMat4("u_projection", identityMatrix);
+  shader_->setUniformMat4("u_projection", glm::ortho(-5.0F, 5.0F, -5.0F, 5.0F, -1.0F, 1.0F));
 
   texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
   texture_->bind(0);
@@ -69,5 +69,7 @@ void TestBatchRender::onRender() {
   renderer_.draw(*shader_, *va_, *ib_);
 }
 void TestBatchRender::onImGuiRender() { ImGui::ColorEdit4("Color", backgroundColor_.data()); }
+
+void TestBatchRender::onResize(int /*width*/, int /*height*/) {}
 
 }  // namespace test

@@ -8,12 +8,13 @@
 #include <Texture.h>
 #include <VertexArray.h>
 #include <VertexBuffer.h>
+#include <WindowListener.h>
 
 #include <memory>
 
 namespace test {
 
-class TestBatchRender : public Test {
+class TestBatchRender : public Test, public WindowListener {
  public:
   explicit TestBatchRender(const TestContext& ctx);
   ~TestBatchRender() override;
@@ -26,6 +27,8 @@ class TestBatchRender : public Test {
   void onUpdate(float deltaTime) override;
   void onRender() override;
   void onImGuiRender() override;
+
+  void onResize(int width, int height) override;
 
  private:
   std::vector<float> backgroundColor_ = {1.0F, 0.5F, 0.1F, 1.0F};

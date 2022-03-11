@@ -8,17 +8,14 @@
 #include <openGLHeaders.h>
 
 // Initialize static class variables
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::width = WindowManager::defaultWidth;
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables, cppcoreguidelines-interfaces-global-init)
 int WindowManager::height = WindowManager::defaultHeight;
-
 // Init to empty
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 std::vector<WindowListener*> WindowManager::listeners_ = {};
 
 WindowManager::~WindowManager() {
   if (window_ != nullptr) {
+    glfwDestroyWindow(window_);
     glfwTerminate();
     window_ = nullptr;
   }

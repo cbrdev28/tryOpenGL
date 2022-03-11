@@ -5,25 +5,27 @@ project(tryOpenGL)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-# Needed for clang-tidy
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Needed for clang-tidy
 
 add_subdirectory("src/MainAppController")
-add_subdirectory("lib")
 
 add_executable(tryOpenGL main.cc)
 
+target_compile_options(tryOpenGL PRIVATE -Wall)
+if(NOT MSVC)
+    target_compile_options(tryOpenGL PRIVATE -Wextra)
+endif()
+
 target_include_directories(
     tryOpenGL
-    PUBLIC
+    PRIVATE
     "src/MainAppController"
 )
 
 target_link_libraries(
     tryOpenGL
-    PUBLIC
+    PRIVATE
     MainAppController
-    ExternalLibraries
 )
 
 # NOTE: I don't know if I should update the install steps

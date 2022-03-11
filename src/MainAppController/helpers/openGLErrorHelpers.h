@@ -6,8 +6,10 @@
  */
 #include <cassert>
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define ASSERT(x) assert(x);
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define GLCall(x) \
   clearError();   \
   x;              \

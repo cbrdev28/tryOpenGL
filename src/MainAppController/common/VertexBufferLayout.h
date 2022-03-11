@@ -11,7 +11,7 @@ struct VertexBufferElement {
   unsigned int count;
   unsigned char normalized;
 
-  static auto getSizeOfType(unsigned int type) -> unsigned int {
+  inline static auto getSizeOfType(unsigned int type) -> unsigned int {
     switch (type) {
       case GL_FLOAT:
         return sizeof(GLfloat);
@@ -31,12 +31,12 @@ class VertexBufferLayout {
  public:
   VertexBufferLayout() = default;
 
-  void pushFloat(unsigned int count) {
+  inline void pushFloat(unsigned int count) {
     elements_.push_back({GL_FLOAT, count, static_cast<unsigned char>(GL_FALSE)});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
   }
 
-  void pushUInt(unsigned int count) {
+  inline void pushUInt(unsigned int count) {
     elements_.push_back({GL_UNSIGNED_INT, count, static_cast<unsigned char>(GL_FALSE)});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
   }

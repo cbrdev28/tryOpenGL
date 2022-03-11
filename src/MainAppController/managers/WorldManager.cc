@@ -4,12 +4,10 @@
 #include "WorldManager.h"
 
 #include <VertexBufferLayout.h>
+#include <basicCamera.h>
 #include <basicSquare.h>
 
-WorldManager::WorldManager(WindowManager& windowManager, InputManager& inputManager)
-    : windowManager_(windowManager), inputManager_(inputManager), renderer_() {}
-
-auto WorldManager::init() -> WorldManager& {
+auto WorldManager::init(const float windowWidth, const float windowHeight) -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
   shaderManager_.init();
 
@@ -26,15 +24,11 @@ auto WorldManager::init() -> WorldManager& {
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
   // Set perspective in the projection matrix based on screen size
-  matrixHelper_.updateProjection(static_cast<float>(windowManager_.getWidth()),
-                                 static_cast<float>(windowManager_.getHeight()));
+  matrixHelper_.updateProjection(windowWidth, windowHeight);
   shaderManager_.bind();
-  shaderManager_.setModelMatrix(matrixHelper_.model)
-      .setViewMatrix(matrixHelper_.view)
-      .setProjectionMatrix(matrixHelper_.projection);
-
-  windowManager_.addWindowListener(this);
-  inputManager_.addKeyboardListener(this);
+  shaderManager_.setUniformMat4("u_model", matrixHelper_.model);
+  shaderManager_.setUniformMat4("u_view", matrixHelper_.view);
+  shaderManager_.setUniformMat4("u_projection", matrixHelper_.projection);
 
   vao_->unBind();
   vbo_->unBind();
@@ -46,13 +40,13 @@ auto WorldManager::init() -> WorldManager& {
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
   updateDeltaTimeFrame_(glfwGetTime());
-  renderer_.clear();
+  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
 
   shaderManager_.bind();
   // Update view matrix for camera movement
-  shaderManager_.setViewMatrix(matrixHelper_.view);
+  shaderManager_.setUniformMat4("u_view", matrixHelper_.view);
   // Update projection matrix for window size change & aspect ratio
-  shaderManager_.setProjectionMatrix(matrixHelper_.projection);
+  shaderManager_.setUniformMat4("u_projection", matrixHelper_.projection);
 
   renderer_.draw(shaderManager_, *vao_, *ibo_);
   return *this;
@@ -73,11 +67,8 @@ void WorldManager::onMoveBackward() {
                            basicCameraUp);
 }
 
-// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 void WorldManager::onResize(int width, int height) {
-  const auto windowWidth = static_cast<float>(width);
-  const auto windowHeight = static_cast<float>(height);
-  matrixHelper_.updateProjection(windowWidth, windowHeight);
+  matrixHelper_.updateProjection(static_cast<float>(width), static_cast<float>(height));
 }
 
 // Called during render

@@ -4,6 +4,7 @@
 #include <KeyboardListener.h>
 #include <WindowManager.h>
 
+#include <algorithm>
 #include <vector>
 
 /**
@@ -31,8 +32,16 @@ class InputManager {
    * Add keyboard listener
    * @return InputManager&
    */
-  auto addKeyboardListener(KeyboardListener* listener) -> InputManager& {
+  inline auto addKeyboardListener(KeyboardListener* listener) -> InputManager& {
     listeners_.emplace_back(listener);
+    return *this;
+  }
+
+  inline auto removeKeyboardListener(KeyboardListener* listener) -> InputManager& {
+    auto iterator = std::find(listeners_.begin(), listeners_.end(), listener);
+    if (iterator != listeners_.end()) {
+      listeners_.erase(iterator);
+    }
     return *this;
   }
 

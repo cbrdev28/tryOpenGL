@@ -3,9 +3,11 @@
  */
 #include "MainAppController.h"
 
+#include <TestMenu.h>
+#include <TestTexture.h>
+#include <TestWorldManager.h>
 #include <fmt/core.h>
 
-// Constructor
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
 auto MainAppController::run() -> int {
@@ -27,7 +29,7 @@ auto MainAppController::init() -> int {
   try {
     windowManager_.init();
     inputManager_.init();
-    worldManager_.init();
+    imGuiManager_.init();
   } catch (int error) {
     return -1;
   }
@@ -37,11 +39,22 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
+  test::TestMenu testMenu({windowManager_, inputManager_});
+  testMenu.registerTest<test::TestWorldManager>("Test World");
+  testMenu.registerTest<test::TestTexture>("Test Texture?");
+
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
+    renderer_.clear();
+    imGuiManager_.renderFrame();
 
-    worldManager_.render();
+    testMenu.onUpdate(0.0F);
+    testMenu.onRender();
+    testMenu.onImGuiRender();
+
+    // imGuiManager_.renderExample();
+    imGuiManager_.render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

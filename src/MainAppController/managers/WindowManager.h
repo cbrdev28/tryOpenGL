@@ -4,6 +4,7 @@
 #include <WindowListener.h>
 #include <openGLHeaders.h>
 
+#include <algorithm>
 #include <vector>
 
 /**
@@ -35,24 +36,27 @@ class WindowManager {
 
   [[nodiscard]] auto getWindow() const -> GLFWwindow*;
 
-  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-  [[nodiscard]] auto getWidth() const -> int { return WindowManager::width; };
-  // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-  [[nodiscard]] auto getHeight() const -> int { return WindowManager::height; };
+  [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
+  [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
 
-  auto addWindowListener(WindowListener* listener) -> WindowManager& {
+  inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
+    return *this;
+  }
+
+  inline auto removeWindowListener(WindowListener* listener) -> WindowManager& {
+    auto iterator = std::find(listeners_.begin(), listeners_.end(), listener);
+    if (iterator != listeners_.end()) {
+      listeners_.erase(iterator);
+    }
     return *this;
   }
 
  private:
   GLFWwindow* window_{nullptr};
 
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int width;
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int height;
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static std::vector<WindowListener*> listeners_;
 
   /**

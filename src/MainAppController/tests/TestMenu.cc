@@ -1,6 +1,8 @@
 #include "TestMenu.h"
 
 #include <imgui.h>
+#include <openGLErrorHelpers.h>
+#include <openGLHeaders.h>
 
 namespace test {
 
@@ -13,6 +15,8 @@ void TestMenu::onUpdate(float deltaTime) {
 void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
+  } else {
+    GLCall(glClearColor(0.0F, 0.0F, 0.0F, 1.0F));
   }
 }
 

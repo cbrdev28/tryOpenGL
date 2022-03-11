@@ -9,7 +9,6 @@
 #include <VertexArray.h>
 #include <VertexBuffer.h>
 #include <WindowListener.h>
-#include <WindowManager.h>
 #include <basicBackgroundColor.h>
 #include <glmHeaders.h>
 
@@ -19,14 +18,14 @@
 /**
  * World manager to define what to draw & how to interact.
  */
-class WorldManager : public WindowListener, KeyboardListener {
+class WorldManager : public WindowListener, public KeyboardListener {
  public:
   /**
    * Initialize world manager: shader...
    * @return WorldManager&
    * @throw -1
    */
-  auto init() -> WorldManager&;
+  auto init(const float windowWidth, const float windowHeight) -> WorldManager&;
 
   /**
    * Render world
@@ -52,10 +51,6 @@ class WorldManager : public WindowListener, KeyboardListener {
   std::unique_ptr<VertexBuffer> vbo_;
   std::unique_ptr<IndexBuffer> ibo_;
   std::unique_ptr<VertexArray> vao_;
-
-  // Keep track of window size to update projection matrix
-  float windowWidth_{WindowManager::defaultWidth};
-  float windowHeight_{WindowManager::defaultHeight};
 
   // Keep track of last frame timestamp
   double lastTimeFrame_ = 0.0F;

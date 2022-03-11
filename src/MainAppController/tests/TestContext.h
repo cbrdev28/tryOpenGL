@@ -7,8 +7,8 @@
 namespace test {
 
 struct TestContext {
-  const WindowManager& windowManager;
-  const InputManager& inputManager;
+  WindowManager& windowManager;
+  InputManager& inputManager;
 };
 
 }  // namespace test

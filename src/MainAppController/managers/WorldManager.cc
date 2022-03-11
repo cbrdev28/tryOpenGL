@@ -7,7 +7,7 @@
 #include <basicCamera.h>
 #include <basicSquare.h>
 
-auto WorldManager::init() -> WorldManager& {
+auto WorldManager::init(const float windowWidth, const float windowHeight) -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
   shaderManager_.init();
 
@@ -24,7 +24,7 @@ auto WorldManager::init() -> WorldManager& {
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
                            basicCameraUp);
   // Set perspective in the projection matrix based on screen size
-  matrixHelper_.updateProjection(windowWidth_, windowHeight_);
+  matrixHelper_.updateProjection(windowWidth, windowHeight);
   shaderManager_.bind();
   shaderManager_.setModelMatrix(matrixHelper_.model)
       .setViewMatrix(matrixHelper_.view)
@@ -36,11 +36,6 @@ auto WorldManager::init() -> WorldManager& {
   shaderManager_.unBind();
   return *this;
 }
-
-// void WorldManager::subscribeAsListener() {
-//   windowManager_.addWindowListener(this);
-//   inputManager_.addKeyboardListener(this);
-// }
 
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
@@ -74,9 +69,7 @@ void WorldManager::onMoveBackward() {
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 void WorldManager::onResize(int width, int height) {
-  windowWidth_ = static_cast<float>(width);
-  windowHeight_ = static_cast<float>(height);
-  matrixHelper_.updateProjection(windowWidth_, windowHeight_);
+  matrixHelper_.updateProjection(static_cast<float>(width), static_cast<float>(height));
 }
 
 // Called during render

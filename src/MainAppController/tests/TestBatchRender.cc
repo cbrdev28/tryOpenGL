@@ -12,16 +12,24 @@ namespace test {
 TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   std::vector<float> positions = {
       // clang-format off
-    -0.5F, -0.5F, 0.0F, 0.0F,
-    0.5F, -0.5F, 1.0F, 0.0F,
-    0.5F, 0.5F, 1.0F, 1.0F,
-    -0.5F, 0.5F, 0.0F, 1.0F
+    -1.5F, -0.5F, 0.0F, 0.0F,
+    -0.5F, -0.5F, 1.0F, 0.0F,
+    -0.5F, 0.5F, 1.0F, 1.0F,
+    -1.5F, 0.5F, 0.0F, 1.0F,
+
+    0.5F, -0.5F, 0.0F, 0.0F,
+    1.5F, -0.5F, 1.0F, 0.0F,
+    1.5F, 0.5F, 1.0F, 1.0F,
+    0.5F, 0.5F, 0.0F, 1.0F
       // clang-format on
   };
   std::vector<unsigned int> indices = {
       // clang-format off
     0, 1, 2,
-    2, 3, 0
+    2, 3, 0,
+
+    4, 5, 6,
+    6, 7, 4
       // clang-format on
   };
 

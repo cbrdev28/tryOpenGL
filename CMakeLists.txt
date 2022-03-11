@@ -20,13 +20,13 @@ endif()
 
 target_include_directories(
     tryOpenGL
-    PUBLIC
+    PRIVATE
     "src/MainAppController"
 )
 
 target_link_libraries(
     tryOpenGL
-    PUBLIC
+    PRIVATE
     MainAppController
     ExternalLibraries
 )

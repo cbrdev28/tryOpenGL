@@ -68,11 +68,16 @@ add_library(
 )
 target_include_directories(
     imgui
-    SYSTEM PUBLIC
+    SYSTEM
+    PUBLIC
     ${imgui_SOURCE_DIR}
     ${imgui_SOURCE_DIR}/backends
 )
-target_link_libraries(imgui PUBLIC glfw)
+target_link_libraries(
+    imgui
+    PUBLIC
+    glfw
+)
 
 FetchContent_Declare(
     GSL
@@ -84,13 +89,8 @@ FetchContent_MakeAvailable(GSL)
 
 target_link_libraries(
     MainAppController
-    PRIVATE
-    GSL
-)
-
-target_link_libraries(
-    MainAppController 
     PUBLIC
+    GSL
     fmt::fmt
     glfw
     glm
@@ -100,8 +100,13 @@ target_link_libraries(
 target_include_directories(
     MainAppController
     SYSTEM
-    PUBLIC
+    PRIVATE
     "../../lib/include"
+)
+
+target_include_directories(
+    MainAppController
+    PUBLIC
     "managers"
     "common"
     "listeners"

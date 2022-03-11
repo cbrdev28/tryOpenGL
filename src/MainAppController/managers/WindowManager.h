@@ -55,11 +55,8 @@ class WindowManager {
  private:
   GLFWwindow* window_{nullptr};
 
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int width;
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static int height;
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static std::vector<WindowListener*> listeners_;
 
   /**

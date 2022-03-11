@@ -22,13 +22,8 @@ class MatrixHelper {
   static constexpr const float defaultNearPlane = 0.1F;
   static constexpr const float defaultFarPlane = 100.0F;
 
-  // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
   glm::mat4 model{identityMatrix};
-
-  // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
   glm::mat4 view{identityMatrix};
-
-  // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
   glm::mat4 projection{identityMatrix};
 
   /**

@@ -19,7 +19,7 @@ class Test {
   virtual void onRender() {}
   virtual void onImGuiRender() {}
 
-  auto getTestContext() -> const TestContext& { return testContext_; }
+  inline auto getTestContext() -> const TestContext& { return testContext_; }
 
  private:
   const TestContext& testContext_;

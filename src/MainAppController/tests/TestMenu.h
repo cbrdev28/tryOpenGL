@@ -13,12 +13,12 @@ class TestMenu : public Test {
   explicit TestMenu(const TestContext& ctx) : Test(ctx) {}
 
   template <typename S>
-  void registerTest(const std::string& name) {
+  inline void registerTest(const std::string& name) {
     tests_.push_back(std::make_pair(name, &TestMenu::newTest<S>));
   }
 
   template <typename T>
-  static auto newTest(const TestContext& ctx) -> gsl::owner<Test*> {
+  inline static auto newTest(const TestContext& ctx) -> gsl::owner<Test*> {
     return new T(ctx);
   }
 

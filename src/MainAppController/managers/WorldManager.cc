@@ -67,7 +67,6 @@ void WorldManager::onMoveBackward() {
                            basicCameraUp);
 }
 
-// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 void WorldManager::onResize(int width, int height) {
   matrixHelper_.updateProjection(static_cast<float>(width), static_cast<float>(height));
 }

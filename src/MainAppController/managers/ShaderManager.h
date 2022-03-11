@@ -16,7 +16,7 @@ struct ShaderProgramSource {
  */
 class ShaderManager {
  public:
-  explicit ShaderManager(const std::string& filepath);
+  explicit ShaderManager(std::string filepath);
   ~ShaderManager();
 
   ShaderManager(const ShaderManager& other) = delete;

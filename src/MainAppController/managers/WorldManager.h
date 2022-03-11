@@ -41,7 +41,7 @@ class WorldManager : public WindowListener, public KeyboardListener {
   void onMoveBackward() override;
   void onResize(int width, int height) override;
 
-  auto getBackGroundColor() -> std::vector<float>* { return &backgroundColor_; };
+  inline auto getBackGroundColor() -> std::vector<float>* { return &backgroundColor_; };
 
  private:
   Renderer renderer_;

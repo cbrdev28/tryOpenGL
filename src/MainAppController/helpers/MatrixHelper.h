@@ -37,7 +37,7 @@ class MatrixHelper {
    * @param width the width of the window
    * @param height the height of the window
    */
-  auto updateProjection(float width, float height) -> MatrixHelper& {
+  inline auto updateProjection(float width, float height) -> MatrixHelper& {
     projection = defaultPerspectiveMatrix(width, height);
     return *this;
   }
@@ -48,7 +48,7 @@ class MatrixHelper {
    * @param target the vector of the camera target
    * @param up the up vector
    */
-  auto updateView(glm::vec3 position, glm::vec3 target, glm::vec3 up) -> MatrixHelper& {
+  inline auto updateView(glm::vec3 position, glm::vec3 target, glm::vec3 up) -> MatrixHelper& {
     view = defaultLookAtMatrix(position, target, up);
     return *this;
   }

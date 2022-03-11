@@ -10,11 +10,11 @@
 #include <array>
 #include <fstream>
 #include <sstream>
+#include <utility>
 
 constexpr int SHADER_INFO_LOG = 512;
 
-// NOLINTNEXTLINE(modernize-pass-by-value)
-ShaderManager::ShaderManager(const std::string& filepath) : shaderFilePath_(filepath){};
+ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)){};
 
 ShaderManager::~ShaderManager() {
   if (vertexShaderID_ != 0) {
@@ -41,7 +41,6 @@ void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 
 void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
 
-// NOLINTNEXTLINE(readability-make-member-function-const)
 auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
   GLsizei matrixCount = 1;
   GLboolean transpose = GL_FALSE;
@@ -49,7 +48,6 @@ auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
   return *this;
 }
 
-// NOLINTNEXTLINE(readability-make-member-function-const)
 auto ShaderManager::setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager& {
   GLsizei matrixCount = 1;
   GLboolean transpose = GL_FALSE;
@@ -57,7 +55,6 @@ auto ShaderManager::setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager& {
   return *this;
 }
 
-// NOLINTNEXTLINE(readability-make-member-function-const)
 auto ShaderManager::setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager& {
   GLsizei matrixCount = 1;
   GLboolean transpose = GL_FALSE;

@@ -14,8 +14,8 @@ clang-format --style=file --verbose -i\
     ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
     ./src/MainAppController/common/*.cc ./src/MainAppController/common/*.h\
     ./src/MainAppController/helpers/*.cc ./src/MainAppController/helpers/*.h\
-    ./src/MainAppController/listeners/*.cc ./src/MainAppController/listeners/*.h\
+    ./src/MainAppController/listeners/*.h\
     ./src/MainAppController/managers/*.cc ./src/MainAppController/managers/*.h\
-    ./src/MainAppController/models/*.cc ./src/MainAppController/models/*.h\
+    ./src/MainAppController/models/*.h\
     ./src/MainAppController/tests/*.cc ./src/MainAppController/tests/*.h
 popd

@@ -5,7 +5,6 @@
 
 #include <fmt/core.h>
 #include <openGLErrorHelpers.h>
-#include <openGLHeaders.h>
 
 #include <array>
 #include <fstream>
@@ -30,10 +29,7 @@ ShaderManager::~ShaderManager() {
 
 auto ShaderManager::init() -> ShaderManager& {
   ShaderProgramSource shaderSources = parseShader();
-  this->compileVertex(shaderSources.vertexSource)
-      .compileFragment(shaderSources.fragmentSource)
-      .link()
-      .loadMatrixUniformLocations();
+  this->compileVertex(shaderSources.vertexSource).compileFragment(shaderSources.fragmentSource).link();
   return *this;
 }
 
@@ -41,31 +37,23 @@ void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 
 void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
 
-auto ShaderManager::setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager& {
-  GLsizei matrixCount = 1;
-  GLboolean transpose = GL_FALSE;
-  GLCall(glUniformMatrix4fv(modelMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(modelMatrix)));
-  return *this;
+auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
+  GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
+  if (uniformLocation == GL_INVALID_VALUE || uniformLocation == GL_INVALID_OPERATION) {
+    fmt::print("Failed to get uniform location for: {}\n", name);
+    throw -1;
+  }
+  return uniformLocation;
 }
 
-auto ShaderManager::setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager& {
-  GLsizei matrixCount = 1;
+void ShaderManager::setUniformMat4(const std::string& name, const glm::mat4& value) {
+  GLsizei count = 1;
   GLboolean transpose = GL_FALSE;
-  GLCall(glUniformMatrix4fv(viewMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(viewMatrix)));
-  return *this;
+  GLCall(glUniformMatrix4fv(this->getUniformLocation(name), count, transpose, glm::value_ptr(value)));
 }
 
-auto ShaderManager::setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager& {
-  GLsizei matrixCount = 1;
-  GLboolean transpose = GL_FALSE;
-  GLCall(
-      glUniformMatrix4fv(projectionMatrixUniformLocation_, matrixCount, transpose, glm::value_ptr(projectionMatrix)));
-  return *this;
-}
-
-auto ShaderManager::setTextureSampler(int value) -> ShaderManager& {
-  GLCall(glUniform1i(textureSamplerUniformLocation_, value));
-  return *this;
+void ShaderManager::setUniform1i(const std::string& name, const int value) {
+  GLCall(glUniform1i(this->getUniformLocation(name), value));
 }
 
 auto ShaderManager::parseShader() -> ShaderProgramSource {
@@ -160,33 +148,5 @@ auto ShaderManager::link() -> ShaderManager& {
   }
   GLCall(glDeleteShader(vertexShaderID_));
   GLCall(glDeleteShader(fragmentShaderID_));
-  return *this;
-}
-
-auto ShaderManager::loadMatrixUniformLocations() -> ShaderManager& {
-  modelMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "model");
-  if (modelMatrixUniformLocation_ == GL_INVALID_VALUE || modelMatrixUniformLocation_ == GL_INVALID_OPERATION) {
-    fmt::print("Failed to get uniform location for model matrix\n");
-    throw -1;
-  }
-
-  viewMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "view");
-  if (viewMatrixUniformLocation_ == GL_INVALID_VALUE || viewMatrixUniformLocation_ == GL_INVALID_OPERATION) {
-    fmt::print("Failed to get uniform location for view matrix\n");
-    throw -1;
-  }
-
-  projectionMatrixUniformLocation_ = glGetUniformLocation(shaderProgramID_, "projection");
-  if (projectionMatrixUniformLocation_ == GL_INVALID_VALUE ||
-      projectionMatrixUniformLocation_ == GL_INVALID_OPERATION) {
-    fmt::print("Failed to get uniform location for projection matrix\n");
-    throw -1;
-  }
-
-  textureSamplerUniformLocation_ = glGetUniformLocation(shaderProgramID_, "textureSampler");
-  if (textureSamplerUniformLocation_ == GL_INVALID_VALUE || textureSamplerUniformLocation_ == GL_INVALID_OPERATION) {
-    fmt::print("Failed to get uniform location for texture sampler\n");
-    throw -1;
-  }
   return *this;
 }

@@ -34,31 +34,9 @@ class ShaderManager {
   void bind() const;
   void unBind() const;
 
-  /**
-   * Helper to directly set the model matrix in the vertex shader
-   * @param modelMatrix the model matrix
-   * @return ShaderManager&
-   * @throw -1
-   */
-  auto setModelMatrix(glm::mat4 modelMatrix) -> ShaderManager&;
-
-  /**
-   * Helper to directly set the view matrix in the vertex shader
-   * @param viewMatrix the view matrix
-   * @return ShaderManager&
-   * @throw -1
-   */
-  auto setViewMatrix(glm::mat4 viewMatrix) -> ShaderManager&;
-
-  /**
-   * Helper to directly set the projection matrix in the vertex shader
-   * @param projectionMatrix the projection matrix
-   * @return ShaderManager&
-   * @throw -1
-   */
-  auto setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager&;
-
-  auto setTextureSampler(int value) -> ShaderManager&;
+  auto getUniformLocation(const std::string& name) -> GLint;
+  void setUniformMat4(const std::string& name, const glm::mat4& value);
+  void setUniform1i(const std::string& name, const int value);
 
  private:
   std::string shaderFilePath_;
@@ -66,11 +44,6 @@ class ShaderManager {
   unsigned int vertexShaderID_{0};
   unsigned int fragmentShaderID_{0};
   unsigned int shaderProgramID_{0};
-
-  GLint modelMatrixUniformLocation_{-1};
-  GLint viewMatrixUniformLocation_{-1};
-  GLint projectionMatrixUniformLocation_{-1};
-  GLint textureSamplerUniformLocation_{-1};
 
   /**
    * Parse shader from a file
@@ -107,13 +80,6 @@ class ShaderManager {
    * @throw -1
    */
   auto link() -> ShaderManager&;
-
-  /**
-   * Load matrix uniform locations from shader
-   * @return ShaderManager&
-   * @throw -1
-   */
-  auto loadMatrixUniformLocations() -> ShaderManager&;
 };
 
 #endif

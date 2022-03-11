@@ -39,11 +39,13 @@ TestTexture::TestTexture(const TestContext& ctx) : Test(ctx) {
   shader_->init();
   shader_->bind();
   glm::mat4 identityMatrix = glm::mat4{1.0F};
-  shader_->setModelMatrix(identityMatrix).setViewMatrix(identityMatrix).setProjectionMatrix(identityMatrix);
+  shader_->setUniformMat4("u_model", identityMatrix);
+  shader_->setUniformMat4("u_view", identityMatrix);
+  shader_->setUniformMat4("u_projection", identityMatrix);
 
   texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
   texture_->bind(0);
-  shader_->setTextureSampler(0);
+  shader_->setUniform1i("u_textureSampler", 0);
 
   va_->unBind();
   vb_->unBind();

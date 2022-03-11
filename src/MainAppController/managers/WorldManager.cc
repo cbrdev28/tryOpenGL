@@ -26,9 +26,9 @@ auto WorldManager::init(const float windowWidth, const float windowHeight) -> Wo
   // Set perspective in the projection matrix based on screen size
   matrixHelper_.updateProjection(windowWidth, windowHeight);
   shaderManager_.bind();
-  shaderManager_.setModelMatrix(matrixHelper_.model)
-      .setViewMatrix(matrixHelper_.view)
-      .setProjectionMatrix(matrixHelper_.projection);
+  shaderManager_.setUniformMat4("u_model", matrixHelper_.model);
+  shaderManager_.setUniformMat4("u_view", matrixHelper_.view);
+  shaderManager_.setUniformMat4("u_projection", matrixHelper_.projection);
 
   vao_->unBind();
   vbo_->unBind();
@@ -44,9 +44,9 @@ auto WorldManager::render() -> WorldManager& {
 
   shaderManager_.bind();
   // Update view matrix for camera movement
-  shaderManager_.setViewMatrix(matrixHelper_.view);
+  shaderManager_.setUniformMat4("u_view", matrixHelper_.view);
   // Update projection matrix for window size change & aspect ratio
-  shaderManager_.setProjectionMatrix(matrixHelper_.projection);
+  shaderManager_.setUniformMat4("u_projection", matrixHelper_.projection);
 
   renderer_.draw(shaderManager_, *vao_, *ibo_);
   return *this;

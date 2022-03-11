@@ -17,6 +17,7 @@ add_library(
     "common/Texture.cc"
     "tests/TestWorldManager.cc"
     "tests/TestMenu.cc"
+    "tests/TestTexture.cc"
 )
 
 target_include_directories(

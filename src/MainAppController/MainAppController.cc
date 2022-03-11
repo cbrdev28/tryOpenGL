@@ -4,6 +4,7 @@
 #include "MainAppController.h"
 
 #include <TestMenu.h>
+#include <TestTexture.h>
 #include <TestWorldManager.h>
 #include <fmt/core.h>
 
@@ -40,6 +41,7 @@ auto MainAppController::renderLoop() -> MainAppController& {
 
   test::TestMenu testMenu({windowManager_, inputManager_});
   testMenu.registerTest<test::TestWorldManager>("Test World");
+  testMenu.registerTest<test::TestTexture>("Test Texture?");
 
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {

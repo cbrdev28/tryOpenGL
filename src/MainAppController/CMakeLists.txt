@@ -18,6 +18,7 @@ add_library(
     "tests/TestWorldManager.cc"
     "tests/TestMenu.cc"
     "tests/TestTexture.cc"
+    "tests/TestBatchRender.cc"
 )
 
 target_include_directories(

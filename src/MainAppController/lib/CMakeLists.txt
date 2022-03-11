@@ -71,13 +71,15 @@ FetchContent_MakeAvailable(GSL)
 
 add_library(
     ExternalLibraries
-    "glad.c"
+    "glad/glad.c"
+    "stb_image/stb_image.cc"
 )
 
 target_include_directories(
     ExternalLibraries
     PUBLIC
-    "include/"
+    "glad/include/"
+    "stb_image/"
 )
 
 target_link_libraries(

@@ -38,11 +38,16 @@ void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
 void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
 
 auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
+  if (uniformLocationCache_.find(name) != uniformLocationCache_.end()) {
+    return uniformLocationCache_[name];
+  }
+
   GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
   if (uniformLocation == GL_INVALID_VALUE || uniformLocation == GL_INVALID_OPERATION) {
     fmt::print("Failed to get uniform location for: {}\n", name);
     throw -1;
   }
+  uniformLocationCache_[name] = uniformLocation;
   return uniformLocation;
 }
 

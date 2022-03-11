@@ -5,6 +5,7 @@
 #include <openGLHeaders.h>
 
 #include <string>
+#include <unordered_map>
 
 struct ShaderProgramSource {
   std::string vertexSource;
@@ -40,6 +41,7 @@ class ShaderManager {
 
  private:
   std::string shaderFilePath_;
+  std::unordered_map<std::string, GLint> uniformLocationCache_;
 
   unsigned int vertexShaderID_{0};
   unsigned int fragmentShaderID_{0};

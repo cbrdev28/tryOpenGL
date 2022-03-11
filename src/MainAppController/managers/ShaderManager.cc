@@ -63,6 +63,11 @@ auto ShaderManager::setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderMan
   return *this;
 }
 
+auto ShaderManager::setTextureSampler(int value) -> ShaderManager& {
+  GLCall(glUniform1i(textureSamplerUniformLocation_, value));
+  return *this;
+}
+
 auto ShaderManager::parseShader() -> ShaderProgramSource {
   enum class ShaderType {
     NONE = -1,
@@ -175,6 +180,12 @@ auto ShaderManager::loadMatrixUniformLocations() -> ShaderManager& {
   if (projectionMatrixUniformLocation_ == GL_INVALID_VALUE ||
       projectionMatrixUniformLocation_ == GL_INVALID_OPERATION) {
     fmt::print("Failed to get uniform location for projection matrix\n");
+    throw -1;
+  }
+
+  textureSamplerUniformLocation_ = glGetUniformLocation(shaderProgramID_, "textureSampler");
+  if (textureSamplerUniformLocation_ == GL_INVALID_VALUE || textureSamplerUniformLocation_ == GL_INVALID_OPERATION) {
+    fmt::print("Failed to get uniform location for texture sampler\n");
     throw -1;
   }
   return *this;

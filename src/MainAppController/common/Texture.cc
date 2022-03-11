@@ -22,13 +22,16 @@ Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
 
   if (localBuffer_ != nullptr) {
     stbi_image_free(localBuffer_);
+    localBuffer_ = nullptr;
   }
 }
 
 Texture::~Texture() {
   GLCall(glDeleteTextures(1, &identifier_));
+
   if (localBuffer_ != nullptr) {
     stbi_image_free(localBuffer_);
+    localBuffer_ = nullptr;
   }
 }
 

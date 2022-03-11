@@ -1,22 +1,21 @@
 #include "TestTexture.h"
 
+#include <VertexBufferLayout.h>
+#include <glmHeaders.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
 #include <vector>
-
-#include "VertexBufferLayout.h"
-#include "glm/fwd.hpp"
 
 namespace test {
 
 TestTexture::TestTexture(const TestContext& ctx) : Test(ctx) {
   std::vector<float> positions = {
       // clang-format off
-    -0.5F, -0.5F,
-    0.5F, -0.5F,
-    0.5F, 0.5F,
-    -0.5F, 0.5F,
+    -0.5F, -0.5F, 0.0F, 0.0F,
+    0.5F, -0.5F, 1.0F, 0.0F,
+    0.5F, 0.5F, 1.0F, 1.0F,
+    -0.5F, 0.5F, 0.0F, 1.0F
       // clang-format on
   };
   std::vector<unsigned int> indices = {
@@ -31,6 +30,7 @@ TestTexture::TestTexture(const TestContext& ctx) : Test(ctx) {
 
   VertexBufferLayout layout;
   layout.pushFloat(2);
+  layout.pushFloat(2);
   va_->addBuffer(*vb_, layout);
 
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
@@ -41,7 +41,9 @@ TestTexture::TestTexture(const TestContext& ctx) : Test(ctx) {
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setModelMatrix(identityMatrix).setViewMatrix(identityMatrix).setProjectionMatrix(identityMatrix);
 
-  // Maybe more
+  texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
+  texture_->bind(0);
+  shader_->setTextureSampler(0);
 
   va_->unBind();
   vb_->unBind();

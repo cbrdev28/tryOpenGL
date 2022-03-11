@@ -58,6 +58,8 @@ class ShaderManager {
    */
   auto setProjectionMatrix(glm::mat4 projectionMatrix) -> ShaderManager&;
 
+  auto setTextureSampler(int value) -> ShaderManager&;
+
  private:
   std::string shaderFilePath_;
 
@@ -68,6 +70,7 @@ class ShaderManager {
   GLint modelMatrixUniformLocation_{-1};
   GLint viewMatrixUniformLocation_{-1};
   GLint projectionMatrixUniformLocation_{-1};
+  GLint textureSamplerUniformLocation_{-1};
 
   /**
    * Parse shader from a file

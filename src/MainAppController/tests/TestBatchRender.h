@@ -32,6 +32,8 @@ class TestBatchRender : public Test {
   float zoom_{10.0F};
   float deltaX_{0.0F};
   float deltaY_{0.0F};
+  float fov_{45.0F};
+  bool usePerspective_{false};
 
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;
@@ -40,7 +42,7 @@ class TestBatchRender : public Test {
   std::unique_ptr<ShaderManager> shader_;
   std::unique_ptr<Texture> texture_;
 
-  void updateProjection();
+  void setViewProjection(bool usePerspective);
 };
 
 }  // namespace test

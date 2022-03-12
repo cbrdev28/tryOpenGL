@@ -32,7 +32,7 @@ class WindowManager {
   /**
    * Constants
    */
-  static const int defaultWidth = 1024;
+  static const int defaultWidth = 2048;
 
   /**
    * Initialize window manager: glfw, glad.

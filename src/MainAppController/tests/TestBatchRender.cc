@@ -48,9 +48,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   shader_->bind();
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);
-  shader_->setUniformMat4("u_view", identityMatrix);
-
-  this->updateProjection();
+  this->setViewProjection(usePerspective_);
 
   texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
   texture_->bind(0);
@@ -67,7 +65,7 @@ TestBatchRender::~TestBatchRender() = default;
 void TestBatchRender::onUpdate(float deltaTime) {}
 
 void TestBatchRender::onRender() {
-  this->updateProjection();
+  this->setViewProjection(usePerspective_);
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
   renderer_.draw(*shader_, *va_, *ib_);
 }
@@ -77,21 +75,41 @@ void TestBatchRender::onImGuiRender() {
   ImGui::Text("Window height: %d", this->getTestContext().windowManager.getHeight());
   ImGui::Text("%s", this->getTestContext().windowManager.getAspectRatio().formattedValue().c_str());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
-  ImGui::SliderFloat("Zoom", &zoom_, 1.0F, 100.0F, "WIP value = %.2f");
-  ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
-  ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
+  ImGui::Checkbox("Use perspective", &usePerspective_);
+  if (usePerspective_) {
+    ImGui::SliderFloat("FOV", &fov_, 1.0F, 180.0F, "WIP value = %.2f");
+  } else {
+    ImGui::SliderFloat("Zoom", &zoom_, 1.0F, 100.0F, "WIP value = %.2f");
+    ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
+    ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
+  }
 }
 
-void TestBatchRender::updateProjection() {
+void TestBatchRender::setViewProjection(bool usePerspective) {
   shader_->bind();
-  const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio;
-  const auto zoom = zoom_ * 0.1F;
-  const auto deltaX = deltaX_ * 0.1F;
-  const auto deltaY = deltaY_ * 0.1F;
-  const auto orthoX = 1.0F * zoom;
-  const auto orthoY = reversedAspectRatio * zoom;
-  shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + deltaX, orthoX + deltaX, (-orthoY) + deltaY,
-                                                     orthoY + deltaY, -1.0F, 1.0F));
+  if (usePerspective) {
+    glm::vec3 pos = {0.0F, 0.0F, 0.0F};
+    glm::vec3 target = {0.0F, 0.0F, -1.0F};
+    glm::vec3 up = {0.0F, 1.0F, 0.0F};
+    // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
+    glm::vec3 posOffset = {0.0F, -1.0F, 1.0F};
+    shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target, up));
+
+    const auto perspective =
+        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);
+    shader_->setUniformMat4("u_projection", perspective);
+  } else {
+    shader_->setUniformMat4("u_view", glm::mat4{1.0F});
+
+    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio;
+    const auto zoom = zoom_ * 0.1F;
+    const auto deltaX = deltaX_ * 0.1F;
+    const auto deltaY = deltaY_ * 0.1F;
+    const auto orthoX = 1.0F * zoom;
+    const auto orthoY = reversedAspectRatio * zoom;
+    shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + deltaX, orthoX + deltaX, (-orthoY) + deltaY,
+                                                       orthoY + deltaY, -1.0F, 1.0F));
+  }
 }
 
 }  // namespace test

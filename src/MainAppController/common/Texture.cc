@@ -6,7 +6,7 @@
 
 Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
   stbi_set_flip_vertically_on_load(1);
-  localBuffer_ = stbi_load(filePath_.c_str(), &width_, &height_, &bpp_, 4);  // 4 as RGBA
+  localBuffer_ = stbi_load(filePath_.c_str(), &width_, &height_, &bpp_, STBI_rgb_alpha);
   ASSERT(localBuffer_ != nullptr);
 
   GLCall(glGenTextures(1, &identifier_));

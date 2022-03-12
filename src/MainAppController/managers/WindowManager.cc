@@ -9,7 +9,7 @@
 
 // Initialize static class variables
 int WindowManager::width = WindowManager::defaultWidth;
-int WindowManager::height = WindowManager::defaultHeight;
+int WindowManager::height = 0;
 // Init to empty
 std::vector<WindowListener*> WindowManager::listeners_ = {};
 
@@ -38,9 +38,8 @@ auto WindowManager::init() -> WindowManager& {
 
   glfwSetErrorCallback(WindowManager::errorCallback);
 
-  const auto aspectRatioHeight = WindowManager::defaultWidth / aspectRatio_.ratio;
-  GLFWwindow* window = glfwCreateWindow(WindowManager::defaultWidth, static_cast<int>(aspectRatioHeight),
-                                        "WindowManager", nullptr, nullptr);
+  WindowManager::height = static_cast<int>(static_cast<float>(WindowManager::width) / aspectRatio_.ratio);
+  GLFWwindow* window = glfwCreateWindow(WindowManager::width, WindowManager::height, "WindowManager", nullptr, nullptr);
   if (window == nullptr) {
     fmt::print("Failed to glfwCreateWindow(...)\n");
     throw -1;

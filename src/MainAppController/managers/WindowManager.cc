@@ -45,6 +45,7 @@ auto WindowManager::init() -> WindowManager& {
     throw -1;
   }
   window_ = window;
+  glfwSetWindowAspectRatio(window, aspectRatio_.numerator, aspectRatio_.denominator);
   glfwMakeContextCurrent(window_);
 
   // NOLINTNEXTLINE(google-readability-casting, cppcoreguidelines-pro-type-cstyle-cast)

@@ -12,15 +12,15 @@ namespace test {
 TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   std::vector<float> positions = {
       // clang-format off
-    -1.5F, -0.5F, 0.0F, 0.0F,
-    -0.5F, -0.5F, 1.0F, 0.0F,
-    -0.5F, 0.5F, 1.0F, 1.0F,
-    -1.5F, 0.5F, 0.0F, 1.0F,
+    -0.75F, -0.25F, 0.0F, 0.0F,
+    -0.25F, -0.25F, 1.0F, 0.0F,
+    -0.25F, 0.25F, 1.0F, 1.0F,
+    -0.75F, 0.25F, 0.0F, 1.0F,
 
-    0.5F, -0.5F, 0.0F, 0.0F,
-    1.5F, -0.5F, 1.0F, 0.0F,
-    1.5F, 0.5F, 1.0F, 1.0F,
-    0.5F, 0.5F, 0.0F, 1.0F
+    0.0F, -0.5F, 0.0F, 0.0F,
+    1.0F, -0.5F, 1.0F, 0.0F,
+    1.0F, 0.5F, 1.0F, 1.0F,
+    0.0F, 0.5F, 0.0F, 1.0F
       // clang-format on
   };
   std::vector<unsigned int> indices = {
@@ -49,7 +49,9 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);
   shader_->setUniformMat4("u_view", identityMatrix);
-  shader_->setUniformMat4("u_projection", glm::ortho(-5.0F, 5.0F, -5.0F, 5.0F, -1.0F, 1.0F));
+  const auto reversedAspectRatio = 1.0F / ctx.windowManager.getAspectRatio().ratio;
+  shader_->setUniformMat4("u_projection",
+                          glm::ortho(-1.0F, 1.0F, -reversedAspectRatio, reversedAspectRatio, -1.0F, 1.0F));
 
   texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
   texture_->bind(0);
@@ -64,12 +66,18 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
 TestBatchRender::~TestBatchRender() = default;
 
 void TestBatchRender::onUpdate(float deltaTime) {}
+
 void TestBatchRender::onRender() {
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
   renderer_.draw(*shader_, *va_, *ib_);
 }
-void TestBatchRender::onImGuiRender() { ImGui::ColorEdit4("Color", backgroundColor_.data()); }
 
-void TestBatchRender::onResize(int /*width*/, int /*height*/) {}
+void TestBatchRender::onImGuiRender() {
+  ImGui::Text("Window width: %d", this->getTestContext().windowManager.getWidth());
+  ImGui::Text("Window height: %d", this->getTestContext().windowManager.getHeight());
+  ImGui::Text("%s", this->getTestContext().windowManager.getAspectRatio().formattedValue().c_str());
+  ImGui::ColorEdit4("Color", backgroundColor_.data());
+  ImGui::SliderFloat("Zoom", &zoom_, 1.0F, 100.0F, "WIP value = %.2f");
+}
 
 }  // namespace test

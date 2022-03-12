@@ -2,10 +2,19 @@
 #define WINDOW_MANAGER_H_
 
 #include <WindowListener.h>
+#include <fmt/core.h>
 #include <openGLHeaders.h>
 
 #include <algorithm>
+#include <string>
 #include <vector>
+
+struct AspectRatio {
+  int numerator{1};
+  int denominator{1};
+  float ratio{static_cast<float>(numerator) / static_cast<float>(denominator)};
+  auto formattedValue() -> std::string { return fmt::format("Ratio: {}/{}", numerator, denominator); }
+};
 
 /**
  * Window manager for glfw
@@ -38,6 +47,7 @@ class WindowManager {
 
   [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
   [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
+  [[nodiscard]] inline auto getAspectRatio() const -> AspectRatio { return aspectRatio_; };
 
   inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
@@ -54,6 +64,7 @@ class WindowManager {
 
  private:
   GLFWwindow* window_{nullptr};
+  AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
 
   static int width;
   static int height;

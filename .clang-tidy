@@ -15,4 +15,5 @@ Checks: >
     -cppcoreguidelines-avoid-non-const-global-variables,
     -misc-non-private-member-variables-in-classes,
     -cppcoreguidelines-interfaces-global-init,
-    -cppcoreguidelines-avoid-magic-numbers
+    -cppcoreguidelines-avoid-magic-numbers,
+    -cppcoreguidelines-pro-type-vararg

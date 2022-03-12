@@ -50,7 +50,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_model", identityMatrix);
   this->setViewProjection(usePerspective_);
 
-  texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
+  texture_ = std::make_unique<Texture>("../res/textures/wall.png");
   texture_->bind(0);
   shader_->setUniform1i("u_textureSampler", 0);
 

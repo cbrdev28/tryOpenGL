@@ -43,7 +43,7 @@ TestTexture::TestTexture(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_view", identityMatrix);
   shader_->setUniformMat4("u_projection", identityMatrix);
 
-  texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
+  texture_ = std::make_unique<Texture>("../res/textures/wall.png");
   texture_->bind(0);
   shader_->setUniform1i("u_textureSampler", 0);
 

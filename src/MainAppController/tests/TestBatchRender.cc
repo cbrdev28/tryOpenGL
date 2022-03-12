@@ -80,20 +80,22 @@ void TestBatchRender::onImGuiRender() {
     ImGui::SliderFloat("FOV", &fov_, 1.0F, 180.0F, "WIP value = %.2f");
   } else {
     ImGui::SliderFloat("Zoom", &zoom_, 1.0F, 100.0F, "WIP value = %.2f");
-    ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
-    ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
   }
+  ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
+  ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
 }
 
 void TestBatchRender::setViewProjection(bool usePerspective) {
   shader_->bind();
   if (usePerspective) {
-    glm::vec3 pos = {0.0F, 0.0F, 0.0F};
+    const auto deltaX = deltaX_ * 0.1F;
+    const auto deltaY = deltaY_ * 0.1F;
+    glm::vec3 pos = {0.0F + deltaX, 0.0F + deltaY, 0.0F};
     glm::vec3 target = {0.0F, 0.0F, -1.0F};
     glm::vec3 up = {0.0F, 1.0F, 0.0F};
     // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
     glm::vec3 posOffset = {0.0F, -1.0F, 1.0F};
-    shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target, up));
+    shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target + pos, up));
 
     const auto perspective =
         glm::perspective(glm::radians(fov_), this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);

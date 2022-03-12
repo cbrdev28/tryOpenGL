@@ -29,7 +29,7 @@ class TestBatchRender : public Test {
 
  private:
   std::vector<float> backgroundColor_ = {0.7F, 0.5F, 0.2F, 1.0F};
-  float zoom_{1.0F};
+  float zoom_{10.0F};
 
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;

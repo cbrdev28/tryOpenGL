@@ -50,8 +50,9 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_model", identityMatrix);
   shader_->setUniformMat4("u_view", identityMatrix);
   const auto reversedAspectRatio = 1.0F / ctx.windowManager.getAspectRatio().ratio;
-  shader_->setUniformMat4("u_projection",
-                          glm::ortho(-1.0F, 1.0F, -reversedAspectRatio, reversedAspectRatio, -1.0F, 1.0F));
+  const auto zoom = zoom_ * 0.1F;
+  shader_->setUniformMat4("u_projection", glm::ortho(-1.0F * zoom, 1.0F * zoom, -reversedAspectRatio * zoom,
+                                                     reversedAspectRatio * zoom, -1.0F, 1.0F));
 
   texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
   texture_->bind(0);
@@ -68,6 +69,11 @@ TestBatchRender::~TestBatchRender() = default;
 void TestBatchRender::onUpdate(float deltaTime) {}
 
 void TestBatchRender::onRender() {
+  shader_->bind();
+  const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio;
+  const auto zoom = zoom_ * 0.1F;
+  shader_->setUniformMat4("u_projection", glm::ortho(-1.0F * zoom, 1.0F * zoom, -reversedAspectRatio * zoom,
+                                                     reversedAspectRatio * zoom, -1.0F, 1.0F));
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
   renderer_.draw(*shader_, *va_, *ib_);
 }

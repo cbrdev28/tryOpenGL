@@ -38,8 +38,9 @@ auto WindowManager::init() -> WindowManager& {
 
   glfwSetErrorCallback(WindowManager::errorCallback);
 
-  GLFWwindow* window =
-      glfwCreateWindow(WindowManager::defaultWidth, WindowManager::defaultHeight, "WindowManager", nullptr, nullptr);
+  const auto aspectRatioHeight = WindowManager::defaultWidth / aspectRatio_.ratio;
+  GLFWwindow* window = glfwCreateWindow(WindowManager::defaultWidth, static_cast<int>(aspectRatioHeight),
+                                        "WindowManager", nullptr, nullptr);
   if (window == nullptr) {
     fmt::print("Failed to glfwCreateWindow(...)\n");
     throw -1;

@@ -119,4 +119,48 @@ void TestRenderTiles::setViewProjection(bool usePerspective) {
   }
 }
 
+auto TestRenderTiles::makeTileVertices(unsigned int count) -> std::vector<TileVertex> {
+  ASSERT(count < 256);
+  const float tileSize = 1.0F;
+  const float tileSpacing = 0.1F;
+  std::vector<TileVertex> allVertices = {};
+
+  for (unsigned int i = 0; i < count; i++) {
+    for (unsigned int j = 0; j < count; j++) {
+      const auto posX = (static_cast<float>(j) * tileSize) + tileSpacing;
+      const auto posY = (static_cast<float>(i) * tileSize) + tileSpacing;
+      TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, 0.0F};
+      TileVertex vertex2 = {{posX + tileSize, posY}, {1.0F, 0.0F}, 0.0F};
+      TileVertex vertex3 = {{posX + tileSize, posY + tileSize}, {1.0F, 1.0F}, 0.0F};
+      TileVertex vertex4 = {{posX, posY + tileSize}, {0.0F, 1.0F}, 0.0F};
+
+      allVertices.emplace_back(vertex1);
+      allVertices.emplace_back(vertex2);
+      allVertices.emplace_back(vertex3);
+      allVertices.emplace_back(vertex4);
+    }
+  }
+  return allVertices;
+}
+
+auto TestRenderTiles::makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int> {
+  const auto numOfVerticesPerTile = 4;
+  const auto numOfTiles = tileVertices.size() / numOfVerticesPerTile;
+  const auto numOfIndices = numOfTiles * 6;
+  std::vector<unsigned int> allIndices = {};
+  allIndices.reserve(numOfIndices);
+
+  for (int i = 0; i < numOfTiles; i++) {
+    const auto indiceIdx = i * numOfVerticesPerTile;
+    allIndices.emplace_back(indiceIdx + 0);
+    allIndices.emplace_back(indiceIdx + 1);
+    allIndices.emplace_back(indiceIdx + 2);
+    allIndices.emplace_back(indiceIdx + 2);
+    allIndices.emplace_back(indiceIdx + 3);
+    allIndices.emplace_back(indiceIdx + 0);
+  }
+
+  return allIndices;
+}
+
 }  // namespace test

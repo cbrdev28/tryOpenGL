@@ -6,6 +6,7 @@
 #include <ShaderManager.h>
 #include <Test.h>
 #include <Texture.h>
+#include <TileVertex.h>
 #include <VertexArray.h>
 #include <VertexBuffer.h>
 
@@ -44,6 +45,8 @@ class TestRenderTiles : public Test {
   std::unique_ptr<Texture> textureGrass_;
 
   void setViewProjection(bool usePerspective);
+  auto makeTileVertices(unsigned int count) -> std::vector<TileVertex>;
+  auto makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int>;
 };
 
 }  // namespace test

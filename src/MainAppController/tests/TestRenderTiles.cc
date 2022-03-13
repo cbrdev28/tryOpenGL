@@ -10,9 +10,9 @@
 namespace test {
 
 TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
-  std::vector<TileVertex> allTileVertices = this->makeTileVertices(4);
-  std::vector<unsigned int> allTileIndices = this->makeTileIndices(allTileVertices);
-  std::vector<float> serializedVertices = TileVertex::serialize(allTileVertices);
+  tileVertices_ = this->makeTileVertices(4);
+  std::vector<unsigned int> allTileIndices = this->makeTileIndices(tileVertices_);
+  std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
   va_ = std::make_unique<VertexArray>();
   vb_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
@@ -68,6 +68,9 @@ void TestRenderTiles::onImGuiRender() {
   }
   ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
   ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
+  ImGui::Text("Camera pos X: %.2f", cameraPosX_);
+  ImGui::Text("Camera pos Y: %.2f", cameraPosY_);
+  ImGui::Text("Base tile index: %d", this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_));
 }
 
 void TestRenderTiles::setViewProjection(bool usePerspective) {
@@ -75,7 +78,9 @@ void TestRenderTiles::setViewProjection(bool usePerspective) {
   if (usePerspective) {
     const auto deltaX = deltaX_ * 0.1F;
     const auto deltaY = deltaY_ * 0.1F;
-    glm::vec3 pos = {0.0F + deltaX, 0.0F + deltaY, 0.0F};
+    cameraPosX_ = deltaX;
+    cameraPosY_ = deltaY;
+    glm::vec3 pos = {cameraPosX_, cameraPosY_, 0.0F};
     glm::vec3 target = {0.0F, 0.0F, -1.0F};
     glm::vec3 up = {0.0F, 1.0F, 0.0F};
     // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
@@ -92,10 +97,12 @@ void TestRenderTiles::setViewProjection(bool usePerspective) {
     const auto zoom = zoom_ * 0.1F;
     const auto deltaX = deltaX_ * 0.1F;
     const auto deltaY = deltaY_ * 0.1F;
+    cameraPosX_ = deltaX;
+    cameraPosY_ = deltaY;
     const auto orthoX = 1.0F * zoom;
     const auto orthoY = reversedAspectRatio * zoom;
-    shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + deltaX, orthoX + deltaX, (-orthoY) + deltaY,
-                                                       orthoY + deltaY, -1.0F, 1.0F));
+    shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
+                                                       (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
   }
 }
 
@@ -143,6 +150,28 @@ auto TestRenderTiles::makeTileIndices(const std::vector<TileVertex>& tileVertice
   }
 
   return allIndices;
+}
+
+auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int {
+  const auto numOfVertexForTile = 4;
+  const auto numOfTile = vertices.size() / numOfVertexForTile;
+
+  for (int i = 0; i < numOfTile; i++) {
+    const auto vertex1Idx = i * numOfVertexForTile + 0;
+    const auto vertex3Idx = i * numOfVertexForTile + 2;
+    ASSERT(vertex1Idx < vertices.size());
+    ASSERT(vertex3Idx < vertices.size());
+
+    const auto& vertex1 = vertices[vertex1Idx];
+    const auto& vertex3 = vertices[vertex3Idx];
+
+    if (posX >= vertex1.positions[0] && posX <= vertex3.positions[0]) {
+      if (posY >= vertex1.positions[1] && posY <= vertex3.positions[1]) {
+        return vertex1Idx;
+      }
+    }
+  }
+  return -1;
 }
 
 }  // namespace test

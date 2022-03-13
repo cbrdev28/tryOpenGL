@@ -36,6 +36,10 @@ class TestRenderTiles : public Test {
   float fov_{45.0F};
   bool usePerspective_{false};
 
+  float cameraPosX_{0.0F};
+  float cameraPosY_{0.0F};
+  std::vector<TileVertex> tileVertices_{};
+
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vb_;
@@ -47,6 +51,7 @@ class TestRenderTiles : public Test {
   void setViewProjection(bool usePerspective);
   auto makeTileVertices(unsigned int count) -> std::vector<TileVertex>;
   auto makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int>;
+  auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;
 };
 
 }  // namespace test

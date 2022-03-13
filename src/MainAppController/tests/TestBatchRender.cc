@@ -12,15 +12,16 @@ namespace test {
 TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   std::vector<float> positions = {
       // clang-format off
-    -0.75F, -0.25F, 0.0F, 0.0F,
-    -0.25F, -0.25F, 1.0F, 0.0F,
-    -0.25F, 0.25F, 1.0F, 1.0F,
-    -0.75F, 0.25F, 0.0F, 1.0F,
+    // 2 coords, 2 texture coord, 1 texture id
+    -0.75F, -0.25F,  0.0F, 0.0F,  0.0F,
+    -0.25F, -0.25F,  1.0F, 0.0F,  0.0F,
+    -0.25F, 0.25F,  1.0F, 1.0F,  0.0F,
+    -0.75F, 0.25F,  0.0F, 1.0F,  0.0F,
 
-    0.0F, -0.5F, 0.0F, 0.0F,
-    1.0F, -0.5F, 1.0F, 0.0F,
-    1.0F, 0.5F, 1.0F, 1.0F,
-    0.0F, 0.5F, 0.0F, 1.0F
+    0.0F, -0.5F,  0.0F, 0.0F,  1.0F,
+    1.0F, -0.5F,  1.0F, 0.0F,  1.0F,
+    1.0F, 0.5F,  1.0F, 1.0F,  1.0F,
+    0.0F, 0.5F,  0.0F, 1.0F,  1.0F
       // clang-format on
   };
   std::vector<unsigned int> indices = {
@@ -39,6 +40,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   VertexBufferLayout layout;
   layout.pushFloat(2);
   layout.pushFloat(2);
+  layout.pushFloat(1);
   va_->addBuffer(*vb_, layout);
 
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
@@ -50,9 +52,12 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_model", identityMatrix);
   this->setViewProjection(usePerspective_);
 
-  texture_ = std::make_unique<Texture>("../res/textures/wall_texture.png");
-  texture_->bind(0);
-  shader_->setUniform1i("u_textureSampler", 0);
+  textureGrass_ = std::make_unique<Texture>("../res/textures/grass.png");
+  textureWall_ = std::make_unique<Texture>("../res/textures/wall.png");
+  textureWall_->bind(0);
+  textureGrass_->bind(1);
+  // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
+  shader_->setUniform1iv("u_textureSamplers", {0, 1});
 
   va_->unBind();
   vb_->unBind();

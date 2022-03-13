@@ -40,8 +40,7 @@ class TestBatchRender : public Test {
   std::unique_ptr<VertexBuffer> vb_;
   std::unique_ptr<IndexBuffer> ib_;
   std::unique_ptr<ShaderManager> shader_;
-  std::unique_ptr<Texture> textureWall_;
-  std::unique_ptr<Texture> textureGrass_;
+  std::unique_ptr<Texture> texture_;
 
   void setViewProjection(bool usePerspective);
 };

@@ -61,10 +61,6 @@ void ShaderManager::setUniform1i(const std::string& name, const int value) {
   GLCall(glUniform1i(this->getUniformLocation(name), value));
 }
 
-void ShaderManager::setUniform1iv(const std::string& name, const std::vector<int>& values) {
-  GLCall(glUniform1iv(this->getUniformLocation(name), values.size(), values.data()));
-}
-
 auto ShaderManager::parseShader() -> ShaderProgramSource {
   enum class ShaderType {
     NONE = -1,

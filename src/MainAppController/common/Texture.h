@@ -8,7 +8,7 @@ class Texture {
   unsigned int identifier_{0};
   std::string filePath_;
   unsigned char* localBuffer_{nullptr};
-  int width_{0}, height_{0}, channelsInFile_{0};
+  int width_{0}, height_{0}, bpp_{0};
 
  public:
   explicit Texture(std::string filePath);

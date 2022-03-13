@@ -6,7 +6,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 struct ShaderProgramSource {
   std::string vertexSource;
@@ -39,7 +38,6 @@ class ShaderManager {
   auto getUniformLocation(const std::string& name) -> GLint;
   void setUniformMat4(const std::string& name, const glm::mat4& value);
   void setUniform1i(const std::string& name, const int value);
-  void setUniform1iv(const std::string& name, const std::vector<int>& values);
 
  private:
   std::string shaderFilePath_;

@@ -107,8 +107,8 @@ auto TestRenderTiles::makeTileVertices(unsigned int count) -> std::vector<TileVe
 
   for (unsigned int i = 0; i < count; i++) {
     for (unsigned int j = 0; j < count; j++) {
-      const auto posX = (static_cast<float>(j) * tileSize) + tileSpacing;
-      const auto posY = (static_cast<float>(i) * tileSize) + tileSpacing;
+      const auto posX = static_cast<float>(j) * (tileSize + tileSpacing);
+      const auto posY = static_cast<float>(i) * (tileSize + tileSpacing);
       TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, 0.0F};
       TileVertex vertex2 = {{posX + tileSize, posY}, {1.0F, 0.0F}, 0.0F};
       TileVertex vertex3 = {{posX + tileSize, posY + tileSize}, {1.0F, 1.0F}, 0.0F};

@@ -10,40 +10,20 @@
 namespace test {
 
 TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
-  std::vector<float> positions = {
-      // clang-format off
-    // 2 coords, 2 texture coord, 1 texture id
-    -0.5F, -0.25F,  0.0F, 0.0F,  0.0F,
-    -0.0F, -0.25F,  1.0F, 0.0F,  0.0F,
-    -0.0F, 0.25F,  1.0F, 1.0F,  0.0F,
-    -0.5F, 0.25F,  0.0F, 1.0F,  0.0F,
-
-    0.0F, -0.5F,  0.0F, 0.0F,  1.0F,
-    1.0F, -0.5F,  1.0F, 0.0F,  1.0F,
-    1.0F, 0.5F,  1.0F, 1.0F,  1.0F,
-    0.0F, 0.5F,  0.0F, 1.0F,  1.0F
-      // clang-format on
-  };
-  std::vector<unsigned int> indices = {
-      // clang-format off
-    0, 1, 2,
-    2, 3, 0,
-
-    4, 5, 6,
-    6, 7, 4
-      // clang-format on
-  };
+  std::vector<TileVertex> allTileVertices = this->makeTileVertices(4);
+  std::vector<unsigned int> allTileIndices = this->makeTileIndices(allTileVertices);
+  std::vector<float> serializedVertices = TileVertex::serialize(allTileVertices);
 
   va_ = std::make_unique<VertexArray>();
-  vb_ = std::make_unique<VertexBuffer>(positions.data(), positions.size() * sizeof(float));
+  vb_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
 
   VertexBufferLayout layout;
-  layout.pushFloat(2);
-  layout.pushFloat(2);
-  layout.pushFloat(1);
+  layout.pushFloat(TileVertex::posCount);
+  layout.pushFloat(TileVertex::textureCoordCount);
+  layout.pushFloat(1);  // TileVertex textureIdx
   va_->addBuffer(*vb_, layout);
 
-  ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
+  ib_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
 
   shader_ = std::make_unique<ShaderManager>("../res/shaders/test_texture.shader");
   shader_->init();
@@ -102,8 +82,8 @@ void TestRenderTiles::setViewProjection(bool usePerspective) {
     glm::vec3 posOffset = {0.0F, -1.0F, 1.0F};
     shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target + pos, up));
 
-    const auto perspective =
-        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);
+    const auto perspective = glm::perspective(
+        glm::radians(fov_), 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);
     shader_->setUniformMat4("u_projection", perspective);
   } else {
     shader_->setUniformMat4("u_view", glm::mat4{1.0F});

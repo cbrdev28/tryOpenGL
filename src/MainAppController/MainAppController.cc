@@ -5,6 +5,7 @@
 
 #include <TestBatchRender.h>
 #include <TestMenu.h>
+#include <TestRenderTiles.h>
 #include <TestTexture.h>
 #include <TestWorldManager.h>
 #include <fmt/core.h>
@@ -44,6 +45,7 @@ auto MainAppController::renderLoop() -> MainAppController& {
   testMenu.registerTest<test::TestWorldManager>("Test World");
   testMenu.registerTest<test::TestTexture>("Test Texture?");
   testMenu.registerTest<test::TestBatchRender>("Test Batch Rendering");
+  testMenu.registerTest<test::TestRenderTiles>("Test Render Tiles");
 
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {

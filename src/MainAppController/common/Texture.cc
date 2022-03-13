@@ -48,7 +48,35 @@ Texture::~Texture() {
 }
 
 void Texture::bind(unsigned int slot /* = 0 */) const {
-  GLCall(glActiveTexture(GL_TEXTURE0 + slot));
+  const auto maxSlotSupported = 8;
+  ASSERT(slot < maxSlotSupported);
+
+  switch (slot) {
+    case 0:
+      GLCall(glActiveTexture(GL_TEXTURE0));
+      break;
+    case 1:
+      GLCall(glActiveTexture(GL_TEXTURE1));
+      break;
+    case 2:
+      GLCall(glActiveTexture(GL_TEXTURE2));
+      break;
+    case 3:
+      GLCall(glActiveTexture(GL_TEXTURE3));
+      break;
+    case 4:
+      GLCall(glActiveTexture(GL_TEXTURE4));
+      break;
+    case 5:
+      GLCall(glActiveTexture(GL_TEXTURE5));
+      break;
+    case 6:
+      GLCall(glActiveTexture(GL_TEXTURE6));
+      break;
+    case 7:
+      GLCall(glActiveTexture(GL_TEXTURE7));
+      break;
+  }
   GLCall(glBindTexture(GL_TEXTURE_2D, identifier_));
 }
 

@@ -43,7 +43,7 @@ auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
   }
 
   GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
-  if (uniformLocation == GL_INVALID_VALUE || uniformLocation == GL_INVALID_OPERATION) {
+  if (uniformLocation == -1) {
     fmt::print("Failed to get uniform location for: {}\n", name);
     throw -1;
   }

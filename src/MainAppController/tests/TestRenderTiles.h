@@ -19,6 +19,8 @@ class TestRenderTiles : public Test {
   static constexpr unsigned int maxTilesVertices = 64;
   static constexpr float tileSize = 1.0F;
   static constexpr float tileSpacing = 0.1F;
+  static constexpr unsigned int verticesPerTile = 4;
+  static constexpr unsigned int indicesPerTile = 6;
 
  public:
   explicit TestRenderTiles(const TestContext& ctx);
@@ -55,7 +57,7 @@ class TestRenderTiles : public Test {
 
   void setViewProjection(bool usePerspective);
   auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
-  auto makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int>;
+  auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;
 };
 

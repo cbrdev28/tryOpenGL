@@ -12,7 +12,7 @@ namespace test {
 
 TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
   tileVertices_ = this->makeTilesVertices(4);
-  std::vector<unsigned int> allTileIndices = this->makeTileIndices(tileVertices_);
+  std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
   va_ = std::make_unique<VertexArray>();
@@ -136,15 +136,16 @@ auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVe
   return allVertices;
 }
 
-auto TestRenderTiles::makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int> {
-  const auto numOfVerticesPerTile = 4;
-  const auto numOfTiles = tileVertices.size() / numOfVerticesPerTile;
-  const auto numOfIndices = numOfTiles * 6;
-  std::vector<unsigned int> allIndices = {};
-  allIndices.reserve(numOfIndices);
+auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int> {
+  const auto tilesCount = tileVerticesCount / TestRenderTiles::verticesPerTile;
+  const auto indicesCount = tilesCount * TestRenderTiles::indicesPerTile;
 
-  for (int i = 0; i < numOfTiles; i++) {
-    const auto indiceIdx = i * numOfVerticesPerTile;
+  std::vector<unsigned int> allIndices = {};
+  allIndices.reserve(indicesCount);
+
+  for (int i = 0; i < tilesCount; i++) {
+    const auto indiceIdx = i * TestRenderTiles::verticesPerTile;
+    ASSERT(indiceIdx + 3 < indicesCount);
     allIndices.emplace_back(indiceIdx + 0);
     allIndices.emplace_back(indiceIdx + 1);
     allIndices.emplace_back(indiceIdx + 2);

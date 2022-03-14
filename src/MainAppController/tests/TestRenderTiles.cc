@@ -10,7 +10,10 @@
 namespace test {
 
 TestRenderTiles::TestRenderTiles(const TestContext& ctx)
-    : Test(ctx), aspectRatio_(ctx.windowManager->getAspectRatio()), reversedAspectRatio_(aspectRatio_.reversed()) {
+    : Test(ctx),
+      aspectRatio_(ctx.windowManager->getAspectRatio()),
+      reversedAspectRatio_(aspectRatio_.reversed()),
+      currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
   tileVertices_ = this->makeTilesVertices(4);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
@@ -47,10 +50,12 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
 
 TestRenderTiles::~TestRenderTiles() = default;
 
-void TestRenderTiles::onUpdate(float deltaTime) {}
+void TestRenderTiles::onUpdate(float /*deltaTime*/) {
+  this->setViewProjection(usePerspective_);
+  currentCameraTileIdx_ = this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_);
+}
 
 void TestRenderTiles::onRender() {
-  this->setViewProjection(usePerspective_);
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
   renderer_.draw(*shader_, *va_, *ib_);
 }
@@ -70,7 +75,7 @@ void TestRenderTiles::onImGuiRender() {
   ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
   ImGui::Text("Camera pos X: %.2f", cameraPosX_);
   ImGui::Text("Camera pos Y: %.2f", cameraPosY_);
-  ImGui::Text("Base tile index: %d", this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_));
+  ImGui::Text("Base tile index: %d", currentCameraTileIdx_);
 }
 
 void TestRenderTiles::setViewProjection(bool usePerspective) {

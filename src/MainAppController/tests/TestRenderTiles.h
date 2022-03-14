@@ -54,6 +54,7 @@ class TestRenderTiles : public Test {
   float cameraPosX_{0.0F};
   float cameraPosY_{0.0F};
   std::vector<TileVertex> tileVertices_{};
+  int currentCameraTileIdx_ = -1;
 
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;

@@ -1,20 +1,12 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
+#include <AspectRatio.h>
 #include <WindowListener.h>
-#include <fmt/core.h>
 #include <openGLHeaders.h>
 
 #include <algorithm>
-#include <string>
 #include <vector>
-
-struct AspectRatio {
-  int numerator{1};
-  int denominator{1};
-  float ratio{static_cast<float>(numerator) / static_cast<float>(denominator)};
-  auto formattedValue() -> std::string { return fmt::format("Ratio: {}/{}", numerator, denominator); }
-};
 
 /**
  * Window manager for glfw

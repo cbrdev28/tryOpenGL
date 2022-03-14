@@ -2,7 +2,6 @@
 
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
-#include <glmHeaders.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
@@ -10,7 +9,8 @@
 
 namespace test {
 
-TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
+TestRenderTiles::TestRenderTiles(const TestContext& ctx)
+    : Test(ctx), aspectRatio_(ctx.windowManager->getAspectRatio()), reversedAspectRatio_(aspectRatio_.reversed()) {
   tileVertices_ = this->makeTilesVertices(4);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
@@ -58,7 +58,7 @@ void TestRenderTiles::onRender() {
 void TestRenderTiles::onImGuiRender() {
   ImGui::Text("Window width: %d", this->getTestContext().windowManager->getWidth());
   ImGui::Text("Window height: %d", this->getTestContext().windowManager->getHeight());
-  ImGui::Text("%s", this->getTestContext().windowManager->getAspectRatio().formattedValue().c_str());
+  ImGui::Text("%s", aspectRatio_.formattedValue().c_str());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
   ImGui::Checkbox("Use perspective", &usePerspective_);
   if (usePerspective_) {
@@ -75,32 +75,23 @@ void TestRenderTiles::onImGuiRender() {
 
 void TestRenderTiles::setViewProjection(bool usePerspective) {
   shader_->bind();
-  if (usePerspective) {
-    const auto deltaX = deltaX_ * 0.1F;
-    const auto deltaY = deltaY_ * 0.1F;
-    cameraPosX_ = deltaX;
-    cameraPosY_ = deltaY;
-    glm::vec3 pos = {cameraPosX_, cameraPosY_, 0.0F};
-    glm::vec3 target = {0.0F, 0.0F, -1.0F};
-    glm::vec3 up = {0.0F, 1.0F, 0.0F};
-    // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
-    glm::vec3 posOffset = {0.0F, -1.0F, 1.0F};
-    shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target + pos, up));
+  cameraPosX_ = deltaX_ * 0.1F;
+  cameraPosY_ = deltaY_ * 0.1F;
 
-    const auto perspective = glm::perspective(
-        glm::radians(fov_), 1.0F / this->getTestContext().windowManager->getAspectRatio().ratio, 0.0F, 10.0F);
+  if (usePerspective) {
+    glm::vec3 pos = {cameraPosX_, cameraPosY_, 0.0F};
+    shader_->setUniformMat4(
+        "u_view", glm::lookAt(pos + TestRenderTiles::perspectiveLookAtPositionOffset,
+                              TestRenderTiles::perspectiveLookAtTarget + pos, TestRenderTiles::perspectiveLookAtUp));
+
+    const auto perspective = glm::perspective(glm::radians(fov_), reversedAspectRatio_, 0.0F, 10.0F);
     shader_->setUniformMat4("u_projection", perspective);
   } else {
-    shader_->setUniformMat4("u_view", glm::mat4{1.0F});
+    shader_->setUniformMat4("u_view", MatrixHelper::identityMatrix);
 
-    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager->getAspectRatio().ratio;
     const auto zoom = zoom_ * 0.1F;
-    const auto deltaX = deltaX_ * 0.1F;
-    const auto deltaY = deltaY_ * 0.1F;
-    cameraPosX_ = deltaX;
-    cameraPosY_ = deltaY;
     const auto orthoX = 1.0F * zoom;
-    const auto orthoY = reversedAspectRatio * zoom;
+    const auto orthoY = reversedAspectRatio_ * zoom;
     shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
                                                        (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
   }

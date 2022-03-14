@@ -165,8 +165,8 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     const auto& vertex1 = vertices[vertex1Idx];
     const auto& vertex3 = vertices[vertex3Idx];
 
-    if (posX >= vertex1.positions[0] && posX <= vertex3.positions[0]) {
-      if (posY >= vertex1.positions[1] && posY <= vertex3.positions[1]) {
+    if (posX >= (vertex1.positions[0] - TestRenderTiles::tileSpacing) && posX <= vertex3.positions[0]) {
+      if (posY >= (vertex1.positions[1] - TestRenderTiles::tileSpacing) && posY <= vertex3.positions[1]) {
         return static_cast<int>(vertex1Idx);
       }
     }

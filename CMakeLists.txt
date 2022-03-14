@@ -33,6 +33,9 @@ configure_file("res/shaders/test_batch_render.shader" ${CMAKE_BINARY_DIR} COPYON
 configure_file("res/shaders/test_render_tiles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file("res/shaders/test_texture.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 
+configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
+
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()

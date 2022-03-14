@@ -52,8 +52,8 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_model", identityMatrix);
   this->setViewProjection(usePerspective_);
 
-  textureGrass_ = std::make_unique<Texture>("../res/textures/grass.png");
-  textureWall_ = std::make_unique<Texture>("../res/textures/wall.png");
+  textureGrass_ = std::make_unique<Texture>("grass.png");
+  textureWall_ = std::make_unique<Texture>("wall.png");
   textureWall_->bind(0);
   textureGrass_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)

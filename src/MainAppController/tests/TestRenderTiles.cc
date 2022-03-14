@@ -35,8 +35,8 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_);
 
-  textureGrass_ = std::make_unique<Texture>("../res/textures/grass.png");
-  textureWall_ = std::make_unique<Texture>("../res/textures/wall.png");
+  textureGrass_ = std::make_unique<Texture>("grass.png");
+  textureWall_ = std::make_unique<Texture>("wall.png");
   textureGrass_->bind(0);
   textureWall_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)

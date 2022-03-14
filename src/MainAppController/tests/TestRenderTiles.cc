@@ -1,5 +1,6 @@
 #include "TestRenderTiles.h"
 
+#include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
 #include <glmHeaders.h>
 #include <imgui.h>
@@ -10,7 +11,7 @@
 namespace test {
 
 TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
-  tileVertices_ = this->makeTileVertices(4);
+  tileVertices_ = this->makeTilesVertices(4);
   std::vector<unsigned int> allTileIndices = this->makeTileIndices(tileVertices_);
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
@@ -28,8 +29,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx) : Test(ctx) {
   shader_ = std::make_unique<ShaderManager>("../res/shaders/test_render_tiles.shader");
   shader_->init();
   shader_->bind();
-  glm::mat4 identityMatrix = glm::mat4{1.0F};
-  shader_->setUniformMat4("u_model", identityMatrix);
+  shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_);
 
   textureGrass_ = std::make_unique<Texture>("../res/textures/grass.png");
@@ -106,22 +106,26 @@ void TestRenderTiles::setViewProjection(bool usePerspective) {
   }
 }
 
-auto TestRenderTiles::makeTileVertices(unsigned int count) -> std::vector<TileVertex> {
-  ASSERT(count < 256);
-  const float tileSize = 1.0F;
-  const float tileSpacing = 0.1F;
-  std::vector<TileVertex> allVertices = {};
+auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {
+  ASSERT(size < TestRenderTiles::maxTilesVertices);
+  // Note: how to check for overflow?
+  const auto totalVertices = size * size;
 
-  for (unsigned int i = 0; i < count; i++) {
-    for (unsigned int j = 0; j < count; j++) {
-      auto posX = static_cast<float>(j) * (tileSize + tileSpacing);
-      posX = posX - (static_cast<float>(count) / 2.0F);
-      auto posY = static_cast<float>(i) * (tileSize + tileSpacing);
-      posY = posY - (static_cast<float>(count) / 2.0F);
+  std::vector<TileVertex> allVertices = {};
+  allVertices.reserve(totalVertices);
+
+  for (unsigned int i = 0; i < size; i++) {
+    for (unsigned int j = 0; j < size; j++) {
+      auto posX = static_cast<float>(j) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
+      posX = posX - (static_cast<float>(size) / 2.0F);  // To center the grid of tiles
+
+      auto posY = static_cast<float>(i) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
+      posY = posY - (static_cast<float>(size) / 2.0F);  // To center the grid of tiles
+
       TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, 0.0F};
-      TileVertex vertex2 = {{posX + tileSize, posY}, {1.0F, 0.0F}, 0.0F};
-      TileVertex vertex3 = {{posX + tileSize, posY + tileSize}, {1.0F, 1.0F}, 0.0F};
-      TileVertex vertex4 = {{posX, posY + tileSize}, {0.0F, 1.0F}, 0.0F};
+      TileVertex vertex2 = {{posX + TestRenderTiles::tileSize, posY}, {1.0F, 0.0F}, 0.0F};
+      TileVertex vertex3 = {{posX + TestRenderTiles::tileSize, posY + TestRenderTiles::tileSize}, {1.0F, 1.0F}, 0.0F};
+      TileVertex vertex4 = {{posX, posY + TestRenderTiles::tileSize}, {0.0F, 1.0F}, 0.0F};
 
       allVertices.emplace_back(vertex1);
       allVertices.emplace_back(vertex2);

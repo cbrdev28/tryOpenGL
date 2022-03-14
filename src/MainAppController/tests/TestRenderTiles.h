@@ -16,6 +16,11 @@ namespace test {
 
 class TestRenderTiles : public Test {
  public:
+  static constexpr unsigned int maxTilesVertices = 64;
+  static constexpr float tileSize = 1.0F;
+  static constexpr float tileSpacing = 0.1F;
+
+ public:
   explicit TestRenderTiles(const TestContext& ctx);
   ~TestRenderTiles() override;
 
@@ -49,7 +54,7 @@ class TestRenderTiles : public Test {
   std::unique_ptr<Texture> textureGrass_;
 
   void setViewProjection(bool usePerspective);
-  auto makeTileVertices(unsigned int count) -> std::vector<TileVertex>;
+  auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
   auto makeTileIndices(const std::vector<TileVertex>& tileVertices) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;
 };

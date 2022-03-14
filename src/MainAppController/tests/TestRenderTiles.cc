@@ -202,8 +202,9 @@ auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::v
 }
 
 auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int {
-  const auto tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
-  auto maxCount = tilesCount;
+  const unsigned int tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
+  unsigned int maxCount = tilesCount;
+  unsigned int startCount = 0;
 
   // We only try to optimize if there is a "large" amount of tiles
   if (tilesCount > 16) {
@@ -214,10 +215,15 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     if (posY < 0) {
       // Search only for half the count (plus the number for one more row/column)
       maxCount = (tilesCount / 2) + TestRenderTiles::gridRowColumnCount;
+    } else if (posY >= 0) {
+      // Skip first half (minus the number for one row/column)
+      startCount = (tilesCount / 2) - TestRenderTiles::gridRowColumnCount;
     }
   }
+  ASSERT(startCount >= 0);
+  ASSERT(maxCount <= tilesCount);
 
-  for (int i = 0; i < maxCount; i++) {
+  for (unsigned int i = startCount; i < maxCount; i++) {
     const auto vertex1Idx = i * TestRenderTiles::verticesPerTile + 0;
     const auto vertex3Idx = i * TestRenderTiles::verticesPerTile + 2;
     ASSERT(vertex1Idx < vertices.size());

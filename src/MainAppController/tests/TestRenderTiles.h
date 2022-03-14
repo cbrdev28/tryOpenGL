@@ -70,6 +70,7 @@ class TestRenderTiles : public Test {
   std::unique_ptr<ShaderManager> shader2_;
 
   void setViewProjection(bool usePerspective, ShaderManager& shader);
+  void setModel(ShaderManager& shader);
   auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;

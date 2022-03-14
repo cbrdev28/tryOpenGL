@@ -15,7 +15,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
       currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
-  tileVertices_ = this->makeTilesVertices(4);
+  tileVertices_ = this->makeTilesVertices(8);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
@@ -73,9 +73,13 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
 TestRenderTiles::~TestRenderTiles() = default;
 
 void TestRenderTiles::onUpdate(float /*deltaTime*/) {
+  cameraPosX_ = deltaX_ * 0.1F;
+  cameraPosY_ = deltaY_ * 0.1F;
+
   this->setViewProjection(usePerspective_, *shader1_);
   shader1_->unBind();
   this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
   shader2_->unBind();
   currentCameraTileIdx_ = this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_);
 }
@@ -106,8 +110,6 @@ void TestRenderTiles::onImGuiRender() {
 
 void TestRenderTiles::setViewProjection(bool usePerspective, ShaderManager& shader) {
   shader.bind();
-  cameraPosX_ = deltaX_ * 0.1F;
-  cameraPosY_ = deltaY_ * 0.1F;
 
   if (usePerspective) {
     glm::vec3 pos = {cameraPosX_, cameraPosY_, 0.0F};
@@ -126,6 +128,12 @@ void TestRenderTiles::setViewProjection(bool usePerspective, ShaderManager& shad
     shader.setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
                                                      (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
   }
+}
+
+void TestRenderTiles::setModel(ShaderManager& shader) {
+  shader.bind();
+  const auto model = glm::translate(MatrixHelper::identityMatrix, glm::vec3(cameraPosX_, cameraPosY_, 0.0F));
+  shader.setUniformMat4("u_model", model);
 }
 
 auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {

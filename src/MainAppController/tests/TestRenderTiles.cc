@@ -2,6 +2,7 @@
 
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
+#include <basicTriangle.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
@@ -18,46 +19,69 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
-  va_ = std::make_unique<VertexArray>();
-  vb_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
+  va1_ = std::make_unique<VertexArray>();
+  vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
 
   VertexBufferLayout layout;
   layout.pushFloat(TileVertex::posCount);
   layout.pushFloat(TileVertex::textureCoordCount);
   layout.pushFloat(1);  // TileVertex textureIdx
-  va_->addBuffer(*vb_, layout);
+  va1_->addBuffer(*vb1_, layout);
 
-  ib_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
+  ib1_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
 
-  shader_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
-  shader_->init();
-  shader_->bind();
-  shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
-  this->setViewProjection(usePerspective_);
+  shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
+  shader1_->init();
+  shader1_->bind();
+  shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
+  this->setViewProjection(usePerspective_, *shader1_);
 
   textureGrass_ = std::make_unique<Texture>("grass.png");
   textureWall_ = std::make_unique<Texture>("wall.png");
   textureGrass_->bind(0);
   textureWall_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
-  shader_->setUniform1iv("u_textureSamplers", {0, 1});
+  shader1_->setUniform1iv("u_textureSamplers", {0, 1});
 
-  va_->unBind();
-  vb_->unBind();
-  ib_->unBind();
-  shader_->unBind();
+  va1_->unBind();
+  vb1_->unBind();
+  ib1_->unBind();
+  shader1_->unBind();
+
+  va2_ = std::make_unique<VertexArray>();
+  vb2_ = std::make_unique<VertexBuffer>(basicTriangleIndicedVertices.data(),
+                                        basicTriangleVerticesSizeOf * basicTriangleIndicedVertices.size());
+
+  VertexBufferLayout layout2;
+  layout2.pushFloat(basicTriangleVertexSize);
+  va2_->addBuffer(*vb2_, layout2);
+
+  ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
+
+  shader2_ = std::make_unique<ShaderManager>("basic.shader");
+  shader2_->init();
+  shader2_->bind();
+  shader2_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
+  this->setViewProjection(usePerspective_, *shader2_);
+
+  va2_->unBind();
+  vb2_->unBind();
+  ib2_->unBind();
+  shader2_->unBind();
 }
 
 TestRenderTiles::~TestRenderTiles() = default;
 
 void TestRenderTiles::onUpdate(float /*deltaTime*/) {
-  this->setViewProjection(usePerspective_);
+  this->setViewProjection(usePerspective_, *shader1_);
+  this->setViewProjection(usePerspective_, *shader2_);
   currentCameraTileIdx_ = this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_);
 }
 
 void TestRenderTiles::onRender() {
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
-  renderer_.draw(*shader_, *va_, *ib_);
+  renderer_.draw(*shader1_, *va1_, *ib1_);
+  renderer_.draw(*shader2_, *va2_, *ib2_);
 }
 
 void TestRenderTiles::onImGuiRender() {
@@ -78,27 +102,27 @@ void TestRenderTiles::onImGuiRender() {
   ImGui::Text("Base tile index: %d", currentCameraTileIdx_);
 }
 
-void TestRenderTiles::setViewProjection(bool usePerspective) {
-  shader_->bind();
+void TestRenderTiles::setViewProjection(bool usePerspective, ShaderManager& shader) {
+  shader.bind();
   cameraPosX_ = deltaX_ * 0.1F;
   cameraPosY_ = deltaY_ * 0.1F;
 
   if (usePerspective) {
     glm::vec3 pos = {cameraPosX_, cameraPosY_, 0.0F};
-    shader_->setUniformMat4(
+    shader.setUniformMat4(
         "u_view", glm::lookAt(pos + TestRenderTiles::perspectiveLookAtPositionOffset,
                               TestRenderTiles::perspectiveLookAtTarget + pos, TestRenderTiles::perspectiveLookAtUp));
 
     const auto perspective = glm::perspective(glm::radians(fov_), reversedAspectRatio_, 0.0F, 10.0F);
-    shader_->setUniformMat4("u_projection", perspective);
+    shader.setUniformMat4("u_projection", perspective);
   } else {
-    shader_->setUniformMat4("u_view", MatrixHelper::identityMatrix);
+    shader.setUniformMat4("u_view", MatrixHelper::identityMatrix);
 
     const auto zoom = zoom_ * 0.1F;
     const auto orthoX = 1.0F * zoom;
     const auto orthoY = reversedAspectRatio_ * zoom;
-    shader_->setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
-                                                       (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
+    shader.setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
+                                                     (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
   }
 }
 

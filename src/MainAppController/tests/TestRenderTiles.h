@@ -57,14 +57,19 @@ class TestRenderTiles : public Test {
   int currentCameraTileIdx_ = -1;
 
   Renderer renderer_;
-  std::unique_ptr<VertexArray> va_;
-  std::unique_ptr<VertexBuffer> vb_;
-  std::unique_ptr<IndexBuffer> ib_;
-  std::unique_ptr<ShaderManager> shader_;
+  std::unique_ptr<VertexArray> va1_;
+  std::unique_ptr<VertexBuffer> vb1_;
+  std::unique_ptr<IndexBuffer> ib1_;
+  std::unique_ptr<ShaderManager> shader1_;
   std::unique_ptr<Texture> textureWall_;
   std::unique_ptr<Texture> textureGrass_;
 
-  void setViewProjection(bool usePerspective);
+  std::unique_ptr<VertexArray> va2_;
+  std::unique_ptr<VertexBuffer> vb2_;
+  std::unique_ptr<IndexBuffer> ib2_;
+  std::unique_ptr<ShaderManager> shader2_;
+
+  void setViewProjection(bool usePerspective, ShaderManager& shader);
   auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;

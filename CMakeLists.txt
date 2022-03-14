@@ -28,8 +28,8 @@ target_link_libraries(
     MainAppController
 )
 
-# NOTE: I don't know if I should update the install steps
-# with the MainAppController library
+# configure_file("res/shaders/basic.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+
 install(TARGETS tryOpenGL DESTINATION bin)
 
 enable_testing()

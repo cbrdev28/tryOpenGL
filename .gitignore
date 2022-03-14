@@ -2,3 +2,4 @@ build/
 .vscode/
 # Used by cland (deamon to run clang-format & clang-tidy)
 .cache/
+imgui.ini

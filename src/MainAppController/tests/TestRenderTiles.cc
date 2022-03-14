@@ -73,15 +73,22 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
 TestRenderTiles::~TestRenderTiles() = default;
 
 void TestRenderTiles::onUpdate(float /*deltaTime*/) {
-  cameraPosX_ = deltaX_ * 0.1F;
-  cameraPosY_ = deltaY_ * 0.1F;
+  const auto nextCameraPosX = deltaX_ * 0.1F;
+  const auto nextCameraPosY = deltaY_ * 0.1F;
+  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, nextCameraPosY, tileVertices_);
+  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+    // Collision with "wall" tile (or out of grid)
+  } else {
+    cameraPosX_ = nextCameraPosX;
+    cameraPosY_ = nextCameraPosY;
+    currentCameraTileIdx_ = nextPosTileIdx;
+  }
 
   this->setViewProjection(usePerspective_, *shader1_);
   shader1_->unBind();
   this->setViewProjection(usePerspective_, *shader2_);
   this->setModel(*shader2_);
   shader2_->unBind();
-  currentCameraTileIdx_ = this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_);
 }
 
 void TestRenderTiles::onRender() {

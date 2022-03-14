@@ -45,7 +45,7 @@ class WorldManager : public WindowListener, public KeyboardListener {
 
  private:
   Renderer renderer_;
-  ShaderManager shaderManager_{"../res/shaders/basic.shader"};
+  ShaderManager shaderManager_{"basic.shader"};
   MatrixHelper matrixHelper_;
 
   std::unique_ptr<VertexBuffer> vbo_;

@@ -28,7 +28,10 @@ target_link_libraries(
     MainAppController
 )
 
-# configure_file("res/shaders/basic.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/basic.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_batch_render.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_render_tiles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_texture.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 
 install(TARGETS tryOpenGL DESTINATION bin)
 

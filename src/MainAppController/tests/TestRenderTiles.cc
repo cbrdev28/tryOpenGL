@@ -29,7 +29,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
 
   ib_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
 
-  shader_ = std::make_unique<ShaderManager>("../res/shaders/test_render_tiles.shader");
+  shader_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
   shader_->init();
   shader_->bind();
   shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);

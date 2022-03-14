@@ -76,9 +76,9 @@ void TestBatchRender::onRender() {
 }
 
 void TestBatchRender::onImGuiRender() {
-  ImGui::Text("Window width: %d", this->getTestContext().windowManager.getWidth());
-  ImGui::Text("Window height: %d", this->getTestContext().windowManager.getHeight());
-  ImGui::Text("%s", this->getTestContext().windowManager.getAspectRatio().formattedValue().c_str());
+  ImGui::Text("Window width: %d", this->getTestContext().windowManager->getWidth());
+  ImGui::Text("Window height: %d", this->getTestContext().windowManager->getHeight());
+  ImGui::Text("%s", this->getTestContext().windowManager->getAspectRatio().formattedValue().c_str());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
   ImGui::Checkbox("Use perspective", &usePerspective_);
   if (usePerspective_) {
@@ -103,12 +103,12 @@ void TestBatchRender::setViewProjection(bool usePerspective) {
     shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target + pos, up));
 
     const auto perspective =
-        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);
+        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager->getAspectRatio().ratio, 0.0F, 10.0F);
     shader_->setUniformMat4("u_projection", perspective);
   } else {
     shader_->setUniformMat4("u_view", glm::mat4{1.0F});
 
-    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio;
+    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager->getAspectRatio().ratio;
     const auto zoom = zoom_ * 0.1F;
     const auto deltaX = deltaX_ * 0.1F;
     const auto deltaY = deltaY_ * 0.1F;

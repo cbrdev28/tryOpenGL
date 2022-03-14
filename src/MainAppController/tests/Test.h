@@ -15,7 +15,7 @@ class Test {
   auto operator=(const Test& other) -> Test& = delete;
   auto operator=(Test&& other) -> Test& = delete;
 
-  virtual void onUpdate(float deltaTime) {}
+  virtual void onUpdate(float /* deltaTime */) {}
   virtual void onRender() {}
   virtual void onImGuiRender() {}
 

@@ -4,7 +4,6 @@
 #include "MainAppController.h"
 
 #include <TestBatchRender.h>
-#include <TestMenu.h>
 #include <TestRenderTiles.h>
 #include <TestTexture.h>
 #include <TestWorldManager.h>
@@ -32,6 +31,11 @@ auto MainAppController::init() -> int {
     windowManager_.init();
     inputManager_.init();
     imGuiManager_.init();
+
+    testMenu_.registerTest<test::TestWorldManager>("Test World");
+    testMenu_.registerTest<test::TestTexture>("Test Texture?");
+    testMenu_.registerTest<test::TestBatchRender>("Test Batch Rendering");
+    testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
   } catch (int error) {
     return -1;
   }
@@ -41,21 +45,15 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  test::TestMenu testMenu({windowManager_, inputManager_});
-  testMenu.registerTest<test::TestWorldManager>("Test World");
-  testMenu.registerTest<test::TestTexture>("Test Texture?");
-  testMenu.registerTest<test::TestBatchRender>("Test Batch Rendering");
-  testMenu.registerTest<test::TestRenderTiles>("Test Render Tiles");
-
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
     renderer_.clear();
     imGuiManager_.renderFrame();
 
-    testMenu.onUpdate(0.0F);
-    testMenu.onRender();
-    testMenu.onImGuiRender();
+    testMenu_.onUpdate(0.0F);
+    testMenu_.onRender();
+    testMenu_.onImGuiRender();
 
     // imGuiManager_.renderExample();
     imGuiManager_.render();

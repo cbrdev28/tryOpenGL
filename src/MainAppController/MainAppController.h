@@ -4,6 +4,8 @@
 #include <ImGuiManager.h>
 #include <InputManager.h>
 #include <Renderer.h>
+#include <TestContext.h>
+#include <TestMenu.h>
 #include <WindowManager.h>
 
 /**
@@ -35,6 +37,8 @@ class MainAppController {
   InputManager inputManager_{windowManager_};
   ImGuiManager imGuiManager_{windowManager_};
   Renderer renderer_;
+  test::TestContext testCtx_{&windowManager_, &inputManager_};
+  test::TestMenu testMenu_{testCtx_};
 
   /**
    * Initialize the app & managers

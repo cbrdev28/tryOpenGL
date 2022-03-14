@@ -154,12 +154,11 @@ auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::v
 }
 
 auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int {
-  const auto numOfVertexForTile = 4;
-  const auto numOfTile = vertices.size() / numOfVertexForTile;
+  const auto tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
 
-  for (int i = 0; i < numOfTile; i++) {
-    const auto vertex1Idx = i * numOfVertexForTile + 0;
-    const auto vertex3Idx = i * numOfVertexForTile + 2;
+  for (int i = 0; i < tilesCount; i++) {
+    const auto vertex1Idx = i * TestRenderTiles::verticesPerTile + 0;
+    const auto vertex3Idx = i * TestRenderTiles::verticesPerTile + 2;
     ASSERT(vertex1Idx < vertices.size());
     ASSERT(vertex3Idx < vertices.size());
 
@@ -168,7 +167,7 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
 
     if (posX >= vertex1.positions[0] && posX <= vertex3.positions[0]) {
       if (posY >= vertex1.positions[1] && posY <= vertex3.positions[1]) {
-        return vertex1Idx;
+        return static_cast<int>(vertex1Idx);
       }
     }
   }

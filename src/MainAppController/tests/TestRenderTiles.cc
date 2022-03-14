@@ -15,7 +15,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
       currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
-  tileVertices_ = this->makeTilesVertices(8);
+  tileVertices_ = this->makeTilesVertices(TestRenderTiles::gridRowColumnCount);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
@@ -203,8 +203,21 @@ auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::v
 
 auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int {
   const auto tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
+  auto maxCount = tilesCount;
 
-  for (int i = 0; i < tilesCount; i++) {
+  // We only try to optimize if there is a "large" amount of tiles
+  if (tilesCount > 16) {
+    ASSERT(tilesCount == TestRenderTiles::gridSize);
+    // We know/hope our grid is centered at coordinate 0/0
+    // So if the position of the camera is negative on Y axis,
+    // it means we "should" only search in the bottom rows of our tile grid
+    if (posY < 0) {
+      // Search only for half the count (plus the number for one more row/column)
+      maxCount = (tilesCount / 2) + TestRenderTiles::gridRowColumnCount;
+    }
+  }
+
+  for (int i = 0; i < maxCount; i++) {
     const auto vertex1Idx = i * TestRenderTiles::verticesPerTile + 0;
     const auto vertex3Idx = i * TestRenderTiles::verticesPerTile + 2;
     ASSERT(vertex1Idx < vertices.size());

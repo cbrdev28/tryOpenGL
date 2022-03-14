@@ -27,6 +27,8 @@ class TestRenderTiles : public Test {
   static constexpr glm::vec3 perspectiveLookAtUp = {0.0F, 1.0F, 0.0F};
   // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
   static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -1.0F, 2.0F};
+  static constexpr unsigned int gridRowColumnCount = 8;
+  static constexpr unsigned int gridSize = gridRowColumnCount * gridRowColumnCount;
 
  public:
   explicit TestRenderTiles(const TestContext& ctx);

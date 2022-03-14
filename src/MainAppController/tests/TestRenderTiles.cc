@@ -74,7 +74,9 @@ TestRenderTiles::~TestRenderTiles() = default;
 
 void TestRenderTiles::onUpdate(float /*deltaTime*/) {
   this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
   this->setViewProjection(usePerspective_, *shader2_);
+  shader2_->unBind();
   currentCameraTileIdx_ = this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_);
 }
 

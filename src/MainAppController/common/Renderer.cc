@@ -8,13 +8,13 @@ auto Renderer::clear() -> Renderer& {
   return *this;
 }
 
-auto Renderer::draw(const ShaderManager& shaders, const VertexArray& va, const IndexBuffer& ib) -> Renderer& {
+auto Renderer::draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer& {
   shaders.bind();
   va.bind();
   ib.bind();
   GLCall(glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr));
-  shaders.unBind();
-  va.unBind();
   ib.unBind();
+  va.unBind();
+  shaders.unBind();
   return *this;
 }

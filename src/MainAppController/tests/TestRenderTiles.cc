@@ -152,10 +152,17 @@ auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVe
       auto posY = static_cast<float>(i) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
       posY = posY - (static_cast<float>(size) / 2.0F);  // To center the grid of tiles
 
-      TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, 0.0F};
-      TileVertex vertex2 = {{posX + TestRenderTiles::tileSize, posY}, {1.0F, 0.0F}, 0.0F};
-      TileVertex vertex3 = {{posX + TestRenderTiles::tileSize, posY + TestRenderTiles::tileSize}, {1.0F, 1.0F}, 0.0F};
-      TileVertex vertex4 = {{posX, posY + TestRenderTiles::tileSize}, {0.0F, 1.0F}, 0.0F};
+      float tileTextureId = 0.0F;
+      if (j == 0 || j == size - 1 || i == 0 || i == size - 1) {
+        // Draw "wall" texture on the edge of the grid
+        tileTextureId = 1.0F;
+      }
+
+      TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, tileTextureId};
+      TileVertex vertex2 = {{posX + TestRenderTiles::tileSize, posY}, {1.0F, 0.0F}, tileTextureId};
+      TileVertex vertex3 = {
+          {posX + TestRenderTiles::tileSize, posY + TestRenderTiles::tileSize}, {1.0F, 1.0F}, tileTextureId};
+      TileVertex vertex4 = {{posX, posY + TestRenderTiles::tileSize}, {0.0F, 1.0F}, tileTextureId};
 
       allVertices.emplace_back(vertex1);
       allVertices.emplace_back(vertex2);

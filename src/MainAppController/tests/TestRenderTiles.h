@@ -3,6 +3,7 @@
 
 #include <AspectRatio.h>
 #include <IndexBuffer.h>
+#include <KeyboardListener.h>
 #include <Renderer.h>
 #include <ShaderManager.h>
 #include <Test.h>
@@ -16,7 +17,7 @@
 
 namespace test {
 
-class TestRenderTiles : public Test {
+class TestRenderTiles : public Test, public KeyboardListener {
  public:
   static constexpr unsigned int maxGridSize = 64;
   static constexpr float tileSize = 1.0F;
@@ -29,6 +30,7 @@ class TestRenderTiles : public Test {
   static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -0.5F, 5.0F};
   static constexpr unsigned int gridRowColumnCount = 9;
   static constexpr unsigned int gridSize = gridRowColumnCount * gridRowColumnCount;
+  static constexpr float defaultCameraSpeed = 5.0F;
 
  public:
   explicit TestRenderTiles(const TestContext& ctx);
@@ -43,15 +45,23 @@ class TestRenderTiles : public Test {
   void onRender() override;
   void onImGuiRender() override;
 
+  void onMoveForward() override;
+  void onMoveBackward() override;
+  void onMoveLeft() override;
+  void onMoveRight() override;
+  void onZoomIn() override;
+  void onZoomOut() override;
+
  private:
   std::vector<float> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
-  float zoom_{100.0F};
+  float zoom_{10.0F};
   float deltaX_{0.0F};
   float deltaY_{0.0F};
   float fov_{90.0F};
-  AspectRatio aspectRatio_;
+  AspectRatio& aspectRatio_;
   float reversedAspectRatio_{aspectRatio_.reversed()};
   bool usePerspective_{false};
+  float frameDeltaTime_{0.0F};
 
   float cameraPosX_{0.0F};
   float cameraPosY_{0.0F};

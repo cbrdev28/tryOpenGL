@@ -68,28 +68,13 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   vb2_->unBind();
   ib2_->unBind();
   shader2_->unBind();
+
+  ctx.inputManager->addKeyboardListener(this);
 }
 
-TestRenderTiles::~TestRenderTiles() = default;
+TestRenderTiles::~TestRenderTiles() { this->getTestContext().inputManager->removeKeyboardListener(this); }
 
-void TestRenderTiles::onUpdate(float /*deltaTime*/) {
-  const auto nextCameraPosX = deltaX_ * 0.1F;
-  const auto nextCameraPosY = deltaY_ * 0.1F;
-  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, nextCameraPosY, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
-    // Collision with "wall" tile (or out of grid)
-  } else {
-    cameraPosX_ = nextCameraPosX;
-    cameraPosY_ = nextCameraPosY;
-    currentCameraTileIdx_ = nextPosTileIdx;
-  }
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
-}
+void TestRenderTiles::onUpdate(float deltaTime) { frameDeltaTime_ = deltaTime; }
 
 void TestRenderTiles::onRender() {
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
@@ -100,16 +85,12 @@ void TestRenderTiles::onRender() {
 void TestRenderTiles::onImGuiRender() {
   ImGui::Text("Window width: %d", this->getTestContext().windowManager->getWidth());
   ImGui::Text("Window height: %d", this->getTestContext().windowManager->getHeight());
+  ImGui::Text("Delta frame: %.3f", frameDeltaTime_);
+  ImGui::Text("FPS: %.2f", 1.0F / frameDeltaTime_);
   ImGui::Text("%s", aspectRatio_.formattedValue().c_str());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
+
   ImGui::Checkbox("Use perspective", &usePerspective_);
-  if (usePerspective_) {
-    ImGui::SliderFloat("FOV", &fov_, 1.0F, 180.0F, "WIP value = %.2f");
-  } else {
-    ImGui::SliderFloat("Zoom", &zoom_, 1.0F, 100.0F, "WIP value = %.2f");
-  }
-  ImGui::SliderFloat("Delta X", &deltaX_, -100.0F, 100.0F, "WIP value = %.2f");
-  ImGui::SliderFloat("Delta Y", &deltaY_, -100.0F, 100.0F, "WIP value = %.2f");
   ImGui::Text("Camera pos X: %.2f", cameraPosX_);
   ImGui::Text("Camera pos Y: %.2f", cameraPosY_);
   ImGui::Text("Base tile index: %d", currentCameraTileIdx_);
@@ -129,9 +110,8 @@ void TestRenderTiles::setViewProjection(bool usePerspective, ShaderManager& shad
   } else {
     shader.setUniformMat4("u_view", MatrixHelper::identityMatrix);
 
-    const auto zoom = zoom_ * 0.1F;
-    const auto orthoX = 1.0F * zoom;
-    const auto orthoY = reversedAspectRatio_ * zoom;
+    const auto orthoX = 1.0F * zoom_;
+    const auto orthoY = reversedAspectRatio_ * zoom_;
     shader.setUniformMat4("u_projection", glm::ortho((-orthoX) + cameraPosX_, orthoX + cameraPosX_,
                                                      (-orthoY) + cameraPosY_, orthoY + cameraPosY_, -1.0F, 1.0F));
   }
@@ -141,6 +121,102 @@ void TestRenderTiles::setModel(ShaderManager& shader) {
   shader.bind();
   const auto model = glm::translate(MatrixHelper::identityMatrix, glm::vec3(cameraPosX_, cameraPosY_, 0.0F));
   shader.setUniformMat4("u_model", model);
+}
+
+void TestRenderTiles::onMoveForward() {
+  const auto nextCameraPosY = cameraPosY_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
+  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+    // Collision with "wall" tile (or out of grid)
+  } else {
+    currentCameraTileIdx_ = nextPosTileIdx;
+    cameraPosY_ = nextCameraPosY;
+  }
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+}
+
+void TestRenderTiles::onMoveBackward() {
+  const auto nextCameraPosY = cameraPosY_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
+  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+    // Collision with "wall" tile (or out of grid)
+  } else {
+    currentCameraTileIdx_ = nextPosTileIdx;
+    cameraPosY_ = nextCameraPosY;
+  }
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+}
+
+void TestRenderTiles::onMoveLeft() {
+  const auto nextCameraPosX = cameraPosX_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
+  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+    // Collision with "wall" tile (or out of grid)
+  } else {
+    currentCameraTileIdx_ = nextPosTileIdx;
+    cameraPosX_ = nextCameraPosX;
+  }
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+}
+
+void TestRenderTiles::onMoveRight() {
+  const auto nextCameraPosX = cameraPosX_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
+  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+    // Collision with "wall" tile (or out of grid)
+  } else {
+    currentCameraTileIdx_ = nextPosTileIdx;
+    cameraPosX_ = nextCameraPosX;
+  }
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+}
+
+void TestRenderTiles::onZoomIn() {
+  zoom_ = zoom_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  fov_ = fov_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+}
+
+void TestRenderTiles::onZoomOut() {
+  zoom_ = zoom_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+  fov_ = fov_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
+
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
 }
 
 auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {

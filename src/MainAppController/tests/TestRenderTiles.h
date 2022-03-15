@@ -55,8 +55,6 @@ class TestRenderTiles : public Test, public KeyboardListener {
  private:
   std::vector<float> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
   float zoom_{10.0F};
-  float deltaX_{0.0F};
-  float deltaY_{0.0F};
   float fov_{90.0F};
   AspectRatio& aspectRatio_;
   float reversedAspectRatio_{aspectRatio_.reversed()};

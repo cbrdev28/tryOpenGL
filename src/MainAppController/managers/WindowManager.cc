@@ -12,9 +12,7 @@
 // Initialize static class variables
 int WindowManager::width = WindowManager::defaultWidth;
 int WindowManager::height = 0;
-// Init to empty
-std::vector<WindowListener*> WindowManager::listeners_ = {};
-std::vector<KeyboardListener*> WindowManager::keyboardListeners_ = {};
+std::vector<WindowListener*> WindowManager::listeners_ = {};  // Init to empty
 
 WindowManager::~WindowManager() {
   if (window_ != nullptr) {
@@ -65,17 +63,12 @@ auto WindowManager::init() -> WindowManager& {
 auto WindowManager::getWindow() const -> GLFWwindow* { return window_; }
 
 void WindowManager::updateWindowStats() {
-  // Stat update
   auto nowTime = std::chrono::steady_clock::now();
   windowStats_.frameDeltaTime =
       std::chrono::duration_cast<std::chrono::duration<float>>(nowTime - windowStats_.endTime);
   windowStats_.endTime = nowTime;
   ++windowStats_.frameCount;
 }
-
-/**
- * Private
- */
 
 /**
  * Callback
@@ -96,18 +89,15 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width,
   // fmt::print("framebufferSizeCallback testSize = {}", testSize);
 }
 
-void WindowManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
   // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
+
   // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
   //   // Pressed Alt + Enter
   // }
-  const int modMask = GLFW_MOD_SHIFT | GLFW_MOD_CONTROL | GLFW_MOD_ALT | GLFW_MOD_SUPER;
 
-  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & modMask) == 0)) {
+  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
     glfwSetWindowShouldClose(window, 1 /* true */);
-  }
-
-  for (KeyboardListener* listener : WindowManager::keyboardListeners_) {
   }
 }
 

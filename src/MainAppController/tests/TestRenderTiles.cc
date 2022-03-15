@@ -3,7 +3,6 @@
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
 #include <basicTriangle.h>
-#include <fmt/core.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
@@ -229,13 +228,21 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     if (!optimizeThreshold) {
       continue;
     } else {
+      const auto idxLine = i % TestRenderTiles::gridRowColumnCount;
       if (posX < 0.0F) {
         // Skip tiles at the end of lines
-        const auto idxLine = i % TestRenderTiles::gridRowColumnCount;
         // If we passed at least half of the line
         if (idxLine > TestRenderTiles::gridRowColumnCount / 2) {
           // Bump current "i" index to finish the line
           const auto offset = TestRenderTiles::gridRowColumnCount - idxLine - 1;
+          i = i + offset;
+        }
+      } else if (posX >= 0.0F) {
+        // Skip tiles from the beginning of lines
+        // If we are still at least in the first half
+        if (idxLine < TestRenderTiles::gridRowColumnCount / 2) {
+          // Bump current "i" index to the middle of line
+          const auto offset = (TestRenderTiles::gridRowColumnCount / 2) - 1;
           i = i + offset;
         }
       }

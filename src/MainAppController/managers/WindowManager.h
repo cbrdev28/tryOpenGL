@@ -3,6 +3,7 @@
 
 #include <AspectRatio.h>
 #include <WindowListener.h>
+#include <WindowStats.h>
 #include <openGLHeaders.h>
 
 #include <algorithm>
@@ -38,7 +39,8 @@ class WindowManager {
 
   [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
   [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
-  [[nodiscard]] inline auto getAspectRatio() const -> AspectRatio { return aspectRatio_; };
+  [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
+  [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
 
   inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
@@ -53,9 +55,12 @@ class WindowManager {
     return *this;
   }
 
+  void updateWindowStats();
+
  private:
   GLFWwindow* window_{nullptr};
   AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
+  WindowStats windowStats_;
 
   static int width;
   static int height;

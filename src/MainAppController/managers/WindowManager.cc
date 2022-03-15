@@ -7,6 +7,8 @@
 #include <openGLErrorHelpers.h>
 #include <openGLHeaders.h>
 
+#include <chrono>
+
 // Initialize static class variables
 int WindowManager::width = WindowManager::defaultWidth;
 int WindowManager::height = 0;
@@ -59,6 +61,15 @@ auto WindowManager::init() -> WindowManager& {
 }
 
 auto WindowManager::getWindow() const -> GLFWwindow* { return window_; }
+
+void WindowManager::updateWindowStats() {
+  // Stat update
+  auto nowTime = std::chrono::steady_clock::now();
+  windowStats_.frameDeltaTime =
+      std::chrono::duration_cast<std::chrono::duration<float>>(nowTime - windowStats_.endTime);
+  windowStats_.endTime = nowTime;
+  ++windowStats_.frameCount;
+}
 
 /**
  * Private

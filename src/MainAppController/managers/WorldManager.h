@@ -42,6 +42,8 @@ class WorldManager : public WindowListener, public KeyboardListener {
   void onResize(int width, int height) override;
 
   inline auto getBackGroundColor() -> std::vector<float>* { return &backgroundColor_; };
+  inline auto getDeltaTimeFrame() -> double { return deltaTimeFrame_; };
+  inline void setDeltaTimeFrame(double deltaTimeFrame) { deltaTimeFrame_ = deltaTimeFrame; };
 
  private:
   Renderer renderer_;
@@ -52,18 +54,15 @@ class WorldManager : public WindowListener, public KeyboardListener {
   std::unique_ptr<IndexBuffer> ibo_;
   std::unique_ptr<VertexArray> vao_;
 
-  // Keep track of last frame timestamp
-  double lastTimeFrame_ = 0.0F;
   // Time between last frame & current frame
   double deltaTimeFrame_ = 0.0F;
-  // Called during render
-  auto updateDeltaTimeFrame_(double currentTimeFrame) -> WorldManager&;
-  [[nodiscard]] auto getCameraSpeedByFrame_() const -> float;
 
   // Keep track of camera position
   glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, 0.0F);
   std::vector<float> backgroundColor_ = {basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB,
                                          1.0F};
+
+  [[nodiscard]] auto getCameraSpeedByFrame_() const -> float;
 };
 
 #endif

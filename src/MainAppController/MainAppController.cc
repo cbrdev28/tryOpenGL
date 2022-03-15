@@ -48,10 +48,12 @@ auto MainAppController::renderLoop() -> MainAppController& {
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
+    windowManager_.updateWindowStats();
     renderer_.clear();
+
     imGuiManager_.renderFrame();
 
-    testMenu_.onUpdate(0.0F);
+    testMenu_.onUpdate(windowManager_.getWindowStats().frameDeltaTime.count());
     testMenu_.onRender();
     testMenu_.onImGuiRender();
 

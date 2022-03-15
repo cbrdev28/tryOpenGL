@@ -6,18 +6,6 @@
 const float triangleDeltaX = 0.2F;
 const float triangleDeltaY = 0.3F;
 
-const std::vector<float> basicTriangleVertices = {
-    // clang-format off
-    -triangleDeltaX, -triangleDeltaY, // Bottom left
-    triangleDeltaX, -triangleDeltaY, // Bottom right
-    triangleDeltaX, triangleDeltaY, // Top right
-
-    triangleDeltaX, triangleDeltaY, // Top right
-    -triangleDeltaX, triangleDeltaY, // Top left
-    -triangleDeltaX, -triangleDeltaY // Bottom left
-    // clang-format on
-};
-
 const std::vector<float> basicTriangleIndicedVertices = {
     // clang-format off
     -triangleDeltaX, -triangleDeltaY, // Bottom left: indice = 0

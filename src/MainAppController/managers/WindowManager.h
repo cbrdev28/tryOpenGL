@@ -2,6 +2,7 @@
 #define WINDOW_MANAGER_H_
 
 #include <AspectRatio.h>
+#include <KeyboardListener.h>
 #include <WindowListener.h>
 #include <WindowStats.h>
 #include <openGLHeaders.h>
@@ -65,11 +66,13 @@ class WindowManager {
   static int width;
   static int height;
   static std::vector<WindowListener*> listeners_;
+  static std::vector<KeyboardListener*> keyboardListeners_;
 
   /**
    * Callback
    */
   static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
   static void errorCallback(int code, const char* description);
 };
 

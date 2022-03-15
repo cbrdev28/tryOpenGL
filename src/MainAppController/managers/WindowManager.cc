@@ -14,6 +14,7 @@ int WindowManager::width = WindowManager::defaultWidth;
 int WindowManager::height = 0;
 // Init to empty
 std::vector<WindowListener*> WindowManager::listeners_ = {};
+std::vector<KeyboardListener*> WindowManager::keyboardListeners_ = {};
 
 WindowManager::~WindowManager() {
   if (window_ != nullptr) {
@@ -57,6 +58,7 @@ auto WindowManager::init() -> WindowManager& {
   }
 
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
+  glfwSetKeyCallback(window_, WindowManager::keyCallback);
   return *this;
 }
 
@@ -92,6 +94,21 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width,
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
   // const auto testSize = WindowManager::listeners_.size();
   // fmt::print("framebufferSizeCallback testSize = {}", testSize);
+}
+
+void WindowManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
+  // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
+  //   // Pressed Alt + Enter
+  // }
+  const int modMask = GLFW_MOD_SHIFT | GLFW_MOD_CONTROL | GLFW_MOD_ALT | GLFW_MOD_SUPER;
+
+  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & modMask) == 0)) {
+    glfwSetWindowShouldClose(window, 1 /* true */);
+  }
+
+  for (KeyboardListener* listener : WindowManager::keyboardListeners_) {
+  }
 }
 
 void WindowManager::errorCallback(int code, const char* description) {

@@ -23,10 +23,6 @@ auto InputManager::init() -> InputManager& {
 
 void InputManager::processKeyboardInput() {
   GLFWwindow* window = windowManager_.getWindow();
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, 1 /* true */);
-  }
-
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     for (KeyboardListener* listener : listeners_) {
       listener->onMoveForward();

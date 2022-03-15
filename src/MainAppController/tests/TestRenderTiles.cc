@@ -3,6 +3,7 @@
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
 #include <basicTriangle.h>
+#include <fmt/core.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
@@ -205,9 +206,10 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
   const unsigned int tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
   unsigned int maxCount = tilesCount;
   unsigned int startCount = 0;
-
   // We only try to optimize if there is a "large" amount of tiles
-  if (tilesCount > 16) {
+  const bool optimizeThreshold = tilesCount > 16;
+
+  if (optimizeThreshold) {
     ASSERT(tilesCount == TestRenderTiles::gridSize);
     // We know/hope our grid is centered at coordinate 0/0
     // So if the position of the camera is negative on Y axis,
@@ -224,6 +226,20 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
   ASSERT(maxCount <= tilesCount);
 
   for (unsigned int i = startCount; i < maxCount; i++) {
+    if (!optimizeThreshold) {
+      continue;
+    } else {
+      if (posX < 0.0F) {
+        // Skip tiles at the end of lines
+        const auto idxLine = i % TestRenderTiles::gridRowColumnCount;
+        // If we passed at least half of the line
+        if (idxLine > TestRenderTiles::gridRowColumnCount / 2) {
+          // Bump current "i" index to finish the line
+          const auto offset = TestRenderTiles::gridRowColumnCount - idxLine - 1;
+          i = i + offset;
+        }
+      }
+    }
     const auto vertex1Idx = i * TestRenderTiles::verticesPerTile + 0;
     const auto vertex3Idx = i * TestRenderTiles::verticesPerTile + 2;
     ASSERT(vertex1Idx < vertices.size());

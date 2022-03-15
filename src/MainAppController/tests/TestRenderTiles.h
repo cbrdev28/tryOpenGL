@@ -26,7 +26,7 @@ class TestRenderTiles : public Test {
   static constexpr glm::vec3 perspectiveLookAtTarget = {0.0F, 0.0F, -1.0F};
   static constexpr glm::vec3 perspectiveLookAtUp = {0.0F, 1.0F, 0.0F};
   // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
-  static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -1.0F, 2.0F};
+  static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -0.5F, 5.0F};
   static constexpr unsigned int gridRowColumnCount = 9;
   static constexpr unsigned int gridSize = gridRowColumnCount * gridRowColumnCount;
 
@@ -45,10 +45,10 @@ class TestRenderTiles : public Test {
 
  private:
   std::vector<float> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
-  float zoom_{10.0F};
+  float zoom_{100.0F};
   float deltaX_{0.0F};
   float deltaY_{0.0F};
-  float fov_{45.0F};
+  float fov_{90.0F};
   AspectRatio aspectRatio_;
   float reversedAspectRatio_{aspectRatio_.reversed()};
   bool usePerspective_{false};

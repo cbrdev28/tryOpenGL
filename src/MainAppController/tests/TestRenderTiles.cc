@@ -149,14 +149,14 @@ void TestRenderTiles::onMoveBackward() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosY_ = nextCameraPosY;
+
+    this->setViewProjection(usePerspective_, *shader1_);
+    shader1_->unBind();
+
+    this->setViewProjection(usePerspective_, *shader2_);
+    this->setModel(*shader2_);
+    shader2_->unBind();
   }
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
 }
 
 void TestRenderTiles::onMoveLeft() {
@@ -167,14 +167,14 @@ void TestRenderTiles::onMoveLeft() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosX_ = nextCameraPosX;
+
+    this->setViewProjection(usePerspective_, *shader1_);
+    shader1_->unBind();
+
+    this->setViewProjection(usePerspective_, *shader2_);
+    this->setModel(*shader2_);
+    shader2_->unBind();
   }
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
 }
 
 void TestRenderTiles::onMoveRight() {
@@ -185,14 +185,14 @@ void TestRenderTiles::onMoveRight() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosX_ = nextCameraPosX;
+
+    this->setViewProjection(usePerspective_, *shader1_);
+    shader1_->unBind();
+
+    this->setViewProjection(usePerspective_, *shader2_);
+    this->setModel(*shader2_);
+    shader2_->unBind();
   }
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
 }
 
 void TestRenderTiles::onZoomIn() {

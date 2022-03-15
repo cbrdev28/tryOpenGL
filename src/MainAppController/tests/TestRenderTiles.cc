@@ -144,7 +144,7 @@ void TestRenderTiles::setModel(ShaderManager& shader) {
 }
 
 auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {
-  ASSERT(size < TestRenderTiles::maxTilesVertices);
+  ASSERT(size < TestRenderTiles::maxGridSize);
   // Note: how to check for overflow?
   const auto totalVertices = size * size;
 

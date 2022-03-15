@@ -18,7 +18,7 @@ namespace test {
 
 class TestRenderTiles : public Test {
  public:
-  static constexpr unsigned int maxTilesVertices = 64;
+  static constexpr unsigned int maxGridSize = 64;
   static constexpr float tileSize = 1.0F;
   static constexpr float tileSpacing = 0.1F;
   static constexpr unsigned int verticesPerTile = 4;

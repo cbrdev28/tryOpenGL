@@ -33,6 +33,26 @@ void InputManager::processKeyboardInput() {
       listener->onMoveBackward();
     }
   }
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onMoveLeft();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onMoveRight();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onZoomOut();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onZoomIn();
+    }
+  }
 }
 
 void InputManager::mouseCallback(GLFWwindow* window, double xPos, double yPos) {

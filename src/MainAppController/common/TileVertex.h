@@ -7,6 +7,7 @@
 #include "openGLErrorHelpers.h"
 
 struct TileVertex {
+  // Constants
   static constexpr unsigned int kPosCount = 2;
   static constexpr unsigned int kTextureCoordCount = 2;
   static constexpr unsigned int kTextureIdCount = 1;
@@ -15,9 +16,12 @@ struct TileVertex {
   static constexpr unsigned int kTileVerticesCount = 4;
   static constexpr std::size_t kTileFloatValuesCount = kPosCount + kTextureCoordCount + kTextureIdCount;
 
+  // Members
   std::array<float, kPosCount> positions;
   std::array<float, kTextureCoordCount> textureCoords;
   float textureIdx;
+
+  // Functions
 
   // Build a grid of N tiles per row & column, centered around 0x:0Y coordinates
   // All tiles will have texture ID set to 0 (to draw grass),except on the edge of the grid,

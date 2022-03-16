@@ -15,6 +15,7 @@ struct TileVertex {
   static constexpr float kTileSpacing = 0.01F;
   static constexpr unsigned int kTileVerticesCount = 4;
   static constexpr std::size_t kTileFloatValuesCount = kPosCount + kTextureCoordCount + kTextureIdCount;
+  static constexpr unsigned int kTileIndicesCount = 6;
 
   // Members
   std::array<float, kPosCount> positions;

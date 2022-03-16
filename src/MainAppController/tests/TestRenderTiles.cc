@@ -14,11 +14,11 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
     : Test(ctx),
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
-      gridVertices_(TileVertex::buildTilesGrid<kGridVerticesCount>(kDefaultGridRowColumnCount)),
-      currentCameraTileIdx_(TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+      gridVertices_(TileVertex::buildTilesGrid<kDefaultGridVerticesCount>(kDefaultGridRowColumnCount)),
+      currentCameraTileIdx_(TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
           cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)) {
-  std::array<float, kGridVerticesFloatCount> serializedVertices =
-      TileVertex::serialize<kGridVerticesCount>(gridVertices_);
+  std::array<float, kDefaultGridVerticesFloatCount> serializedVertices =
+      TileVertex::serialize<kDefaultGridVerticesCount>(gridVertices_);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(gridVertices_.size());
 
   va1_ = std::make_unique<VertexArray>();
@@ -192,7 +192,7 @@ void TestRenderTiles::updateModelViewProjection() {
 
 void TestRenderTiles::onMoveForward() {
   const auto nextCameraPosY = cameraPosY_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
       cameraPosX_, nextCameraPosY, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
 
   if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
@@ -206,7 +206,7 @@ void TestRenderTiles::onMoveForward() {
 
 void TestRenderTiles::onMoveBackward() {
   const auto nextCameraPosY = cameraPosY_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
       cameraPosX_, nextCameraPosY, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
 
   if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
@@ -220,7 +220,7 @@ void TestRenderTiles::onMoveBackward() {
 
 void TestRenderTiles::onMoveLeft() {
   const auto nextCameraPosX = cameraPosX_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
       nextCameraPosX, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
 
   if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
@@ -234,7 +234,7 @@ void TestRenderTiles::onMoveLeft() {
 
 void TestRenderTiles::onMoveRight() {
   const auto nextCameraPosX = cameraPosX_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
       nextCameraPosX, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
 
   if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {

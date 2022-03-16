@@ -23,8 +23,9 @@ class TestRenderTiles : public Test, public KeyboardListener {
  public:
   static constexpr unsigned int kDefaultGridRowColumnCount = 9;
   static constexpr unsigned int kDefaultGridSize = kDefaultGridRowColumnCount * kDefaultGridRowColumnCount;
-  static constexpr unsigned int kGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
-  static constexpr unsigned int kGridVerticesFloatCount = kGridVerticesCount * TileVertex::kTileFloatValuesCount;
+  static constexpr unsigned int kDefaultGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
+  static constexpr unsigned int kDefaultGridVerticesFloatCount =
+      kDefaultGridVerticesCount * TileVertex::kTileFloatValuesCount;
 
   static constexpr unsigned int verticesPerTile = 4;
   static constexpr unsigned int indicesPerTile = 6;
@@ -70,7 +71,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
 
   float cameraPosX_{0.0F};
   float cameraPosY_{0.0F};
-  std::array<TileVertex, kGridVerticesCount> gridVertices_{};
+  std::array<TileVertex, kDefaultGridVerticesCount> gridVertices_{};
   int currentCameraTileIdx_ = -1;
 
   Renderer renderer_;

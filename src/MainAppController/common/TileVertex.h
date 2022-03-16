@@ -88,6 +88,26 @@ struct TileVertex {
     return serializedVertices;
   }
 
+  // Function to build indices based on the count of vertices in the grid
+  template <unsigned int indicesCount>
+  inline static auto makeGridIndices(unsigned int gridVerticesCount) -> std::array<unsigned int, indicesCount> {
+    const auto tilesCount = gridVerticesCount / kTileVerticesCount;
+    ASSERT(indicesCount == tilesCount * kTileIndicesCount);
+
+    std::array<unsigned int, indicesCount> indices;
+
+    for (int i = 0; i < tilesCount; i++) {
+      ASSERT(i * kTileIndicesCount + 5 < indicesCount);
+      indices.at(i * kTileIndicesCount + 0) = 0 + (i * kTileVerticesCount);
+      indices.at(i * kTileIndicesCount + 1) = 1 + (i * kTileVerticesCount);
+      indices.at(i * kTileIndicesCount + 2) = 2 + (i * kTileVerticesCount);
+      indices.at(i * kTileIndicesCount + 3) = 2 + (i * kTileVerticesCount);
+      indices.at(i * kTileIndicesCount + 4) = 3 + (i * kTileVerticesCount);
+      indices.at(i * kTileIndicesCount + 5) = 0 + (i * kTileVerticesCount);
+    }
+    return indices;
+  }
+
   // Given a coordinate & a grid, return the index (of the first vertext) of the tile matching in the grid
   // The grid size & grid row/column size are needed for verification
   template <unsigned int verticesCount>

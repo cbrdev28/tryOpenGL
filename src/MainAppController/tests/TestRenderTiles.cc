@@ -19,7 +19,8 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
           cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)) {
   std::array<float, kDefaultGridVerticesFloatCount> serializedVertices =
       TileVertex::serialize<kDefaultGridVerticesCount>(gridVertices_);
-  std::vector<unsigned int> allTileIndices = this->makeTilesIndices(gridVertices_.size());
+  std::array<unsigned int, kDefaultGridIndicesCount> gridIndices =
+      TileVertex::makeGridIndices<kDefaultGridIndicesCount>(gridVertices_.size());
 
   va1_ = std::make_unique<VertexArray>();
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
@@ -30,7 +31,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   layout.pushFloat(TileVertex::kTextureIdCount);
   va1_->addBuffer(*vb1_, layout);
 
-  ib1_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
+  ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
   shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
   shader1_->init();
@@ -256,27 +257,6 @@ void TestRenderTiles::onZoomOut() {
   zoom_ = zoom_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   fov_ = fov_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   this->updateModelViewProjection();
-}
-
-auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int> {
-  const auto tilesCount = tileVerticesCount / TestRenderTiles::verticesPerTile;
-  const auto indicesCount = tilesCount * TestRenderTiles::indicesPerTile;
-
-  std::vector<unsigned int> allIndices = {};
-  allIndices.reserve(indicesCount);
-
-  for (int i = 0; i < tilesCount; i++) {
-    const auto indiceIdx = i * TestRenderTiles::verticesPerTile;
-    ASSERT(indiceIdx + 3 < indicesCount);
-    allIndices.emplace_back(indiceIdx + 0);
-    allIndices.emplace_back(indiceIdx + 1);
-    allIndices.emplace_back(indiceIdx + 2);
-    allIndices.emplace_back(indiceIdx + 2);
-    allIndices.emplace_back(indiceIdx + 3);
-    allIndices.emplace_back(indiceIdx + 0);
-  }
-
-  return allIndices;
 }
 
 auto TestRenderTiles::makeDynamicTriangle() -> std::vector<float> {

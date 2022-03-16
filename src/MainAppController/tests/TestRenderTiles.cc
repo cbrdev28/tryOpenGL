@@ -15,10 +15,10 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
       currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
-  // TODO(cbr): try to store in array?
   tileVertices_ = TileVertex::buildTilesGrid<kGridVerticesCount>(kDefaultGridRowColumnCount);
+  std::array<float, kGridVerticesFloatCount> serializedVertices =
+      TileVertex::serialize<kGridVerticesCount>(tileVertices_);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
-  std::vector<float> serializedVertices = TileVertex::serialize<kGridVerticesCount>(tileVertices_);
 
   va1_ = std::make_unique<VertexArray>();
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));

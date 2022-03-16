@@ -24,6 +24,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
   static constexpr unsigned int kDefaultGridRowColumnCount = 9;
   static constexpr unsigned int kDefaultGridSize = kDefaultGridRowColumnCount * kDefaultGridRowColumnCount;
   static constexpr unsigned int kGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
+  static constexpr unsigned int kGridVerticesFloatCount = kGridVerticesCount * TileVertex::kTileFloatValuesCount;
 
   static constexpr unsigned int verticesPerTile = 4;
   static constexpr unsigned int indicesPerTile = 6;

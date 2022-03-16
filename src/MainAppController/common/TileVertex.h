@@ -13,6 +13,7 @@ struct TileVertex {
   static constexpr float kTileSize = 1.0F;
   static constexpr float kTileSpacing = 0.01F;
   static constexpr unsigned int kTileVerticesCount = 4;
+  static constexpr std::size_t kTileFloatValuesCount = kPosCount + kTextureCoordCount + kTextureIdCount;
 
   std::array<float, kPosCount> positions;
   std::array<float, kTextureCoordCount> textureCoords;
@@ -24,7 +25,8 @@ struct TileVertex {
   // NOTE: verticesCount must be equal to: rowColumnSize * rowColumnSize * kTileVerticesCount
   template <unsigned int verticesCount>
   inline static auto buildTilesGrid(unsigned int rowColumnSize) -> std::array<TileVertex, verticesCount> {
-    ASSERT(verticesCount <= 2048);  // Make sure we're not building a crazy grid!
+    // Make sure we're not building a crazy grid!
+    ASSERT(verticesCount <= 2048);
     // NOTE: check for overflow?
     ASSERT(verticesCount == rowColumnSize * rowColumnSize * kTileVerticesCount);
 
@@ -64,22 +66,21 @@ struct TileVertex {
   }
 
   template <unsigned int verticesCount>
-  inline static auto serialize(const std::array<TileVertex, verticesCount>& tileVertices) -> std::vector<float> {
-    // The goal is to transform a vector of TileVertex into a vector of float
-    // Count how many floats we have in 1 TileVertex (used to reserve vector size)
-    const auto floatValuesCount = kPosCount + kTextureCoordCount + kTextureIdCount;
-    // TODO(cbr): try to change this into an array?
-    std::vector<float> serializedTiles = {};
-    serializedTiles.reserve(floatValuesCount * tileVertices.size());
+  inline static auto serialize(const std::array<TileVertex, verticesCount>& gridVertices)
+      -> std::array<float, kTileFloatValuesCount * verticesCount> {
+    // The goal is to transform an array of TileVertex into an array of float
+    // Total of float values needed for the grid
+    const auto floatVerticesCount = kTileFloatValuesCount * verticesCount;
+    std::array<float, floatVerticesCount> serializedVertices;
 
-    for (auto& tileVertex : tileVertices) {
-      serializedTiles.emplace_back(tileVertex.positions[0]);
-      serializedTiles.emplace_back(tileVertex.positions[1]);
-      serializedTiles.emplace_back(tileVertex.textureCoords[0]);
-      serializedTiles.emplace_back(tileVertex.textureCoords[1]);
-      serializedTiles.emplace_back(tileVertex.textureIdx);
+    for (int i = 0; i < gridVertices.size(); i++) {
+      serializedVertices.at(i * kTileFloatValuesCount + 0) = gridVertices.at(i).positions[0];
+      serializedVertices.at(i * kTileFloatValuesCount + 1) = gridVertices.at(i).positions[1];
+      serializedVertices.at(i * kTileFloatValuesCount + 2) = gridVertices.at(i).textureCoords[0];
+      serializedVertices.at(i * kTileFloatValuesCount + 3) = gridVertices.at(i).textureCoords[1];
+      serializedVertices.at(i * kTileFloatValuesCount + 4) = gridVertices.at(i).textureIdx;
     }
-    return serializedTiles;
+    return serializedVertices;
   }
 };
 

@@ -138,9 +138,7 @@ struct TileVertex {
     ASSERT(maxCount <= tilesCount);
 
     for (unsigned int i = startCount; i < maxCount; i++) {
-      if (!optimizeThreshold) {
-        continue;
-      } else {
+      if (optimizeThreshold) {
         const auto idxLine = i % rowColumnSize;
         if (posX < 0.0F) {
           // Skip tiles at the end of lines

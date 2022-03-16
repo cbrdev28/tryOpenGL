@@ -70,7 +70,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
 
   float cameraPosX_{0.0F};
   float cameraPosY_{0.0F};
-  std::array<TileVertex, kGridVerticesCount> tileVertices_{};
+  std::array<TileVertex, kGridVerticesCount> gridVertices_{};
   int currentCameraTileIdx_ = -1;
 
   Renderer renderer_;
@@ -96,11 +96,9 @@ class TestRenderTiles : public Test, public KeyboardListener {
   void updateModelViewProjection();
 
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
-  auto findTileBaseIdxForPos(float posX, float posY, const std::array<TileVertex, kGridVerticesCount>& vertices) -> int;
 
   std::vector<float> dynamicTriangles_{};
   std::vector<unsigned int> dynamicTriangleIndices_{};
-  // std::array<unsigned int, maxDynamicTriangleIndiceValues> dynamicIndicesArray_;
   auto makeDynamicTriangle() -> std::vector<float>;
   std::default_random_engine gen{std::random_device{}()};
   void addDynamicTriangle();

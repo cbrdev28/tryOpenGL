@@ -14,11 +14,12 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
     : Test(ctx),
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
-      currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
-  tileVertices_ = TileVertex::buildTilesGrid<kGridVerticesCount>(kDefaultGridRowColumnCount);
+      gridVertices_(TileVertex::buildTilesGrid<kGridVerticesCount>(kDefaultGridRowColumnCount)),
+      currentCameraTileIdx_(TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+          cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)) {
   std::array<float, kGridVerticesFloatCount> serializedVertices =
-      TileVertex::serialize<kGridVerticesCount>(tileVertices_);
-  std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
+      TileVertex::serialize<kGridVerticesCount>(gridVertices_);
+  std::vector<unsigned int> allTileIndices = this->makeTilesIndices(gridVertices_.size());
 
   va1_ = std::make_unique<VertexArray>();
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
@@ -191,8 +192,10 @@ void TestRenderTiles::updateModelViewProjection() {
 
 void TestRenderTiles::onMoveForward() {
   const auto nextCameraPosY = cameraPosY_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+      cameraPosX_, nextCameraPosY, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
+
+  if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -203,8 +206,10 @@ void TestRenderTiles::onMoveForward() {
 
 void TestRenderTiles::onMoveBackward() {
   const auto nextCameraPosY = cameraPosY_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+      cameraPosX_, nextCameraPosY, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
+
+  if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -215,8 +220,10 @@ void TestRenderTiles::onMoveBackward() {
 
 void TestRenderTiles::onMoveLeft() {
   const auto nextCameraPosX = cameraPosX_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+      nextCameraPosX, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
+
+  if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -227,8 +234,10 @@ void TestRenderTiles::onMoveLeft() {
 
 void TestRenderTiles::onMoveRight() {
   const auto nextCameraPosX = cameraPosX_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-  const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
+  const auto nextPosTileIdx = TileVertex::findTileBaseIdxForPos<kGridVerticesCount>(
+      nextCameraPosX, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount);
+
+  if (nextPosTileIdx == -1 || gridVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -268,70 +277,6 @@ auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::v
   }
 
   return allIndices;
-}
-
-auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY,
-                                            const std::array<TileVertex, kGridVerticesCount>& vertices) -> int {
-  const unsigned int tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
-  unsigned int maxCount = tilesCount;
-  unsigned int startCount = 0;
-  // We only try to optimize if there is a "large" amount of tiles
-  const bool optimizeThreshold = tilesCount > 16;
-
-  if (optimizeThreshold) {
-    ASSERT(tilesCount == kDefaultGridSize);
-    // We know/hope our grid is centered at coordinate 0/0
-    // So if the position of the camera is negative on Y axis,
-    // it means we "should" only search in the bottom rows of our tile grid
-    if (posY < 0) {
-      // Search only for half the count (plus the number for one more row/column)
-      maxCount = (tilesCount / 2) + kDefaultGridRowColumnCount;
-    } else if (posY >= 0) {
-      // Skip first half (minus the number for one row/column)
-      startCount = (tilesCount / 2) - kDefaultGridRowColumnCount;
-    }
-  }
-  ASSERT(startCount >= 0);
-  ASSERT(maxCount <= tilesCount);
-
-  for (unsigned int i = startCount; i < maxCount; i++) {
-    if (!optimizeThreshold) {
-      continue;
-    } else {
-      const auto idxLine = i % kDefaultGridRowColumnCount;
-      if (posX < 0.0F) {
-        // Skip tiles at the end of lines
-        // If we passed at least half of the line
-        if (idxLine > kDefaultGridRowColumnCount / 2) {
-          // Bump current "i" index to finish the line
-          const auto offset = kDefaultGridRowColumnCount - idxLine - 1;
-          i = i + offset;
-        }
-      } else if (posX >= 0.0F) {
-        // Skip tiles from the beginning of lines
-        // If we are still at least in the first half
-        if (idxLine < kDefaultGridRowColumnCount / 2) {
-          // Bump current "i" index to the middle of line
-          const auto offset = (kDefaultGridRowColumnCount / 2) - 1;
-          i = i + offset;
-        }
-      }
-    }
-    const auto vertex1Idx = i * TestRenderTiles::verticesPerTile + 0;
-    const auto vertex3Idx = i * TestRenderTiles::verticesPerTile + 2;
-    ASSERT(vertex1Idx < vertices.size());
-    ASSERT(vertex3Idx < vertices.size());
-
-    const auto& vertex1 = vertices.at(vertex1Idx);
-    const auto& vertex3 = vertices.at(vertex3Idx);
-
-    if (posX >= (vertex1.positions[0] - TileVertex::kTileSpacing) && posX <= vertex3.positions[0]) {
-      if (posY >= (vertex1.positions[1] - TileVertex::kTileSpacing) && posY <= vertex3.positions[1]) {
-        return static_cast<int>(vertex1Idx);
-      }
-    }
-  }
-  return -1;
 }
 
 auto TestRenderTiles::makeDynamicTriangle() -> std::vector<float> {

@@ -14,6 +14,7 @@
 #include <glmHeaders.h>
 
 #include <memory>
+#include <random>
 
 namespace test {
 
@@ -84,6 +85,12 @@ class TestRenderTiles : public Test, public KeyboardListener {
   auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;
+
+  std::vector<float> dynamicTriangles_{};
+  std::vector<unsigned int> dynamicTriangleIndices_{};
+  auto makeDynamicTriangle() -> std::vector<float>;
+  std::default_random_engine gen{std::random_device{}()};
+  void addDynamicTriangle();
 };
 
 }  // namespace test

@@ -94,6 +94,28 @@ void TestRenderTiles::onImGuiRender() {
   ImGui::Text("Camera pos X: %.2f", cameraPosX_);
   ImGui::Text("Camera pos Y: %.2f", cameraPosY_);
   ImGui::Text("Base tile index: %d", currentCameraTileIdx_);
+
+  if (ImGui::Button("Add dynamic triangle")) {
+    this->addDynamicTriangle();
+  }
+  ImGui::Text("Dynamic triangles count: %zu", dynamicTriangles_.size());
+  ImGui::Text("Dynamic indices count: %zu", dynamicTriangleIndices_.size());
+
+  for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {
+    ImGui::Text("#: %.d", i);
+    ImGui::Text("Triangle v1: %.2f, %.2f", dynamicTriangles_[i * 6 + 0], dynamicTriangles_[i * 6 + 1]);
+    ImGui::Text("Triangle v2: %.2f, %.2f", dynamicTriangles_[i * 6 + 2], dynamicTriangles_[i * 6 + 2 + 1]);
+    ImGui::Text("Triangle v3: %.2f, %.2f", dynamicTriangles_[i * 6 + 4], dynamicTriangles_[i * 6 + 4 + 1]);
+    ImGui::Text("---- ---- ---- ----");
+  }
+
+  for (int i = 0; i < dynamicTriangleIndices_.size() / 3; i++) {
+    ImGui::Text("#: %.d", i);
+    ImGui::Text("Indice 1: %.d", dynamicTriangleIndices_[i * 3 + 0]);
+    ImGui::Text("Indice 2: %.d", dynamicTriangleIndices_[i * 3 + 1]);
+    ImGui::Text("Indice 3: %.d", dynamicTriangleIndices_[i * 3 + 2]);
+    ImGui::Text("---- ---- ---- ----");
+  }
 }
 
 void TestRenderTiles::setViewProjection(bool usePerspective, ShaderManager& shader) {
@@ -338,6 +360,36 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     }
   }
   return -1;
+}
+
+auto TestRenderTiles::makeDynamicTriangle() -> std::vector<float> {
+  const float gridRightEdgePos =
+      (TestRenderTiles::gridRowColumnCount / 2.0F) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
+  const float gridLeftEdgePos = -gridRightEdgePos;
+  const float gridTopPos = gridRightEdgePos;
+  const float gridBottomPos = -gridTopPos;
+
+  std::uniform_real_distribution<float> dist(0.0F, 1.0F);
+  const float randomPosX = (dist(gen) * gridRightEdgePos * 2) - gridRightEdgePos;
+  const float randomPosY = (dist(gen) * gridTopPos * 2) - gridTopPos;
+
+  return std::vector<float>{
+      // clang-format off
+    randomPosX, randomPosY, // Bottom left: indice = 0
+    randomPosX + 0.2F, randomPosY, // Bottom right: indice = 1
+    randomPosX, randomPosY + 0.2F, // Top right: indice = 2
+      // clang-format on
+  };
+}
+
+void TestRenderTiles::addDynamicTriangle() {
+  auto const tempTriangle = this->makeDynamicTriangle();
+  dynamicTriangles_.insert(dynamicTriangles_.end(), tempTriangle.begin(), tempTriangle.end());
+
+  // Make new indices
+  unsigned int currentSize = dynamicTriangleIndices_.size();
+  const auto tempIndice = std::vector<unsigned int>{currentSize, currentSize + 1, currentSize + 2};
+  dynamicTriangleIndices_.insert(dynamicTriangleIndices_.end(), tempIndice.begin(), tempIndice.end());
 }
 
 }  // namespace test

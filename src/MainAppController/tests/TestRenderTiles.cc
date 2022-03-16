@@ -15,7 +15,8 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
       aspectRatio_(ctx.windowManager->getAspectRatio()),
       reversedAspectRatio_(aspectRatio_.reversed()),
       currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
-  tileVertices_ = this->makeTilesVertices(TestRenderTiles::gridRowColumnCount);
+  // TODO(cbr): try to store in array?
+  tileVertices_ = TileVertex::buildTilesGrid(kDefaultGridRowColumnCount);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
   std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
 
@@ -23,9 +24,9 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
 
   VertexBufferLayout layout;
-  layout.pushFloat(TileVertex::posCount);
-  layout.pushFloat(TileVertex::textureCoordCount);
-  layout.pushFloat(1);  // TileVertex textureIdx
+  layout.pushFloat(TileVertex::kPosCount);
+  layout.pushFloat(TileVertex::kTextureCoordCount);
+  layout.pushFloat(TileVertex::kTextureIdCount);
   va1_->addBuffer(*vb1_, layout);
 
   ib1_ = std::make_unique<IndexBuffer>(allTileIndices.data(), allTileIndices.size());
@@ -78,6 +79,7 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   va3_->addBuffer(*vb3_, layout3);
 
   // Index buffer is pre-filled with max indices values
+  // TODO(cbr): try to use array instead?
   dynamicTriangleIndices_.reserve(TestRenderTiles::maxDynamicTriangleIndiceValues);
   for (int i = 0; i < TestRenderTiles::maxDynamicTriangles; i++) {
     dynamicTriangleIndices_.emplace_back(i * 3 + 0);
@@ -183,7 +185,6 @@ void TestRenderTiles::updateModelViewProjection() {
   this->setModel(*shader2_);
   shader2_->unBind();
 
-  // Update view projection for shader 3 (dynamic triangles)
   this->setViewProjection(usePerspective_, *shader3_);
   shader3_->unBind();
 }
@@ -248,43 +249,6 @@ void TestRenderTiles::onZoomOut() {
   this->updateModelViewProjection();
 }
 
-auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {
-  ASSERT(size < TestRenderTiles::maxGridSize);
-  // Note: how to check for overflow?
-  const auto totalVertices = size * size;
-
-  std::vector<TileVertex> allVertices = {};
-  allVertices.reserve(totalVertices);
-
-  for (unsigned int i = 0; i < size; i++) {
-    for (unsigned int j = 0; j < size; j++) {
-      auto posX = static_cast<float>(j) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
-      posX = posX - (static_cast<float>(size) / 2.0F);  // To center the grid of tiles
-
-      auto posY = static_cast<float>(i) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
-      posY = posY - (static_cast<float>(size) / 2.0F);  // To center the grid of tiles
-
-      float tileTextureId = 0.0F;
-      if (j == 0 || j == size - 1 || i == 0 || i == size - 1) {
-        // Draw "wall" texture on the edge of the grid
-        tileTextureId = 1.0F;
-      }
-
-      TileVertex vertex1 = {{posX, posY}, {0.0F, 0.0F}, tileTextureId};
-      TileVertex vertex2 = {{posX + TestRenderTiles::tileSize, posY}, {1.0F, 0.0F}, tileTextureId};
-      TileVertex vertex3 = {
-          {posX + TestRenderTiles::tileSize, posY + TestRenderTiles::tileSize}, {1.0F, 1.0F}, tileTextureId};
-      TileVertex vertex4 = {{posX, posY + TestRenderTiles::tileSize}, {0.0F, 1.0F}, tileTextureId};
-
-      allVertices.emplace_back(vertex1);
-      allVertices.emplace_back(vertex2);
-      allVertices.emplace_back(vertex3);
-      allVertices.emplace_back(vertex4);
-    }
-  }
-  return allVertices;
-}
-
 auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int> {
   const auto tilesCount = tileVerticesCount / TestRenderTiles::verticesPerTile;
   const auto indicesCount = tilesCount * TestRenderTiles::indicesPerTile;
@@ -314,16 +278,16 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
   const bool optimizeThreshold = tilesCount > 16;
 
   if (optimizeThreshold) {
-    ASSERT(tilesCount == TestRenderTiles::gridSize);
+    ASSERT(tilesCount == kDefaultGridSize);
     // We know/hope our grid is centered at coordinate 0/0
     // So if the position of the camera is negative on Y axis,
     // it means we "should" only search in the bottom rows of our tile grid
     if (posY < 0) {
       // Search only for half the count (plus the number for one more row/column)
-      maxCount = (tilesCount / 2) + TestRenderTiles::gridRowColumnCount;
+      maxCount = (tilesCount / 2) + kDefaultGridRowColumnCount;
     } else if (posY >= 0) {
       // Skip first half (minus the number for one row/column)
-      startCount = (tilesCount / 2) - TestRenderTiles::gridRowColumnCount;
+      startCount = (tilesCount / 2) - kDefaultGridRowColumnCount;
     }
   }
   ASSERT(startCount >= 0);
@@ -333,21 +297,21 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     if (!optimizeThreshold) {
       continue;
     } else {
-      const auto idxLine = i % TestRenderTiles::gridRowColumnCount;
+      const auto idxLine = i % kDefaultGridRowColumnCount;
       if (posX < 0.0F) {
         // Skip tiles at the end of lines
         // If we passed at least half of the line
-        if (idxLine > TestRenderTiles::gridRowColumnCount / 2) {
+        if (idxLine > kDefaultGridRowColumnCount / 2) {
           // Bump current "i" index to finish the line
-          const auto offset = TestRenderTiles::gridRowColumnCount - idxLine - 1;
+          const auto offset = kDefaultGridRowColumnCount - idxLine - 1;
           i = i + offset;
         }
       } else if (posX >= 0.0F) {
         // Skip tiles from the beginning of lines
         // If we are still at least in the first half
-        if (idxLine < TestRenderTiles::gridRowColumnCount / 2) {
+        if (idxLine < kDefaultGridRowColumnCount / 2) {
           // Bump current "i" index to the middle of line
-          const auto offset = (TestRenderTiles::gridRowColumnCount / 2) - 1;
+          const auto offset = (kDefaultGridRowColumnCount / 2) - 1;
           i = i + offset;
         }
       }
@@ -360,8 +324,8 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     const auto& vertex1 = vertices[vertex1Idx];
     const auto& vertex3 = vertices[vertex3Idx];
 
-    if (posX >= (vertex1.positions[0] - TestRenderTiles::tileSpacing) && posX <= vertex3.positions[0]) {
-      if (posY >= (vertex1.positions[1] - TestRenderTiles::tileSpacing) && posY <= vertex3.positions[1]) {
+    if (posX >= (vertex1.positions[0] - TileVertex::kTileSpacing) && posX <= vertex3.positions[0]) {
+      if (posY >= (vertex1.positions[1] - TileVertex::kTileSpacing) && posY <= vertex3.positions[1]) {
         return static_cast<int>(vertex1Idx);
       }
     }
@@ -371,7 +335,7 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
 
 auto TestRenderTiles::makeDynamicTriangle() -> std::vector<float> {
   const float gridRightEdgePos =
-      (TestRenderTiles::gridRowColumnCount / 2.0F) * (TestRenderTiles::tileSize + TestRenderTiles::tileSpacing);
+      (kDefaultGridRowColumnCount / 2.0F) * (TileVertex::kTileSize + TileVertex::kTileSpacing);
   const float gridLeftEdgePos = -gridRightEdgePos;
   const float gridTopPos = gridRightEdgePos;
   const float gridBottomPos = -gridTopPos;
@@ -400,8 +364,8 @@ void TestRenderTiles::addDynamicTriangle() {
   // const auto tempIndice = std::vector<unsigned int>{currentSize, currentSize + 1, currentSize + 2};
   // dynamicTriangleIndices_.insert(dynamicTriangleIndices_.end(), tempIndice.begin(), tempIndice.end());
 
-  vb3_->bind();
   // Potential refactor: not sending ALL data each time
+  vb3_->bind();
   vb3_->setData(dynamicTriangles_.data(), sizeof(float) * dynamicTriangles_.size());
   vb3_->unBind();
 }

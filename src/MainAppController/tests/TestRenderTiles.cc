@@ -145,6 +145,17 @@ void TestRenderTiles::setModel(ShaderManager& shader) {
   shader.setUniformMat4("u_model", model);
 }
 
+void TestRenderTiles::updateModelViewProjection() {
+  this->setViewProjection(usePerspective_, *shader1_);
+  shader1_->unBind();
+
+  this->setViewProjection(usePerspective_, *shader2_);
+  this->setModel(*shader2_);
+  shader2_->unBind();
+
+  // Update view projection for shader 3 (dynamic triangles)
+}
+
 void TestRenderTiles::onMoveForward() {
   const auto nextCameraPosY = cameraPosY_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
@@ -153,14 +164,8 @@ void TestRenderTiles::onMoveForward() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosY_ = nextCameraPosY;
+    this->updateModelViewProjection();
   }
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
 }
 
 void TestRenderTiles::onMoveBackward() {
@@ -171,13 +176,7 @@ void TestRenderTiles::onMoveBackward() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosY_ = nextCameraPosY;
-
-    this->setViewProjection(usePerspective_, *shader1_);
-    shader1_->unBind();
-
-    this->setViewProjection(usePerspective_, *shader2_);
-    this->setModel(*shader2_);
-    shader2_->unBind();
+    this->updateModelViewProjection();
   }
 }
 
@@ -189,13 +188,7 @@ void TestRenderTiles::onMoveLeft() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosX_ = nextCameraPosX;
-
-    this->setViewProjection(usePerspective_, *shader1_);
-    shader1_->unBind();
-
-    this->setViewProjection(usePerspective_, *shader2_);
-    this->setModel(*shader2_);
-    shader2_->unBind();
+    this->updateModelViewProjection();
   }
 }
 
@@ -207,38 +200,20 @@ void TestRenderTiles::onMoveRight() {
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
     cameraPosX_ = nextCameraPosX;
-
-    this->setViewProjection(usePerspective_, *shader1_);
-    shader1_->unBind();
-
-    this->setViewProjection(usePerspective_, *shader2_);
-    this->setModel(*shader2_);
-    shader2_->unBind();
+    this->updateModelViewProjection();
   }
 }
 
 void TestRenderTiles::onZoomIn() {
   zoom_ = zoom_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   fov_ = fov_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
+  this->updateModelViewProjection();
 }
 
 void TestRenderTiles::onZoomOut() {
   zoom_ = zoom_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   fov_ = fov_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
-
-  this->setViewProjection(usePerspective_, *shader1_);
-  shader1_->unBind();
-
-  this->setViewProjection(usePerspective_, *shader2_);
-  this->setModel(*shader2_);
-  shader2_->unBind();
+  this->updateModelViewProjection();
 }
 
 auto TestRenderTiles::makeTilesVertices(unsigned int size) -> std::vector<TileVertex> {

@@ -82,6 +82,8 @@ class TestRenderTiles : public Test, public KeyboardListener {
 
   void setViewProjection(bool usePerspective, ShaderManager& shader);
   void setModel(ShaderManager& shader);
+  void updateModelViewProjection();
+
   auto makeTilesVertices(unsigned int size) -> std::vector<TileVertex>;
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
   auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;

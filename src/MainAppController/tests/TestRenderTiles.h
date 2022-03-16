@@ -8,7 +8,6 @@
 #include <ShaderManager.h>
 #include <Test.h>
 #include <Texture.h>
-#include <TileVertex.h>
 #include <VertexArray.h>
 #include <VertexBuffer.h>
 #include <glmHeaders.h>
@@ -16,12 +15,15 @@
 #include <memory>
 #include <random>
 
+#include "TileVertex.h"
+
 namespace test {
 
 class TestRenderTiles : public Test, public KeyboardListener {
  public:
   static constexpr unsigned int kDefaultGridRowColumnCount = 9;
   static constexpr unsigned int kDefaultGridSize = kDefaultGridRowColumnCount * kDefaultGridRowColumnCount;
+  static constexpr unsigned int kGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
 
   static constexpr unsigned int verticesPerTile = 4;
   static constexpr unsigned int indicesPerTile = 6;
@@ -67,7 +69,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
 
   float cameraPosX_{0.0F};
   float cameraPosY_{0.0F};
-  std::vector<TileVertex> tileVertices_{};
+  std::array<TileVertex, kGridVerticesCount> tileVertices_{};
   int currentCameraTileIdx_ = -1;
 
   Renderer renderer_;
@@ -93,7 +95,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
   void updateModelViewProjection();
 
   auto makeTilesIndices(unsigned int tileVerticesCount) -> std::vector<unsigned int>;
-  auto findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int;
+  auto findTileBaseIdxForPos(float posX, float posY, const std::array<TileVertex, kGridVerticesCount>& vertices) -> int;
 
   std::vector<float> dynamicTriangles_{};
   std::vector<unsigned int> dynamicTriangleIndices_{};

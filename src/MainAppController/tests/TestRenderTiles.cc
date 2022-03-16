@@ -16,9 +16,9 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
       reversedAspectRatio_(aspectRatio_.reversed()),
       currentCameraTileIdx_(this->findTileBaseIdxForPos(cameraPosX_, cameraPosY_, tileVertices_)) {
   // TODO(cbr): try to store in array?
-  tileVertices_ = TileVertex::buildTilesGrid(kDefaultGridRowColumnCount);
+  tileVertices_ = TileVertex::buildTilesGrid<kGridVerticesCount>(kDefaultGridRowColumnCount);
   std::vector<unsigned int> allTileIndices = this->makeTilesIndices(tileVertices_.size());
-  std::vector<float> serializedVertices = TileVertex::serialize(tileVertices_);
+  std::vector<float> serializedVertices = TileVertex::serialize<kGridVerticesCount>(tileVertices_);
 
   va1_ = std::make_unique<VertexArray>();
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
@@ -192,7 +192,7 @@ void TestRenderTiles::updateModelViewProjection() {
 void TestRenderTiles::onMoveForward() {
   const auto nextCameraPosY = cameraPosY_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -204,7 +204,7 @@ void TestRenderTiles::onMoveForward() {
 void TestRenderTiles::onMoveBackward() {
   const auto nextCameraPosY = cameraPosY_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   const auto nextPosTileIdx = this->findTileBaseIdxForPos(cameraPosX_, nextCameraPosY, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -216,7 +216,7 @@ void TestRenderTiles::onMoveBackward() {
 void TestRenderTiles::onMoveLeft() {
   const auto nextCameraPosX = cameraPosX_ - (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -228,7 +228,7 @@ void TestRenderTiles::onMoveLeft() {
 void TestRenderTiles::onMoveRight() {
   const auto nextCameraPosX = cameraPosX_ + (TestRenderTiles::defaultCameraSpeed * frameDeltaTime_);
   const auto nextPosTileIdx = this->findTileBaseIdxForPos(nextCameraPosX, cameraPosY_, tileVertices_);
-  if (nextPosTileIdx == -1 || tileVertices_[nextPosTileIdx].textureIdx == 1.0F) {
+  if (nextPosTileIdx == -1 || tileVertices_.at(nextPosTileIdx).textureIdx == 1.0F) {
     // Collision with "wall" tile (or out of grid)
   } else {
     currentCameraTileIdx_ = nextPosTileIdx;
@@ -270,7 +270,8 @@ auto TestRenderTiles::makeTilesIndices(unsigned int tileVerticesCount) -> std::v
   return allIndices;
 }
 
-auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::vector<TileVertex>& vertices) -> int {
+auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY,
+                                            const std::array<TileVertex, kGridVerticesCount>& vertices) -> int {
   const unsigned int tilesCount = vertices.size() / TestRenderTiles::verticesPerTile;
   unsigned int maxCount = tilesCount;
   unsigned int startCount = 0;
@@ -321,8 +322,8 @@ auto TestRenderTiles::findTileBaseIdxForPos(float posX, float posY, const std::v
     ASSERT(vertex1Idx < vertices.size());
     ASSERT(vertex3Idx < vertices.size());
 
-    const auto& vertex1 = vertices[vertex1Idx];
-    const auto& vertex3 = vertices[vertex3Idx];
+    const auto& vertex1 = vertices.at(vertex1Idx);
+    const auto& vertex3 = vertices.at(vertex3Idx);
 
     if (posX >= (vertex1.positions[0] - TileVertex::kTileSpacing) && posX <= vertex3.positions[0]) {
       if (posY >= (vertex1.positions[1] - TileVertex::kTileSpacing) && posY <= vertex3.positions[1]) {

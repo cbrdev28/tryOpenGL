@@ -19,8 +19,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
       reversedAspectRatio_(aspectRatio_.reversed()),
       gridVertices_(TileVertex::buildTilesGrid<kDefaultGridVerticesCount>(kDefaultGridRowColumnCount)),
       currentCameraTileIdx_(TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
-          cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)),
-      dynamicIndices_(DynamicTriangle::makeIndices<kDefaultMaxDynamicTriangleIndices>()) {
+          cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)) {
   std::array<float, kDefaultGridVerticesFloatCount> serializedVertices =
       TileVertex::serialize<kDefaultGridVerticesCount>(gridVertices_);
   std::array<unsigned int, kDefaultGridIndicesCount> gridIndices =
@@ -84,8 +83,10 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   layout3.pushFloat(2);  // Each vertex has 2 float values
   va3_->addBuffer(*vb3_, layout3);
 
-  // Index buffer is pre-filled with max indices values
-  ib3_ = std::make_unique<IndexBuffer>(dynamicIndices_.data(), dynamicIndices_.size());
+  // Dynamic usage of index buffer
+  ib3_ = std::make_unique<IndexBuffer>(nullptr, kDefaultMaxDynamicTriangleIndices, GL_DYNAMIC_DRAW);
+  // Send empty data to initialize it
+  ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
 
   shader3_ = std::make_unique<ShaderManager>("basic.shader");
   shader3_->init();
@@ -126,23 +127,7 @@ void TestDynamicRender::onImGuiRender() {
     this->addDynamicTriangle();
   }
   ImGui::Text("Dynamic vertices count: %zu", dynamicTriangleVertices_.size());
-  ImGui::Text("Dynamic indices count: %zu", dynamicIndices_.size());
-
-  // for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {
-  //   ImGui::Text("#: %.d", i);
-  //   ImGui::Text("Triangle v1: %.2f, %.2f", dynamicTriangles_[i * 6 + 0], dynamicTriangles_[i * 6 + 1]);
-  //   ImGui::Text("Triangle v2: %.2f, %.2f", dynamicTriangles_[i * 6 + 2], dynamicTriangles_[i * 6 + 2 + 1]);
-  //   ImGui::Text("Triangle v3: %.2f, %.2f", dynamicTriangles_[i * 6 + 4], dynamicTriangles_[i * 6 + 4 + 1]);
-  //   ImGui::Text("---- ---- ---- ----");
-  // }
-
-  // for (int i = 0; i < dynamicIndices_.size() / 3; i++) {
-  //   ImGui::Text("#: %.d", i);
-  //   ImGui::Text("Indice 1: %.d", dynamicIndices_.at(i * 3 + 0));
-  //   ImGui::Text("Indice 2: %.d", dynamicIndices_.at(i * 3 + 1));
-  //   ImGui::Text("Indice 3: %.d", dynamicIndices_.at(i * 3 + 2));
-  //   ImGui::Text("---- ---- ---- ----");
-  // }
+  ImGui::Text("Dynamic indices vector count: %zu", dynamicIndicesVector_.size());
 }
 
 void TestDynamicRender::setViewProjection(bool usePerspective, ShaderManager& shader) {
@@ -258,10 +243,18 @@ void TestDynamicRender::addDynamicTriangle() {
   dynamicTriangleVertices_.insert(dynamicTriangleVertices_.end(), tempTriangle.begin(), tempTriangle.end());
   ASSERT(dynamicTriangleVertices_.size() <= kDefaultMaxDynamicTriangleVertices);
 
+  unsigned int currentSize = dynamicIndicesVector_.size();
+  const auto tempIndice = std::vector<unsigned int>{currentSize, currentSize + 1, currentSize + 2};
+  dynamicIndicesVector_.insert(dynamicIndicesVector_.end(), tempIndice.begin(), tempIndice.end());
+
   // Potential refactor: not sending ALL data each time
   vb3_->bind();
   vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
   vb3_->unBind();
+  // Update indices in index buffer
+  ib3_->bind();
+  ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
+  ib3_->unBind();
 }
 
 }  // namespace test

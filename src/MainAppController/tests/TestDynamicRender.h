@@ -96,7 +96,7 @@ class TestDynamicRender : public Test, public KeyboardListener {
   void setModel(ShaderManager& shader);
   void updateModelViewProjection();
 
-  std::array<unsigned int, kDefaultMaxDynamicTriangleIndices> dynamicIndices_;
+  std::vector<unsigned int> dynamicIndicesVector_{};
   std::vector<float> dynamicTriangleVertices_{};
   void addDynamicTriangle();
 };

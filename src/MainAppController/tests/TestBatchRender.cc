@@ -5,12 +5,12 @@
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
-#include <vector>
+#include <array>
 
 namespace test {
 
 TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
-  std::vector<float> positions = {
+  std::array<float, 40> positions = {
       // clang-format off
     // 2 coords, 2 texture coord, 1 texture id
     -0.75F, -0.25F,  0.0F, 0.0F,  0.0F,
@@ -24,7 +24,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
     0.0F, 0.5F,  0.0F, 1.0F,  1.0F
       // clang-format on
   };
-  std::vector<unsigned int> indices = {
+  std::array<unsigned int, 12> indices = {
       // clang-format off
     0, 1, 2,
     2, 3, 0,

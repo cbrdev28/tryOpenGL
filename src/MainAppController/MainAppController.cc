@@ -9,6 +9,9 @@
 #include <TestWorldManager.h>
 #include <fmt/core.h>
 
+#include "TestDynamicRender.h"
+
+
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
 auto MainAppController::run() -> int {
@@ -36,6 +39,7 @@ auto MainAppController::init() -> int {
     testMenu_.registerTest<test::TestTexture>("Test Texture?");
     testMenu_.registerTest<test::TestBatchRender>("Test Batch Rendering");
     testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
+    testMenu_.registerTest<test::TestDynamicRender>("Test Dynamic Render");
   } catch (int error) {
     return -1;
   }

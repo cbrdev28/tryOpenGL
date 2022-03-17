@@ -20,6 +20,7 @@ add_library(
     "tests/TestTexture.cc"
     "tests/TestBatchRender.cc"
     "tests/TestRenderTiles.cc"
+    "tests/TestDynamicRender.cc"
 )
 
 target_include_directories(

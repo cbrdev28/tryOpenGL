@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "openGLErrorHelpers.h"
+#include "../helpers/openGLErrorHelpers.h"
 
 struct DynamicTriangle {
   template <unsigned int indicesCount>

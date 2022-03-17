@@ -13,7 +13,6 @@
 #include <glmHeaders.h>
 
 #include <memory>
-#include <random>
 
 #include "TileVertex.h"
 
@@ -30,15 +29,8 @@ class TestRenderTiles : public Test, public KeyboardListener {
 
   static constexpr glm::vec3 perspectiveLookAtTarget = {0.0F, 0.0F, -1.0F};
   static constexpr glm::vec3 perspectiveLookAtUp = {0.0F, 1.0F, 0.0F};
-  // Move camera: up on Z axis & back on the Y axis (to look from above and a bit behind)
   static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -0.5F, 5.0F};
   static constexpr float defaultCameraSpeed = 5.0F;
-
-  static constexpr unsigned int maxDynamicTriangles = 16;
-  static constexpr unsigned int maxDynamicTriangleVertexValues =
-      maxDynamicTriangles * 6;  // A triangle is made of 6 float values
-  static constexpr unsigned int maxDynamicTriangleIndiceValues =
-      maxDynamicTriangles * 3;  // A triangle indice is made of 3 unsigned int values
 
  public:
   explicit TestRenderTiles(const TestContext& ctx);
@@ -65,6 +57,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
   float zoom_{7.0F};
   float fov_{90.0F};
   bool usePerspective_{false};
+
   AspectRatio& aspectRatio_;
   float reversedAspectRatio_{aspectRatio_.reversed()};
   float frameDeltaTime_{0.0F};
@@ -88,20 +81,9 @@ class TestRenderTiles : public Test, public KeyboardListener {
   std::unique_ptr<IndexBuffer> ib2_;
   std::unique_ptr<ShaderManager> shader2_;
 
-  std::unique_ptr<VertexArray> va3_;
-  std::unique_ptr<VertexBuffer> vb3_;
-  std::unique_ptr<IndexBuffer> ib3_;
-  std::unique_ptr<ShaderManager> shader3_;
-
   void setViewProjection(bool usePerspective, ShaderManager& shader);
   void setModel(ShaderManager& shader);
   void updateModelViewProjection();
-
-  std::vector<float> dynamicTriangles_{};
-  std::vector<unsigned int> dynamicTriangleIndices_{};
-  auto makeDynamicTriangle() -> std::vector<float>;
-  std::default_random_engine gen{std::random_device{}()};
-  void addDynamicTriangle();
 };
 
 }  // namespace test

@@ -1,5 +1,10 @@
 build/
 .vscode/
+
 # Used by cland (deamon to run clang-format & clang-tidy)
 .cache/
+
 imgui.ini
+
+# Visual Studio Community 2022
+.vs/

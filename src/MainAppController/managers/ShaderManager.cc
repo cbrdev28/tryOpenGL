@@ -16,6 +16,7 @@ constexpr int SHADER_INFO_LOG = 512;
 ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)){};
 
 ShaderManager::~ShaderManager() {
+  unBind();
   if (vertexShaderID_ != 0) {
     GLCall(glDeleteShader(vertexShaderID_));
   }
@@ -30,6 +31,7 @@ ShaderManager::~ShaderManager() {
 auto ShaderManager::init() -> ShaderManager& {
   ShaderProgramSource shaderSources = parseShader();
   this->compileVertex(shaderSources.vertexSource).compileFragment(shaderSources.fragmentSource).link();
+  bind();
   return *this;
 }
 

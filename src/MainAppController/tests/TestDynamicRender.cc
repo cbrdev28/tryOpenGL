@@ -39,7 +39,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
   shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
   shader1_->init();
-  shader1_->bind();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
 
@@ -67,7 +66,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
   shader2_ = std::make_unique<ShaderManager>("basic.shader");
   shader2_->init();
-  shader2_->bind();
   shader2_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader2_);
 
@@ -77,7 +75,10 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   shader2_->unBind();
 
   va3_ = std::make_unique<VertexArray>();
+  // Dynamic usage of vertex buffer
   vb3_ = std::make_unique<VertexBuffer>(nullptr, sizeof(float) * kDefaultMaxDynamicTriangleVertices, GL_DYNAMIC_DRAW);
+  // Send empty data to initialize it
+  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
 
   VertexBufferLayout layout3;
   layout3.pushFloat(2);  // Each vertex has 2 float values
@@ -88,7 +89,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
   shader3_ = std::make_unique<ShaderManager>("basic.shader");
   shader3_->init();
-  shader3_->bind();
   shader3_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader3_);
 
@@ -125,7 +125,7 @@ void TestDynamicRender::onImGuiRender() {
   if (ImGui::Button("Add dynamic triangle")) {
     this->addDynamicTriangle();
   }
-  ImGui::Text("Dynamic triangles count: %zu", dynamicTriangleVertices_.size());
+  ImGui::Text("Dynamic vertices count: %zu", dynamicTriangleVertices_.size());
   ImGui::Text("Dynamic indices count: %zu", dynamicIndices_.size());
 
   // for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {

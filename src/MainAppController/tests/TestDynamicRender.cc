@@ -43,10 +43,10 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
 
-  textureGrass_ = std::make_unique<Texture>("grass.png");
   textureWall_ = std::make_unique<Texture>("wall.png");
-  textureGrass_->bind(0);
-  textureWall_->bind(1);
+  textureGrass_ = std::make_unique<Texture>("grass.png");
+  textureWall_->bind(0);
+  textureGrass_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
   shader1_->setUniform1iv("u_textureSamplers", {0, 1});
 
@@ -77,8 +77,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   shader2_->unBind();
 
   va3_ = std::make_unique<VertexArray>();
-  vb3_ = std::make_unique<VertexBuffer>(nullptr, sizeof(float) * TestDynamicRender::maxDynamicTriangleVertexValues,
-                                        GL_DYNAMIC_DRAW);
+  vb3_ = std::make_unique<VertexBuffer>(nullptr, sizeof(float) * kDefaultMaxDynamicTriangleVertices, GL_DYNAMIC_DRAW);
 
   VertexBufferLayout layout3;
   layout3.pushFloat(2);  // Each vertex has 2 float values
@@ -257,7 +256,7 @@ void TestDynamicRender::addDynamicTriangle() {
   auto const tempTriangle = DynamicTriangle::makeTriangleVertices(kDefaultGridRowColumnCount, TileVertex::kTileSize,
                                                                   TileVertex::kTileSpacing);
   dynamicTriangleVertices_.insert(dynamicTriangleVertices_.end(), tempTriangle.begin(), tempTriangle.end());
-  ASSERT(dynamicTriangleVertices_.size() < TestDynamicRender::maxDynamicTriangleVertexValues);
+  ASSERT(dynamicTriangleVertices_.size() <= kDefaultMaxDynamicTriangleVertices);
 
   // Potential refactor: not sending ALL data each time
   vb3_->bind();

@@ -36,12 +36,7 @@ class TestDynamicRender : public Test, public KeyboardListener {
 
   static constexpr unsigned int kDefaultMaxDynamicTriangles = 16;
   static constexpr unsigned int kDefaultMaxDynamicTriangleIndices = kDefaultMaxDynamicTriangles * 3;
-  // TODO(cbr): remove
-  static constexpr unsigned int maxDynamicTriangles = 16;
-  static constexpr unsigned int maxDynamicTriangleVertexValues =
-      maxDynamicTriangles * 6;  // A triangle is made of 6 float values
-  static constexpr unsigned int maxDynamicTriangleIndiceValues =
-      maxDynamicTriangles * 3;  // A triangle indice is made of 3 unsigned int values
+  static constexpr unsigned int kDefaultMaxDynamicTriangleVertices = kDefaultMaxDynamicTriangles * 6;
 
  public:
   explicit TestDynamicRender(const TestContext& ctx);
@@ -100,7 +95,6 @@ class TestDynamicRender : public Test, public KeyboardListener {
   void setModel(ShaderManager& shader);
   void updateModelViewProjection();
 
-  std::default_random_engine gen{std::random_device{}()};
   std::array<unsigned int, kDefaultMaxDynamicTriangleIndices> dynamicIndices_;
   std::vector<float> dynamicTriangleVertices_{};
   void addDynamicTriangle();

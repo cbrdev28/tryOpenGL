@@ -43,6 +43,7 @@ Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
 }
 
 Texture::~Texture() {
+  unBind();
   GLCall(glDeleteTextures(1, &identifier_));
 
   if (localBuffer_ != nullptr) {

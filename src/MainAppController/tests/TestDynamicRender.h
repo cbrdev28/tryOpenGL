@@ -12,6 +12,7 @@
 #include <VertexBuffer.h>
 #include <glmHeaders.h>
 
+#include <array>
 #include <memory>
 #include <random>
 

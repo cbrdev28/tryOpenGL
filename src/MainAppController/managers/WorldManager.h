@@ -13,6 +13,7 @@
 #include <glmHeaders.h>
 
 #include <memory>
+#include <array>
 
 /**
  * World manager to define what to draw & how to interact.

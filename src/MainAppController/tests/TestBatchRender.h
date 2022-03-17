@@ -10,6 +10,7 @@
 #include <VertexBuffer.h>
 
 #include <memory>
+#include <array>
 
 namespace test {
 

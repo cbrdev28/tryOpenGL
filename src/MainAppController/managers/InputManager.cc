@@ -11,6 +11,12 @@ InputManager::InputManager(WindowManager& windowManager) : windowManager_(window
   fmt::print("InputManager::InputManager(...): windowManager_ = {}\n", formattedRef);
 };
 
+InputManager::~InputManager() {
+  if (!listeners_.empty()) {
+    fmt::print("Warning: ~InputManager(): listeners are not empty!\n");
+  }
+}
+
 auto InputManager::init() -> InputManager& {
   GLFWwindow* window = windowManager_.getWindow();
   glfwSetCursorPosCallback(window, InputManager::mouseCallback);

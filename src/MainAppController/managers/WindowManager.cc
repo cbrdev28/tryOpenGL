@@ -15,6 +15,10 @@ int WindowManager::height = 0;
 std::vector<WindowListener*> WindowManager::listeners_ = {};  // Init to empty
 
 WindowManager::~WindowManager() {
+  if (!listeners_.empty()) {
+    fmt::print("Warning: ~WindowManager(): listeners are not empty!\n");
+  }
+
   if (window_ != nullptr) {
     glfwDestroyWindow(window_);
     glfwTerminate();

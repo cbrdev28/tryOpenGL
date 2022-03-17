@@ -6,6 +6,13 @@
 
 namespace test {
 
+TestMenu::~TestMenu() {
+  if (currentTest_ != nullptr) {
+    delete currentTest_;
+    currentTest_ = nullptr;
+  }
+}
+
 void TestMenu::onUpdate(float deltaTime) {
   if (currentTest_ != nullptr) {
     currentTest_->onUpdate(deltaTime);

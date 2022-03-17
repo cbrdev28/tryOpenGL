@@ -34,6 +34,9 @@ class TestDynamicRender : public Test, public KeyboardListener {
   static constexpr glm::vec3 perspectiveLookAtPositionOffset = {0.0F, -0.5F, 5.0F};
   static constexpr float defaultCameraSpeed = 5.0F;
 
+  static constexpr unsigned int kDefaultMaxDynamicTriangles = 16;
+  static constexpr unsigned int kDefaultMaxDynamicTriangleIndices = kDefaultMaxDynamicTriangles * 3;
+  // TODO(cbr): remove
   static constexpr unsigned int maxDynamicTriangles = 16;
   static constexpr unsigned int maxDynamicTriangleVertexValues =
       maxDynamicTriangles * 6;  // A triangle is made of 6 float values
@@ -61,7 +64,7 @@ class TestDynamicRender : public Test, public KeyboardListener {
   void onZoomOut() override;
 
  private:
-  std::vector<float> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
+  std::vector<float> backgroundColor_ = {0.4F, 0.7F, 0.6F, 1.0F};
   float zoom_{7.0F};
   float fov_{90.0F};
   bool usePerspective_{false};
@@ -97,10 +100,10 @@ class TestDynamicRender : public Test, public KeyboardListener {
   void setModel(ShaderManager& shader);
   void updateModelViewProjection();
 
-  std::vector<float> dynamicTriangles_{};
-  std::vector<unsigned int> dynamicTriangleIndices_{};
-  auto makeDynamicTriangle() -> std::vector<float>;
   std::default_random_engine gen{std::random_device{}()};
+  std::array<unsigned int, kDefaultMaxDynamicTriangleIndices> dynamicIndices_;
+  std::vector<float> dynamicTriangles_{};
+  auto makeDynamicTriangle() -> std::vector<float>;
   void addDynamicTriangle();
 };
 

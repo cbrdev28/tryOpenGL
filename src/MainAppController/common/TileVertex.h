@@ -6,6 +6,7 @@
 
 #include "openGLErrorHelpers.h"
 
+// TODO(cbr): move to "models" folder
 struct TileVertex {
   // Constants
   static constexpr unsigned int kPosCount = 2;

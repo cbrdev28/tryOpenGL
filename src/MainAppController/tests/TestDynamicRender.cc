@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include "DynamicTriangle.h"
+
 namespace test {
 
 TestDynamicRender::TestDynamicRender(const TestContext& ctx)
@@ -16,7 +18,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
       reversedAspectRatio_(aspectRatio_.reversed()),
       gridVertices_(TileVertex::buildTilesGrid<kDefaultGridVerticesCount>(kDefaultGridRowColumnCount)),
       currentCameraTileIdx_(TileVertex::findTileBaseIdxForPos<kDefaultGridVerticesCount>(
-          cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)) {
+          cameraPosX_, cameraPosY_, gridVertices_, kDefaultGridSize, kDefaultGridRowColumnCount)),
+      dynamicIndices_(DynamicTriangle::makeIndices<kDefaultMaxDynamicTriangleIndices>()) {
   std::array<float, kDefaultGridVerticesFloatCount> serializedVertices =
       TileVertex::serialize<kDefaultGridVerticesCount>(gridVertices_);
   std::array<unsigned int, kDefaultGridIndicesCount> gridIndices =
@@ -81,15 +84,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   va3_->addBuffer(*vb3_, layout3);
 
   // Index buffer is pre-filled with max indices values
-  // TODO(cbr): try to use array instead?
-  dynamicTriangleIndices_.reserve(TestDynamicRender::maxDynamicTriangleIndiceValues);
-  for (int i = 0; i < TestDynamicRender::maxDynamicTriangles; i++) {
-    dynamicTriangleIndices_.emplace_back(i * 3 + 0);
-    dynamicTriangleIndices_.emplace_back(i * 3 + 1);
-    dynamicTriangleIndices_.emplace_back(i * 3 + 2);
-  }
-
-  ib3_ = std::make_unique<IndexBuffer>(dynamicTriangleIndices_.data(), dynamicTriangleIndices_.size());
+  ib3_ = std::make_unique<IndexBuffer>(dynamicIndices_.data(), dynamicIndices_.size());
 
   shader3_ = std::make_unique<ShaderManager>("basic.shader");
   shader3_->init();
@@ -117,8 +112,6 @@ void TestDynamicRender::onRender() {
 }
 
 void TestDynamicRender::onImGuiRender() {
-  ImGui::Text("Window width: %d", this->getTestContext().windowManager->getWidth());
-  ImGui::Text("Window height: %d", this->getTestContext().windowManager->getHeight());
   ImGui::Text("Delta frame: %.3f", frameDeltaTime_);
   ImGui::Text("FPS: %.2f", 1.0F / frameDeltaTime_);
   ImGui::Text("%s", aspectRatio_.formattedValue().c_str());
@@ -133,7 +126,7 @@ void TestDynamicRender::onImGuiRender() {
     this->addDynamicTriangle();
   }
   ImGui::Text("Dynamic triangles count: %zu", dynamicTriangles_.size());
-  ImGui::Text("Dynamic indices count: %zu", dynamicTriangleIndices_.size());
+  ImGui::Text("Dynamic indices count: %zu", dynamicIndices_.size());
 
   for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {
     ImGui::Text("#: %.d", i);
@@ -143,11 +136,11 @@ void TestDynamicRender::onImGuiRender() {
     ImGui::Text("---- ---- ---- ----");
   }
 
-  for (int i = 0; i < dynamicTriangleIndices_.size() / 3; i++) {
+  for (int i = 0; i < dynamicIndices_.size() / 3; i++) {
     ImGui::Text("#: %.d", i);
-    ImGui::Text("Indice 1: %.d", dynamicTriangleIndices_[i * 3 + 0]);
-    ImGui::Text("Indice 2: %.d", dynamicTriangleIndices_[i * 3 + 1]);
-    ImGui::Text("Indice 3: %.d", dynamicTriangleIndices_[i * 3 + 2]);
+    ImGui::Text("Indice 1: %.d", dynamicIndices_.at(i * 3 + 0));
+    ImGui::Text("Indice 2: %.d", dynamicIndices_.at(i * 3 + 1));
+    ImGui::Text("Indice 3: %.d", dynamicIndices_.at(i * 3 + 2));
     ImGui::Text("---- ---- ---- ----");
   }
 }

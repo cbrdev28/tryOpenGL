@@ -53,7 +53,7 @@ class TestRenderTiles : public Test, public KeyboardListener {
   void onZoomOut() override;
 
  private:
-  std::vector<float> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
+  std::array<float, 4> backgroundColor_ = {0.5F, 0.4F, 0.3F, 1.0F};
   float zoom_{7.0F};
   float fov_{90.0F};
   bool usePerspective_{false};

@@ -13,7 +13,6 @@
 #include <glmHeaders.h>
 
 #include <memory>
-#include <vector>
 
 /**
  * World manager to define what to draw & how to interact.
@@ -41,7 +40,7 @@ class WorldManager : public WindowListener, public KeyboardListener {
   void onMoveBackward() override;
   void onResize(int width, int height) override;
 
-  inline auto getBackGroundColor() -> std::vector<float>* { return &backgroundColor_; };
+  inline auto getBackGroundColor() -> std::array<float, 4>* { return &backgroundColor_; };
   inline auto getDeltaTimeFrame() -> double { return deltaTimeFrame_; };
   inline void setDeltaTimeFrame(double deltaTimeFrame) { deltaTimeFrame_ = deltaTimeFrame; };
 
@@ -59,8 +58,8 @@ class WorldManager : public WindowListener, public KeyboardListener {
 
   // Keep track of camera position
   glm::vec3 cameraPosition_ = glm::vec3(0.0F, 0.0F, 0.0F);
-  std::vector<float> backgroundColor_ = {basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB,
-                                         1.0F};
+  std::array<float, 4> backgroundColor_ = {basicBackgroundNeonPinkR, basicBackgroundNeonPinkG, basicBackgroundNeonPinkB,
+                                           1.0F};
 
   [[nodiscard]] auto getCameraSpeedByFrame_() const -> float;
 };

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "DynamicTriangle.h"
+#include "TileVertex.h"
 
 namespace test {
 
@@ -125,24 +126,24 @@ void TestDynamicRender::onImGuiRender() {
   if (ImGui::Button("Add dynamic triangle")) {
     this->addDynamicTriangle();
   }
-  ImGui::Text("Dynamic triangles count: %zu", dynamicTriangles_.size());
+  ImGui::Text("Dynamic triangles count: %zu", dynamicTriangleVertices_.size());
   ImGui::Text("Dynamic indices count: %zu", dynamicIndices_.size());
 
-  for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {
-    ImGui::Text("#: %.d", i);
-    ImGui::Text("Triangle v1: %.2f, %.2f", dynamicTriangles_[i * 6 + 0], dynamicTriangles_[i * 6 + 1]);
-    ImGui::Text("Triangle v2: %.2f, %.2f", dynamicTriangles_[i * 6 + 2], dynamicTriangles_[i * 6 + 2 + 1]);
-    ImGui::Text("Triangle v3: %.2f, %.2f", dynamicTriangles_[i * 6 + 4], dynamicTriangles_[i * 6 + 4 + 1]);
-    ImGui::Text("---- ---- ---- ----");
-  }
+  // for (int i = 0; i < dynamicTriangles_.size() / 6; i++) {
+  //   ImGui::Text("#: %.d", i);
+  //   ImGui::Text("Triangle v1: %.2f, %.2f", dynamicTriangles_[i * 6 + 0], dynamicTriangles_[i * 6 + 1]);
+  //   ImGui::Text("Triangle v2: %.2f, %.2f", dynamicTriangles_[i * 6 + 2], dynamicTriangles_[i * 6 + 2 + 1]);
+  //   ImGui::Text("Triangle v3: %.2f, %.2f", dynamicTriangles_[i * 6 + 4], dynamicTriangles_[i * 6 + 4 + 1]);
+  //   ImGui::Text("---- ---- ---- ----");
+  // }
 
-  for (int i = 0; i < dynamicIndices_.size() / 3; i++) {
-    ImGui::Text("#: %.d", i);
-    ImGui::Text("Indice 1: %.d", dynamicIndices_.at(i * 3 + 0));
-    ImGui::Text("Indice 2: %.d", dynamicIndices_.at(i * 3 + 1));
-    ImGui::Text("Indice 3: %.d", dynamicIndices_.at(i * 3 + 2));
-    ImGui::Text("---- ---- ---- ----");
-  }
+  // for (int i = 0; i < dynamicIndices_.size() / 3; i++) {
+  //   ImGui::Text("#: %.d", i);
+  //   ImGui::Text("Indice 1: %.d", dynamicIndices_.at(i * 3 + 0));
+  //   ImGui::Text("Indice 2: %.d", dynamicIndices_.at(i * 3 + 1));
+  //   ImGui::Text("Indice 3: %.d", dynamicIndices_.at(i * 3 + 2));
+  //   ImGui::Text("---- ---- ---- ----");
+  // }
 }
 
 void TestDynamicRender::setViewProjection(bool usePerspective, ShaderManager& shader) {
@@ -252,40 +253,15 @@ void TestDynamicRender::onZoomOut() {
   this->updateModelViewProjection();
 }
 
-auto TestDynamicRender::makeDynamicTriangle() -> std::vector<float> {
-  const float gridRightEdgePos =
-      (kDefaultGridRowColumnCount / 2.0F) * (TileVertex::kTileSize + TileVertex::kTileSpacing);
-  const float gridLeftEdgePos = -gridRightEdgePos;
-  const float gridTopPos = gridRightEdgePos;
-  const float gridBottomPos = -gridTopPos;
-
-  std::uniform_real_distribution<float> dist(0.0F, 1.0F);
-  const float randomPosX = (dist(gen) * gridRightEdgePos * 2) - gridRightEdgePos;
-  const float randomPosY = (dist(gen) * gridTopPos * 2) - gridTopPos;
-
-  return std::vector<float>{
-      // clang-format off
-    randomPosX, randomPosY, // Bottom left: indice = 0
-    randomPosX + 0.2F, randomPosY, // Bottom right: indice = 1
-    randomPosX, randomPosY + 0.2F, // Top right: indice = 2
-      // clang-format on
-  };
-}
-
 void TestDynamicRender::addDynamicTriangle() {
-  auto const tempTriangle = this->makeDynamicTriangle();
-  dynamicTriangles_.insert(dynamicTriangles_.end(), tempTriangle.begin(), tempTriangle.end());
-
-  ASSERT(dynamicTriangles_.size() < TestDynamicRender::maxDynamicTriangleVertexValues);
-
-  // Make new indices
-  // unsigned int currentSize = dynamicTriangleIndices_.size();
-  // const auto tempIndice = std::vector<unsigned int>{currentSize, currentSize + 1, currentSize + 2};
-  // dynamicTriangleIndices_.insert(dynamicTriangleIndices_.end(), tempIndice.begin(), tempIndice.end());
+  auto const tempTriangle = DynamicTriangle::makeTriangleVertices(kDefaultGridRowColumnCount, TileVertex::kTileSize,
+                                                                  TileVertex::kTileSpacing);
+  dynamicTriangleVertices_.insert(dynamicTriangleVertices_.end(), tempTriangle.begin(), tempTriangle.end());
+  ASSERT(dynamicTriangleVertices_.size() < TestDynamicRender::maxDynamicTriangleVertexValues);
 
   // Potential refactor: not sending ALL data each time
   vb3_->bind();
-  vb3_->setData(dynamicTriangles_.data(), sizeof(float) * dynamicTriangles_.size());
+  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
   vb3_->unBind();
 }
 

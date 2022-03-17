@@ -102,8 +102,7 @@ class TestDynamicRender : public Test, public KeyboardListener {
 
   std::default_random_engine gen{std::random_device{}()};
   std::array<unsigned int, kDefaultMaxDynamicTriangleIndices> dynamicIndices_;
-  std::vector<float> dynamicTriangles_{};
-  auto makeDynamicTriangle() -> std::vector<float>;
+  std::vector<float> dynamicTriangleVertices_{};
   void addDynamicTriangle();
 };
 

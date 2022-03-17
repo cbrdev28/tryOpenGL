@@ -1,22 +1,22 @@
 #ifndef BASIC_TRIANGLE_H_
 #define BASIC_TRIANGLE_H_
 
-#include <vector>
+#include <array>
 
 const float triangleDeltaX = 0.2F;
 const float triangleDeltaY = 0.3F;
 
-const std::vector<float> basicTriangleIndicedVertices = {
+const std::array<float, 6> basicTriangleIndicedVertices = {
     // clang-format off
     -triangleDeltaX, -triangleDeltaY, // Bottom left: indice = 0
     triangleDeltaX, -triangleDeltaY, // Bottom right: indice = 1
-    triangleDeltaX - triangleDeltaX, triangleDeltaY, // Top right: indice = 2
+    triangleDeltaX - triangleDeltaX, triangleDeltaY // Top right: indice = 2
     // clang-format on
 };
 
-const std::vector<unsigned int> basicTriangleIndices = {
+const std::array<unsigned int, 3> basicTriangleIndices = {
     // clang-format off
-    0, 1, 2,
+    0, 1, 2
     // clang-format on
 };
 

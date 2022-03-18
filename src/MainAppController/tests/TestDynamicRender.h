@@ -22,7 +22,7 @@ namespace test {
 
 class TestDynamicRender : public Test, public KeyboardListener {
  public:
-  static constexpr unsigned int kDefaultGridRowColumnCount = 5;
+  static constexpr unsigned int kDefaultGridRowColumnCount = 12;
   static constexpr unsigned int kDefaultGridSize = kDefaultGridRowColumnCount * kDefaultGridRowColumnCount;
   static constexpr unsigned int kDefaultGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
   static constexpr unsigned int kDefaultGridVerticesFloatCount =

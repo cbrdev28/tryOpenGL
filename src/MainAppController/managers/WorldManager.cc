@@ -4,8 +4,8 @@
 #include "WorldManager.h"
 
 #include <VertexBufferLayout.h>
-#include <basicCamera.h>
-#include <basicSquare.h>
+
+#include "basicFirstForms.h"
 
 auto WorldManager::init(const float windowWidth, const float windowHeight) -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));

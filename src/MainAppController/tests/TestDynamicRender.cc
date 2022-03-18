@@ -103,7 +103,12 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
 TestDynamicRender::~TestDynamicRender() { this->getTestContext().inputManager->removeKeyboardListener(this); }
 
-void TestDynamicRender::onUpdate(float deltaTime) { frameDeltaTime_ = deltaTime; }
+void TestDynamicRender::onUpdate(float deltaTime) {
+  frameDeltaTime_ = deltaTime;
+  // For each dynamic triangle
+  // Grab 6 float: 3 vector of 2 floats
+  // Update positions
+}
 
 void TestDynamicRender::onRender() {
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));

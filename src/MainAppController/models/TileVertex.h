@@ -4,7 +4,7 @@
 #include <array>
 #include <vector>
 
-#include "openGLErrorHelpers.h"
+#include "../helpers/openGLErrorHelpers.h"
 
 // TODO(cbr): move to "models" folder
 struct TileVertex {

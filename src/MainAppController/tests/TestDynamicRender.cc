@@ -2,7 +2,6 @@
 
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
-#include <basicTriangle.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
@@ -10,6 +9,7 @@
 
 #include "DynamicTriangle.h"
 #include "TileVertex.h"
+#include "basicFirstForms.h"
 
 namespace test {
 
@@ -36,7 +36,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
-  shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
+  shader1_ = std::make_unique<ShaderManager>("test_dynamic_render.shader");
   shader1_->init();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
@@ -46,7 +46,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   textureWall_->bind(0);
   textureGrass_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
-  shader1_->setUniform1iv("u_textureSamplers", {0, 1});
+  shader1_->setUniform1i("u_textureSamplerA", 0);
+  shader1_->setUniform1i("u_textureSamplerB", 1);
 
   va1_->unBind();
   vb1_->unBind();
@@ -268,6 +269,18 @@ void TestDynamicRender::onUpdateDynamicTriangles(float deltaTime) { this->onMove
 void TestDynamicRender::onMoveTriangleTowardCamera(float deltaTime) {
   // For each 6 vertices (since a triangle is made of 3 vector of 2 positions)
   for (int i = 0; i < dynamicTriangleVertices_.size(); i += 6) {
+    // Only once per loop, trying to rotate a triangle
+    // if (i == 0) {
+    //   const float triangleMidPosX = dynamicTriangleVertices_.at(0) + (DynamicTriangle::kTriangleSize / 2);
+    //   const float triangleMidPosY = dynamicTriangleVertices_.at(1) + (DynamicTriangle::kTriangleSize / 2);
+    //   auto const directionVec = glm::vec2(cameraPosX_ - triangleMidPosX, cameraPosY_ - triangleMidPosY);
+    //   const auto angle = glm::atan(directionVec.y, directionVec.x);
+    //   const auto modelMatrix = glm::rotate(MatrixHelper::identityMatrix, cbr, glm::vec3(0.0F, 0.0F, 1.0F));
+    //   shader3_->bind();
+    //   shader3_->setUniformMat4("u_model", modelMatrix);
+    //   shader3_->unBind();
+    // }
+
     const float triangleX = dynamicTriangleVertices_.at(i);
     const float triangleY = dynamicTriangleVertices_.at(i + 1);
     const float deltaPos = 0.2F * deltaTime;

@@ -269,6 +269,18 @@ void TestDynamicRender::onUpdateDynamicTriangles(float deltaTime) { this->onMove
 void TestDynamicRender::onMoveTriangleTowardCamera(float deltaTime) {
   // For each 6 vertices (since a triangle is made of 3 vector of 2 positions)
   for (int i = 0; i < dynamicTriangleVertices_.size(); i += 6) {
+    // Only once per loop, trying to rotate a triangle
+    // if (i == 0) {
+    //   const float triangleMidPosX = dynamicTriangleVertices_.at(0) + (DynamicTriangle::kTriangleSize / 2);
+    //   const float triangleMidPosY = dynamicTriangleVertices_.at(1) + (DynamicTriangle::kTriangleSize / 2);
+    //   auto const directionVec = glm::vec2(cameraPosX_ - triangleMidPosX, cameraPosY_ - triangleMidPosY);
+    //   const auto angle = glm::atan(directionVec.y, directionVec.x);
+    //   const auto modelMatrix = glm::rotate(MatrixHelper::identityMatrix, cbr, glm::vec3(0.0F, 0.0F, 1.0F));
+    //   shader3_->bind();
+    //   shader3_->setUniformMat4("u_model", modelMatrix);
+    //   shader3_->unBind();
+    // }
+
     const float triangleX = dynamicTriangleVertices_.at(i);
     const float triangleY = dynamicTriangleVertices_.at(i + 1);
     const float deltaPos = 0.2F * deltaTime;

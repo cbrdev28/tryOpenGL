@@ -2,11 +2,12 @@
 
 #include <MatrixHelper.h>
 #include <VertexBufferLayout.h>
-#include <basicTriangle.h>
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
 #include <vector>
+
+#include "basicFirstForms.h"
 
 namespace test {
 

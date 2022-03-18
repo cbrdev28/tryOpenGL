@@ -12,8 +12,8 @@ struct TileVertex {
   static constexpr unsigned int kPosCount = 2;
   static constexpr unsigned int kTextureCoordCount = 2;
   static constexpr unsigned int kTextureIdCount = 1;
-  static constexpr float kTileSize = 1.0F;
-  static constexpr float kTileSpacing = 0.01F;
+  static constexpr float kTileSize = 1.5F;
+  static constexpr float kTileSpacing = 0.02F;
   static constexpr unsigned int kTileVerticesCount = 4;
   static constexpr std::size_t kTileFloatValuesCount = kPosCount + kTextureCoordCount + kTextureIdCount;
   static constexpr unsigned int kTileIndicesCount = 6;
@@ -41,14 +41,16 @@ struct TileVertex {
     for (unsigned int i = 0; i < rowColumnSize; i += 1) {
       for (unsigned int j = 0; j < rowColumnSize; j += 1) {
         auto posX = static_cast<float>(j) * (kTileSize + kTileSpacing);
-        posX = posX - (static_cast<float>(rowColumnSize) / 2.0F);  // To center the grid of tiles
+        // To center the grid of tiles
+        posX = posX - ((static_cast<float>(rowColumnSize) * (kTileSize + kTileSpacing)) / 2.0F);
 
         auto posY = static_cast<float>(i) * (kTileSize + kTileSpacing);
-        posY = posY - (static_cast<float>(rowColumnSize) / 2.0F);  // To center the grid of tiles
+        // To center the grid of tiles
+        posY = posY - ((static_cast<float>(rowColumnSize) * (kTileSize + kTileSpacing)) / 2.0F);
 
         float tileTextureId = 0.0F;
+        // Draw "wall" texture on the edge of the grid
         if (j == 0 || j == rowColumnSize - 1 || i == 0 || i == rowColumnSize - 1) {
-          // Draw "wall" texture on the edge of the grid
           tileTextureId = 1.0F;
         }
 
@@ -58,10 +60,10 @@ struct TileVertex {
         TileVertex vertex4 = {{posX, posY + kTileSize}, {0.0F, 1.0F}, tileTextureId};
 
         const auto offset = i * rowColumnSize * kTileVerticesCount;
-        ASSERT(j + 0 + offset < verticesCount);
-        ASSERT(j + 1 + offset < verticesCount);
-        ASSERT(j + 2 + offset < verticesCount);
-        ASSERT(j + 3 + offset < verticesCount);
+        ASSERT((j * 4) + 0 + offset < verticesCount);
+        ASSERT((j * 4) + 1 + offset < verticesCount);
+        ASSERT((j * 4) + 2 + offset < verticesCount);
+        ASSERT((j * 4) + 3 + offset < verticesCount);
         vertices.at((j * 4) + 0 + offset) = vertex1;
         vertices.at((j * 4) + 1 + offset) = vertex2;
         vertices.at((j * 4) + 2 + offset) = vertex3;

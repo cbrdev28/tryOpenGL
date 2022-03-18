@@ -22,7 +22,7 @@ namespace test {
 
 class TestDynamicRender : public Test, public KeyboardListener {
  public:
-  static constexpr unsigned int kDefaultGridRowColumnCount = 9;
+  static constexpr unsigned int kDefaultGridRowColumnCount = 5;
   static constexpr unsigned int kDefaultGridSize = kDefaultGridRowColumnCount * kDefaultGridRowColumnCount;
   static constexpr unsigned int kDefaultGridVerticesCount = kDefaultGridSize * TileVertex::kTileVerticesCount;
   static constexpr unsigned int kDefaultGridVerticesFloatCount =
@@ -60,7 +60,7 @@ class TestDynamicRender : public Test, public KeyboardListener {
   void onZoomOut() override;
 
  private:
-  std::array<float, 4> backgroundColor_ = {0.4F, 0.7F, 0.6F, 1.0F};
+  std::array<float, 4> backgroundColor_ = {0.2F, 0.2F, 0.2F, 1.0F};
   float zoom_{7.0F};
   float fov_{90.0F};
   bool usePerspective_{false};

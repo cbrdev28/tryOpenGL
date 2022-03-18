@@ -23,7 +23,7 @@ void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
   } else {
-    GLCall(glClearColor(0.2F, 0.2F, 0.2F, 1.0F));
+    GLCall(glClearColor(0.1F, 0.1F, 0.1F, 1.0F));
   }
 }
 

@@ -46,7 +46,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   textureWall_->bind(0);
   textureGrass_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
-  shader1_->setUniform1iv("u_textureSamplers", {0, 1});
+  shader1_->setUniform1i("u_textureSamplerA", 0);
+  shader1_->setUniform1i("u_textureSamplerB", 1);
 
   va1_->unBind();
   vb1_->unBind();

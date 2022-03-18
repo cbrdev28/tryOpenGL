@@ -27,10 +27,18 @@ in float v_textureIdx;
 
 layout(location = 0) out vec4 fragmentColor;
 
-uniform sampler2D u_textureSamplers[2];
+uniform sampler2D u_textureSamplerA;
+uniform sampler2D u_textureSamplerB;
 
 void main()
 {
-    vec4 textureFragment = texture(u_textureSamplers[int(v_textureIdx)], v_texturePos);
-    fragmentColor = textureFragment;
+    fragmentColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    switch (int(v_textureIdx)) {
+        case 0:
+            fragmentColor = texture(u_textureSamplerA, v_texturePos);
+            break;
+        case 1:
+            fragmentColor = texture(u_textureSamplerB, v_texturePos);
+            break;
+    }
 };

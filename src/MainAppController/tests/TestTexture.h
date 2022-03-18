@@ -9,6 +9,7 @@
 #include <VertexArray.h>
 #include <VertexBuffer.h>
 
+#include <array>
 #include <memory>
 
 namespace test {
@@ -28,7 +29,7 @@ class TestTexture : public Test {
   void onImGuiRender() override;
 
  private:
-  std::vector<float> backgroundColor_ = {1.0F, 1.0F, 1.0F, 1.0F};
+  std::array<float, 4> backgroundColor_ = {1.0F, 1.0F, 1.0F, 1.0F};
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vb_;

@@ -9,8 +9,12 @@ class KeyboardListener {
   KeyboardListener() = default;
   virtual ~KeyboardListener() = default;
 
-  virtual void onMoveForward() = 0;
-  virtual void onMoveBackward() = 0;
+  virtual void onMoveForward(){};
+  virtual void onMoveBackward(){};
+  virtual void onMoveLeft(){};
+  virtual void onMoveRight(){};
+  virtual void onZoomOut(){};
+  virtual void onZoomIn(){};
 
   KeyboardListener(const KeyboardListener& other) = default;
   KeyboardListener(KeyboardListener&& other) = delete;

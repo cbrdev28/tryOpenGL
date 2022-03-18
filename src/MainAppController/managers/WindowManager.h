@@ -1,20 +1,13 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
+#include <AspectRatio.h>
 #include <WindowListener.h>
-#include <fmt/core.h>
+#include <WindowStats.h>
 #include <openGLHeaders.h>
 
 #include <algorithm>
-#include <string>
 #include <vector>
-
-struct AspectRatio {
-  int numerator{1};
-  int denominator{1};
-  float ratio{static_cast<float>(numerator) / static_cast<float>(denominator)};
-  auto formattedValue() -> std::string { return fmt::format("Ratio: {}/{}", numerator, denominator); }
-};
 
 /**
  * Window manager for glfw
@@ -33,6 +26,7 @@ class WindowManager {
    * Constants
    */
   static const int defaultWidth = 2048;
+  static constexpr int defaultKeyModMask = GLFW_MOD_SHIFT | GLFW_MOD_CONTROL | GLFW_MOD_ALT | GLFW_MOD_SUPER;
 
   /**
    * Initialize window manager: glfw, glad.
@@ -46,7 +40,8 @@ class WindowManager {
 
   [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
   [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
-  [[nodiscard]] inline auto getAspectRatio() const -> AspectRatio { return aspectRatio_; };
+  [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
+  [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
 
   inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
@@ -61,18 +56,21 @@ class WindowManager {
     return *this;
   }
 
+  void updateWindowStats();
+
  private:
   GLFWwindow* window_{nullptr};
   AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
+  WindowStats windowStats_;
 
   static int width;
   static int height;
   static std::vector<WindowListener*> listeners_;
-
   /**
    * Callback
    */
   static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
   static void errorCallback(int code, const char* description);
 };
 

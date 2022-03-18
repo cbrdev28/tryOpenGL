@@ -4,10 +4,13 @@
 #include "MainAppController.h"
 
 #include <TestBatchRender.h>
-#include <TestMenu.h>
+#include <TestRenderTiles.h>
 #include <TestTexture.h>
 #include <TestWorldManager.h>
 #include <fmt/core.h>
+
+#include "TestDynamicRender.h"
+
 
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
@@ -31,6 +34,12 @@ auto MainAppController::init() -> int {
     windowManager_.init();
     inputManager_.init();
     imGuiManager_.init();
+
+    testMenu_.registerTest<test::TestWorldManager>("Test World");
+    testMenu_.registerTest<test::TestTexture>("Test Texture?");
+    testMenu_.registerTest<test::TestBatchRender>("Test Batch Rendering");
+    testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
+    testMenu_.registerTest<test::TestDynamicRender>("Test Dynamic Render");
   } catch (int error) {
     return -1;
   }
@@ -40,20 +49,17 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> MainAppController& {
   fmt::print("renderLoop()\n");
 
-  test::TestMenu testMenu({windowManager_, inputManager_});
-  testMenu.registerTest<test::TestWorldManager>("Test World");
-  testMenu.registerTest<test::TestTexture>("Test Texture?");
-  testMenu.registerTest<test::TestBatchRender>("Test Batch Rendering");
-
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     inputManager_.processKeyboardInput();
+    windowManager_.updateWindowStats();
     renderer_.clear();
+
     imGuiManager_.renderFrame();
 
-    testMenu.onUpdate(0.0F);
-    testMenu.onRender();
-    testMenu.onImGuiRender();
+    testMenu_.onUpdate(windowManager_.getWindowStats().frameDeltaTime.count());
+    testMenu_.onRender();
+    testMenu_.onImGuiRender();
 
     // imGuiManager_.renderExample();
     imGuiManager_.render();

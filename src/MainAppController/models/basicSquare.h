@@ -1,7 +1,7 @@
 #ifndef BASIC_SQUARE_H_
 #define BASIC_SQUARE_H_
 
-#include <vector>
+#include <array>
 
 /**
  * The delta from the origin on the X axis for a tile.
@@ -20,8 +20,7 @@ const float tileDeltaY = 0.5F;
  */
 // static constexpr const float tileDepthZ = 0.2F;
 
-// NOTE: this should not be used anymore (keeping as reference)
-const std::vector<float> basicSquareVertices = {
+const std::array<float, 12> basicSquareVertices = {
     // clang-format off
     -tileDeltaX, -tileDeltaY, // Bottom left
     tileDeltaX, -tileDeltaY, // Bottom right
@@ -33,19 +32,19 @@ const std::vector<float> basicSquareVertices = {
     // clang-format on
 };
 
-const std::vector<float> basicSquareIndicedVertices = {
+const std::array<float, 8> basicSquareIndicedVertices = {
     // clang-format off
     -tileDeltaX, -tileDeltaY, // Bottom left: indice = 0
     tileDeltaX, -tileDeltaY, // Bottom right: indice = 1
     tileDeltaX, tileDeltaY, // Top right: indice = 2
-    -tileDeltaX, tileDeltaY, // Top left: indice = 3
+    -tileDeltaX, tileDeltaY // Top left: indice = 3
     // clang-format on
 };
 
-const std::vector<unsigned int> basicSquareIndices = {
+const std::array<unsigned int, 6> basicSquareIndices = {
     // clang-format off
     0, 1, 2,
-    2, 3, 0,
+    2, 3, 0
     // clang-format on
 };
 

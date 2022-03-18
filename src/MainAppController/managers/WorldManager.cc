@@ -39,7 +39,6 @@ auto WorldManager::init(const float windowWidth, const float windowHeight) -> Wo
 
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
-  updateDeltaTimeFrame_(glfwGetTime());
   GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
 
   shaderManager_.bind();
@@ -69,13 +68,6 @@ void WorldManager::onMoveBackward() {
 
 void WorldManager::onResize(int width, int height) {
   matrixHelper_.updateProjection(static_cast<float>(width), static_cast<float>(height));
-}
-
-// Called during render
-auto WorldManager::updateDeltaTimeFrame_(double currentTimeFrame) -> WorldManager& {
-  deltaTimeFrame_ = currentTimeFrame - lastTimeFrame_;
-  lastTimeFrame_ = currentTimeFrame;
-  return *this;
 }
 
 // Helper function called when moving camera

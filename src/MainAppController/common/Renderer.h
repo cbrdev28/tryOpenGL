@@ -11,7 +11,7 @@
 class Renderer {
  public:
   auto clear() -> Renderer&;
-  auto draw(const ShaderManager& shaders, const VertexArray& va, const IndexBuffer& ib) -> Renderer&;
+  auto draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer&;
 };
 
 #endif

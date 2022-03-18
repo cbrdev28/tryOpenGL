@@ -16,6 +16,7 @@ constexpr int SHADER_INFO_LOG = 512;
 ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)){};
 
 ShaderManager::~ShaderManager() {
+  unBind();
   if (vertexShaderID_ != 0) {
     GLCall(glDeleteShader(vertexShaderID_));
   }
@@ -30,7 +31,39 @@ ShaderManager::~ShaderManager() {
 auto ShaderManager::init() -> ShaderManager& {
   ShaderProgramSource shaderSources = parseShader();
   this->compileVertex(shaderSources.vertexSource).compileFragment(shaderSources.fragmentSource).link();
+  bind();
   return *this;
+}
+
+auto ShaderManager::parseShader() -> ShaderProgramSource {
+  enum class ShaderType {
+    NONE = -1,
+    VERTEX = 0,
+    FRAGMENT = 1,
+  };
+
+  std::ifstream fileStream(shaderFilePath_);
+  if (!fileStream.is_open()) {
+    fmt::print("Failed to open shader file: {}\n", shaderFilePath_);
+    throw -1;
+  }
+
+  std::string line;
+  std::array<std::stringstream, 2> streams;
+  ShaderType type = ShaderType::NONE;
+  while (std::getline(fileStream, line)) {
+    if (line.find("#shader") != std::string::npos) {
+      if (line.find("vertex") != std::string::npos) {
+        type = ShaderType::VERTEX;
+      } else if (line.find("fragment") != std::string::npos) {
+        type = ShaderType::FRAGMENT;
+      }
+    } else {
+      const auto streamIndex = static_cast<std::size_t>(type);
+      streams.at(streamIndex) << line << "\n";
+    }
+  }
+  return {streams[0].str(), streams[1].str()};
 }
 
 void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
@@ -43,7 +76,8 @@ auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
   }
 
   GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
-  if (uniformLocation == GL_INVALID_VALUE || uniformLocation == GL_INVALID_OPERATION) {
+  if (uniformLocation == -1) {
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Failed to get uniform location for: {}\n", name);
     throw -1;
   }
@@ -65,36 +99,11 @@ void ShaderManager::setUniform1iv(const std::string& name, const std::vector<int
   GLCall(glUniform1iv(this->getUniformLocation(name), values.size(), values.data()));
 }
 
-auto ShaderManager::parseShader() -> ShaderProgramSource {
-  enum class ShaderType {
-    NONE = -1,
-    VERTEX = 0,
-    FRAGMENT = 1,
-  };
-
-  std::ifstream fileStream(shaderFilePath_);
-  std::string line;
-  std::array<std::stringstream, 2> streams;
-  ShaderType type = ShaderType::NONE;
-  while (std::getline(fileStream, line)) {
-    if (line.find("#shader") != std::string::npos) {
-      if (line.find("vertex") != std::string::npos) {
-        type = ShaderType::VERTEX;
-      } else if (line.find("fragment") != std::string::npos) {
-        type = ShaderType::FRAGMENT;
-      }
-    } else {
-      const auto streamIndex = static_cast<std::size_t>(type);
-      streams.at(streamIndex) << line << "\n";
-    }
-  }
-  return {streams[0].str(), streams[1].str()};
-}
-
 auto ShaderManager::compileVertex(const std::string& source) -> ShaderManager& {
   vertexShaderID_ = glCreateShader(GL_VERTEX_SHADER);
   if (vertexShaderID_ == 0) {
-    fmt::print("Failed to glCreateShader(GL_VERTEX_SHADER)\n");
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
+    fmt::print("Failed to glCreateShader(GL_VERTEX_SHADER): {}\n", source);
     throw -1;
   }
   const char* src = source.c_str();
@@ -106,7 +115,8 @@ auto ShaderManager::compileVertex(const std::string& source) -> ShaderManager& {
 auto ShaderManager::compileFragment(const std::string& source) -> ShaderManager& {
   fragmentShaderID_ = glCreateShader(GL_FRAGMENT_SHADER);
   if (fragmentShaderID_ == 0) {
-    fmt::print("Failed to glCreateShader(GL_FRAGMENT_SHADER)\n");
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
+    fmt::print("Failed to glCreateShader(GL_FRAGMENT_SHADER): {}\n", source);
     throw -1;
   }
   const char* src = source.c_str();
@@ -117,6 +127,7 @@ auto ShaderManager::compileFragment(const std::string& source) -> ShaderManager&
 
 auto ShaderManager::compile(const unsigned int shaderID) -> ShaderManager& {
   if (shaderID == 0) {
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Invalid shaderID\n");
     throw -1;
   }
@@ -129,6 +140,7 @@ auto ShaderManager::compile(const unsigned int shaderID) -> ShaderManager& {
   GLCall(glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success));
   if (success == 0) {
     GLCall(glGetShaderInfoLog(shaderID, SHADER_INFO_LOG, nullptr, static_cast<GLchar*>(infoLog)));
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Failed to compile shader:\n{}\n", infoLog);
     throw -1;
   }
@@ -138,6 +150,7 @@ auto ShaderManager::compile(const unsigned int shaderID) -> ShaderManager& {
 auto ShaderManager::link() -> ShaderManager& {
   shaderProgramID_ = glCreateProgram();
   if (shaderProgramID_ == 0) {
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Failed to glCreateProgram()\n");
     throw -1;
   }
@@ -152,6 +165,7 @@ auto ShaderManager::link() -> ShaderManager& {
   GLCall(glGetProgramiv(shaderProgramID_, GL_LINK_STATUS, &success));
   if (success == 0) {
     GLCall(glGetProgramInfoLog(shaderProgramID_, SHADER_INFO_LOG, nullptr, static_cast<GLchar*>(infoLog)));
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Failed to link shaders:\n{}\n", infoLog);
     throw -1;
   }

@@ -6,6 +6,13 @@
 
 namespace test {
 
+TestMenu::~TestMenu() {
+  if (currentTest_ != nullptr) {
+    delete currentTest_;
+    currentTest_ = nullptr;
+  }
+}
+
 void TestMenu::onUpdate(float deltaTime) {
   if (currentTest_ != nullptr) {
     currentTest_->onUpdate(deltaTime);
@@ -16,7 +23,7 @@ void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
   } else {
-    GLCall(glClearColor(0.2F, 0.2F, 0.2F, 1.0F));
+    GLCall(glClearColor(0.1F, 0.1F, 0.1F, 1.0F));
   }
 }
 

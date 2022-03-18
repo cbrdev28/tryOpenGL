@@ -7,13 +7,18 @@
 #include <openGLErrorHelpers.h>
 #include <openGLHeaders.h>
 
+#include <chrono>
+
 // Initialize static class variables
 int WindowManager::width = WindowManager::defaultWidth;
 int WindowManager::height = 0;
-// Init to empty
-std::vector<WindowListener*> WindowManager::listeners_ = {};
+std::vector<WindowListener*> WindowManager::listeners_ = {};  // Init to empty
 
 WindowManager::~WindowManager() {
+  if (!listeners_.empty()) {
+    fmt::print("Warning: ~WindowManager(): listeners are not empty!\n");
+  }
+
   if (window_ != nullptr) {
     glfwDestroyWindow(window_);
     glfwTerminate();
@@ -55,14 +60,19 @@ auto WindowManager::init() -> WindowManager& {
   }
 
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
+  glfwSetKeyCallback(window_, WindowManager::keyCallback);
   return *this;
 }
 
 auto WindowManager::getWindow() const -> GLFWwindow* { return window_; }
 
-/**
- * Private
- */
+void WindowManager::updateWindowStats() {
+  auto nowTime = std::chrono::steady_clock::now();
+  windowStats_.frameDeltaTime =
+      std::chrono::duration_cast<std::chrono::duration<float>>(nowTime - windowStats_.endTime);
+  windowStats_.endTime = nowTime;
+  ++windowStats_.frameCount;
+}
 
 /**
  * Callback
@@ -81,6 +91,18 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width,
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
   // const auto testSize = WindowManager::listeners_.size();
   // fmt::print("framebufferSizeCallback testSize = {}", testSize);
+}
+
+void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
+  // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
+
+  // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
+  //   // Pressed Alt + Enter
+  // }
+
+  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
+    glfwSetWindowShouldClose(window, 1 /* true */);
+  }
 }
 
 void WindowManager::errorCallback(int code, const char* description) {

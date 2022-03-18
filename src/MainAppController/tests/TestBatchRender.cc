@@ -5,12 +5,12 @@
 #include <imgui.h>
 #include <openGLErrorHelpers.h>
 
-#include <vector>
+#include <array>
 
 namespace test {
 
 TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
-  std::vector<float> positions = {
+  std::array<float, 40> positions = {
       // clang-format off
     // 2 coords, 2 texture coord, 1 texture id
     -0.75F, -0.25F,  0.0F, 0.0F,  0.0F,
@@ -24,7 +24,7 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
     0.0F, 0.5F,  0.0F, 1.0F,  1.0F
       // clang-format on
   };
-  std::vector<unsigned int> indices = {
+  std::array<unsigned int, 12> indices = {
       // clang-format off
     0, 1, 2,
     2, 3, 0,
@@ -45,15 +45,15 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
 
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
 
-  shader_ = std::make_unique<ShaderManager>("../res/shaders/test_texture.shader");
+  shader_ = std::make_unique<ShaderManager>("test_batch_render.shader");
   shader_->init();
   shader_->bind();
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);
   this->setViewProjection(usePerspective_);
 
-  textureGrass_ = std::make_unique<Texture>("../res/textures/grass.png");
-  textureWall_ = std::make_unique<Texture>("../res/textures/wall.png");
+  textureGrass_ = std::make_unique<Texture>("grass.png");
+  textureWall_ = std::make_unique<Texture>("wall.png");
   textureWall_->bind(0);
   textureGrass_->bind(1);
   // Set an array of samplers in our shader with values: 0, 1 (respectively matching the texture bind(...) function)
@@ -76,9 +76,9 @@ void TestBatchRender::onRender() {
 }
 
 void TestBatchRender::onImGuiRender() {
-  ImGui::Text("Window width: %d", this->getTestContext().windowManager.getWidth());
-  ImGui::Text("Window height: %d", this->getTestContext().windowManager.getHeight());
-  ImGui::Text("%s", this->getTestContext().windowManager.getAspectRatio().formattedValue().c_str());
+  ImGui::Text("Window width: %d", this->getTestContext().windowManager->getWidth());
+  ImGui::Text("Window height: %d", this->getTestContext().windowManager->getHeight());
+  ImGui::Text("%s", this->getTestContext().windowManager->getAspectRatio().formattedValue().c_str());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
   ImGui::Checkbox("Use perspective", &usePerspective_);
   if (usePerspective_) {
@@ -103,12 +103,12 @@ void TestBatchRender::setViewProjection(bool usePerspective) {
     shader_->setUniformMat4("u_view", glm::lookAt(pos + posOffset, target + pos, up));
 
     const auto perspective =
-        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager.getAspectRatio().ratio, 0.0F, 10.0F);
+        glm::perspective(glm::radians(fov_), this->getTestContext().windowManager->getAspectRatio().ratio, 0.0F, 10.0F);
     shader_->setUniformMat4("u_projection", perspective);
   } else {
     shader_->setUniformMat4("u_view", glm::mat4{1.0F});
 
-    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager.getAspectRatio().ratio;
+    const auto reversedAspectRatio = 1.0F / this->getTestContext().windowManager->getAspectRatio().ratio;
     const auto zoom = zoom_ * 0.1F;
     const auto deltaX = deltaX_ * 0.1F;
     const auto deltaY = deltaY_ * 0.1F;

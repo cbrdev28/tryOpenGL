@@ -14,6 +14,12 @@
 class InputManager {
  public:
   explicit InputManager(WindowManager& windowManager);
+  ~InputManager();
+
+  InputManager(const InputManager& other) = delete;
+  InputManager(InputManager&& other) = delete;
+  auto operator=(const InputManager& other) -> InputManager& = delete;
+  auto operator=(InputManager&& other) -> InputManager& = delete;
 
   /**
    * Initialize input manager.

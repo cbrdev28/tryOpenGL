@@ -19,6 +19,8 @@ add_library(
     "tests/TestMenu.cc"
     "tests/TestTexture.cc"
     "tests/TestBatchRender.cc"
+    "tests/TestRenderTiles.cc"
+    "tests/TestDynamicRender.cc"
 )
 
 target_include_directories(

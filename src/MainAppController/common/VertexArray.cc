@@ -5,7 +5,10 @@
 
 VertexArray::VertexArray() { GLCall(glGenVertexArrays(1, &identifier_)); }
 
-VertexArray::~VertexArray() { GLCall(glDeleteVertexArrays(1, &identifier_)); }
+VertexArray::~VertexArray() {
+  unBind();
+  GLCall(glDeleteVertexArrays(1, &identifier_));
+}
 
 void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) const {
   bind();

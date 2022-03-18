@@ -1,5 +1,6 @@
 #include "Texture.h"
 
+#include <fmt/core.h>
 #include <openGLErrorHelpers.h>
 #include <openGLHeaders.h>
 #include <stb_image.h>
@@ -7,7 +8,10 @@
 Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
   stbi_set_flip_vertically_on_load(1);
   localBuffer_ = stbi_load(filePath_.c_str(), &width_, &height_, &channelsInFile_, STBI_rgb_alpha);
-  ASSERT(localBuffer_ != nullptr);
+  if (localBuffer_ == nullptr) {
+    fmt::print("Failed to open texture file: {}\n", filePath_);
+    throw -1;
+  }
 
   GLCall(glGenTextures(1, &identifier_));
   GLCall(glBindTexture(GL_TEXTURE_2D, identifier_));
@@ -39,6 +43,7 @@ Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
 }
 
 Texture::~Texture() {
+  unBind();
   GLCall(glDeleteTextures(1, &identifier_));
 
   if (localBuffer_ != nullptr) {

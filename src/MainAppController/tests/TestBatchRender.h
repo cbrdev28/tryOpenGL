@@ -10,6 +10,7 @@
 #include <VertexBuffer.h>
 
 #include <memory>
+#include <array>
 
 namespace test {
 
@@ -28,7 +29,7 @@ class TestBatchRender : public Test {
   void onImGuiRender() override;
 
  private:
-  std::vector<float> backgroundColor_ = {0.7F, 0.5F, 0.2F, 1.0F};
+  std::array<float, 4> backgroundColor_ = {0.7F, 0.5F, 0.2F, 1.0F};
   float zoom_{10.0F};
   float deltaX_{0.0F};
   float deltaY_{0.0F};

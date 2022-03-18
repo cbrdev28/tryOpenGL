@@ -28,14 +28,27 @@ target_link_libraries(
     MainAppController
 )
 
-# NOTE: I don't know if I should update the install steps
-# with the MainAppController library
+configure_file("res/shaders/basic.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_batch_render.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_render_tiles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_texture.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+
+configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
+
+# Install steps
 install(TARGETS tryOpenGL DESTINATION bin)
 
+install(FILES "res/shaders/basic.shader" DESTINATION bin)
+install(FILES "res/shaders/test_batch_render.shader" DESTINATION bin)
+install(FILES "res/shaders/test_render_tiles.shader" DESTINATION bin)
+install(FILES "res/shaders/test_texture.shader" DESTINATION bin)
+
+install(FILES "res/textures/grass.png" DESTINATION bin)
+install(FILES "res/textures/wall.png" DESTINATION bin)
+
+# Testing steps
 enable_testing()
 
 # Enable/Disable this test to run the program
 add_test(NAME Runs COMMAND tryOpenGL)
-
-# Example of failure when running with --test:
-# add_test(NAME RunsTestOpenGL COMMAND tryOpenGL --test opengl)

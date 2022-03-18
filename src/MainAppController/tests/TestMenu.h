@@ -1,3 +1,6 @@
+#ifndef TEST_MENU_H_
+#define TEST_MENU_H_
+
 #include <functional>
 #include <gsl/gsl>
 #include <string>
@@ -11,6 +14,12 @@ namespace test {
 class TestMenu : public Test {
  public:
   explicit TestMenu(const TestContext& ctx) : Test(ctx) {}
+  ~TestMenu() override;
+
+  TestMenu(const TestMenu& other) = delete;
+  TestMenu(TestMenu&& other) = delete;
+  auto operator=(const TestMenu& other) -> TestMenu& = delete;
+  auto operator=(TestMenu&& other) -> TestMenu& = delete;
 
   template <typename S>
   inline void registerTest(const std::string& name) {
@@ -32,3 +41,5 @@ class TestMenu : public Test {
 };
 
 }  // namespace test
+
+#endif

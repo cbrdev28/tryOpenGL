@@ -11,6 +11,12 @@ InputManager::InputManager(WindowManager& windowManager) : windowManager_(window
   fmt::print("InputManager::InputManager(...): windowManager_ = {}\n", formattedRef);
 };
 
+InputManager::~InputManager() {
+  if (!listeners_.empty()) {
+    fmt::print("Warning: ~InputManager(): listeners are not empty!\n");
+  }
+}
+
 auto InputManager::init() -> InputManager& {
   GLFWwindow* window = windowManager_.getWindow();
   glfwSetCursorPosCallback(window, InputManager::mouseCallback);
@@ -23,10 +29,6 @@ auto InputManager::init() -> InputManager& {
 
 void InputManager::processKeyboardInput() {
   GLFWwindow* window = windowManager_.getWindow();
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, 1 /* true */);
-  }
-
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     for (KeyboardListener* listener : listeners_) {
       listener->onMoveForward();
@@ -35,6 +37,26 @@ void InputManager::processKeyboardInput() {
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
     for (KeyboardListener* listener : listeners_) {
       listener->onMoveBackward();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onMoveLeft();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onMoveRight();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onZoomOut();
+    }
+  }
+  if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+    for (KeyboardListener* listener : listeners_) {
+      listener->onZoomIn();
     }
   }
 }

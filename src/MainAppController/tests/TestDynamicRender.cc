@@ -36,7 +36,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
-  shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
+  shader1_ = std::make_unique<ShaderManager>("test_dynamic_render.shader");
   shader1_->init();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);

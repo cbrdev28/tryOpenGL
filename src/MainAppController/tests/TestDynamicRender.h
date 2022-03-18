@@ -99,6 +99,9 @@ class TestDynamicRender : public Test, public KeyboardListener {
   std::vector<unsigned int> dynamicIndicesVector_{};
   std::vector<float> dynamicTriangleVertices_{};
   void addDynamicTriangle();
+
+  void onUpdateDynamicTriangles(float deltaTime);
+  void onMoveTriangleTowardCamera(float deltaTime);
 };
 
 }  // namespace test

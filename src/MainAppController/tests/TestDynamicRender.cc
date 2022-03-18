@@ -103,39 +103,12 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
 
 TestDynamicRender::~TestDynamicRender() { this->getTestContext().inputManager->removeKeyboardListener(this); }
 
+/**
+ * onUpdate, onRender, onImGuiRender
+ */
 void TestDynamicRender::onUpdate(float deltaTime) {
   frameDeltaTime_ = deltaTime;
-
-  // For each 6 vertices (since a triangle is made of 3 vector of 2 positions)
-  for (int i = 0; i < dynamicTriangleVertices_.size(); i += 6) {
-    const float triangleX = dynamicTriangleVertices_.at(i);
-    const float triangleY = dynamicTriangleVertices_.at(i + 1);
-    const float deltaPos = 0.1F * deltaTime;
-
-    ASSERT(i + 5 < dynamicTriangleVertices_.size());
-
-    if (triangleX < cameraPosX_) {
-      dynamicTriangleVertices_.at(i + 0) += deltaPos;
-      dynamicTriangleVertices_.at(i + 2) += deltaPos;
-      dynamicTriangleVertices_.at(i + 4) += deltaPos;
-    } else if (triangleX > cameraPosX_) {
-      dynamicTriangleVertices_.at(i + 0) -= deltaPos;
-      dynamicTriangleVertices_.at(i + 2) -= deltaPos;
-      dynamicTriangleVertices_.at(i + 4) -= deltaPos;
-    }
-    if (triangleY < cameraPosY_) {
-      dynamicTriangleVertices_.at(i + 1) += deltaPos;
-      dynamicTriangleVertices_.at(i + 3) += deltaPos;
-      dynamicTriangleVertices_.at(i + 5) += deltaPos;
-    } else if (triangleY > cameraPosY_) {
-      dynamicTriangleVertices_.at(i + 1) -= deltaPos;
-      dynamicTriangleVertices_.at(i + 3) -= deltaPos;
-      dynamicTriangleVertices_.at(i + 5) -= deltaPos;
-    }
-  }
-  vb3_->bind();
-  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
-  vb3_->unBind();
+  this->onUpdateDynamicTriangles(deltaTime);
 }
 
 void TestDynamicRender::onRender() {
@@ -288,6 +261,41 @@ void TestDynamicRender::addDynamicTriangle() {
   ib3_->bind();
   ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
   ib3_->unBind();
+}
+
+void TestDynamicRender::onUpdateDynamicTriangles(float deltaTime) { this->onMoveTriangleTowardCamera(deltaTime); }
+
+void TestDynamicRender::onMoveTriangleTowardCamera(float deltaTime) {
+  // For each 6 vertices (since a triangle is made of 3 vector of 2 positions)
+  for (int i = 0; i < dynamicTriangleVertices_.size(); i += 6) {
+    const float triangleX = dynamicTriangleVertices_.at(i);
+    const float triangleY = dynamicTriangleVertices_.at(i + 1);
+    const float deltaPos = 0.2F * deltaTime;
+
+    ASSERT(i + 5 < dynamicTriangleVertices_.size());
+
+    if (triangleX < cameraPosX_) {
+      dynamicTriangleVertices_.at(i + 0) += deltaPos;
+      dynamicTriangleVertices_.at(i + 2) += deltaPos;
+      dynamicTriangleVertices_.at(i + 4) += deltaPos;
+    } else if (triangleX > cameraPosX_) {
+      dynamicTriangleVertices_.at(i + 0) -= deltaPos;
+      dynamicTriangleVertices_.at(i + 2) -= deltaPos;
+      dynamicTriangleVertices_.at(i + 4) -= deltaPos;
+    }
+    if (triangleY < cameraPosY_) {
+      dynamicTriangleVertices_.at(i + 1) += deltaPos;
+      dynamicTriangleVertices_.at(i + 3) += deltaPos;
+      dynamicTriangleVertices_.at(i + 5) += deltaPos;
+    } else if (triangleY > cameraPosY_) {
+      dynamicTriangleVertices_.at(i + 1) -= deltaPos;
+      dynamicTriangleVertices_.at(i + 3) -= deltaPos;
+      dynamicTriangleVertices_.at(i + 5) -= deltaPos;
+    }
+  }
+  vb3_->bind();
+  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
+  vb3_->unBind();
 }
 
 }  // namespace test

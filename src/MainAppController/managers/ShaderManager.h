@@ -26,13 +26,6 @@ class ShaderManager {
   auto operator=(const ShaderManager& other) -> ShaderManager& = delete;
   auto operator=(ShaderManager&& other) -> ShaderManager& = delete;
 
-  /**
-   * Initialize shaders: create, compile, link
-   * @return ShaderManager&
-   * @throw -1
-   */
-  auto init() -> ShaderManager&;
-
   void bind() const;
   void unBind() const;
 
@@ -48,6 +41,13 @@ class ShaderManager {
   unsigned int vertexShaderID_{0};
   unsigned int fragmentShaderID_{0};
   unsigned int shaderProgramID_{0};
+
+  /**
+   * Initialize shaders: create, compile, link
+   * @return ShaderManager&
+   * @throw -1
+   */
+  auto init() -> ShaderManager&;
 
   /**
    * Parse shader from a file

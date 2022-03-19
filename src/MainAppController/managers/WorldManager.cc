@@ -9,8 +9,6 @@
 
 auto WorldManager::init(const float windowWidth, const float windowHeight) -> WorldManager& {
   // GLCall(glEnable(GL_DEPTH_TEST));
-  shaderManager_.init();
-
   vao_ = std::make_unique<VertexArray>();
   vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
                                         basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());

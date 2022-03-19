@@ -17,7 +17,6 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx) {
   va_->addBuffer(*vb_, layout);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
-  shader_->init();
   shader_->bind();
   shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   shader_->setUniformMat4("u_view", MatrixHelper::identityMatrix);

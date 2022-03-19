@@ -13,8 +13,7 @@
 
 constexpr int SHADER_INFO_LOG = 512;
 
-// TODO(cbr): call init during constructor?
-ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)){};
+ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)) { init(); };
 
 ShaderManager::~ShaderManager() {
   unBind();
@@ -27,6 +26,39 @@ ShaderManager::~ShaderManager() {
   if (shaderProgramID_ != 0) {
     GLCall(glDeleteProgram(shaderProgramID_));
   }
+}
+
+void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
+
+void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
+
+auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
+  if (uniformLocationCache_.find(name) != uniformLocationCache_.end()) {
+    return uniformLocationCache_[name];
+  }
+
+  GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
+  if (uniformLocation == -1) {
+    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
+    fmt::print("Failed to get uniform location for: {}\n", name);
+    throw -1;
+  }
+  uniformLocationCache_[name] = uniformLocation;
+  return uniformLocation;
+}
+
+void ShaderManager::setUniformMat4(const std::string& name, const glm::mat4& value) {
+  GLsizei count = 1;
+  GLboolean transpose = GL_FALSE;
+  GLCall(glUniformMatrix4fv(this->getUniformLocation(name), count, transpose, glm::value_ptr(value)));
+}
+
+void ShaderManager::setUniform1i(const std::string& name, const int value) {
+  GLCall(glUniform1i(this->getUniformLocation(name), value));
+}
+
+void ShaderManager::setUniform1iv(const std::string& name, const std::vector<int>& values) {
+  GLCall(glUniform1iv(this->getUniformLocation(name), values.size(), values.data()));
 }
 
 auto ShaderManager::init() -> ShaderManager& {
@@ -65,39 +97,6 @@ auto ShaderManager::parseShader() -> ShaderProgramSource {
     }
   }
   return {streams[0].str(), streams[1].str()};
-}
-
-void ShaderManager::bind() const { GLCall(glUseProgram(shaderProgramID_)); }
-
-void ShaderManager::unBind() const { GLCall(glUseProgram(0)); }
-
-auto ShaderManager::getUniformLocation(const std::string& name) -> GLint {
-  if (uniformLocationCache_.find(name) != uniformLocationCache_.end()) {
-    return uniformLocationCache_[name];
-  }
-
-  GLCall(GLint uniformLocation = glGetUniformLocation(shaderProgramID_, name.c_str()));
-  if (uniformLocation == -1) {
-    fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
-    fmt::print("Failed to get uniform location for: {}\n", name);
-    throw -1;
-  }
-  uniformLocationCache_[name] = uniformLocation;
-  return uniformLocation;
-}
-
-void ShaderManager::setUniformMat4(const std::string& name, const glm::mat4& value) {
-  GLsizei count = 1;
-  GLboolean transpose = GL_FALSE;
-  GLCall(glUniformMatrix4fv(this->getUniformLocation(name), count, transpose, glm::value_ptr(value)));
-}
-
-void ShaderManager::setUniform1i(const std::string& name, const int value) {
-  GLCall(glUniform1i(this->getUniformLocation(name), value));
-}
-
-void ShaderManager::setUniform1iv(const std::string& name, const std::vector<int>& values) {
-  GLCall(glUniform1iv(this->getUniformLocation(name), values.size(), values.data()));
 }
 
 auto ShaderManager::compileVertex(const std::string& source) -> ShaderManager& {

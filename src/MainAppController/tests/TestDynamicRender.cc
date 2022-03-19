@@ -37,7 +37,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
   shader1_ = std::make_unique<ShaderManager>("test_dynamic_render.shader");
-  shader1_->init();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
 
@@ -65,7 +64,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
 
   shader2_ = std::make_unique<ShaderManager>("basic.shader");
-  shader2_->init();
   shader2_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader2_);
 
@@ -90,7 +88,6 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
 
   shader3_ = std::make_unique<ShaderManager>("basic.shader");
-  shader3_->init();
   shader3_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader3_);
 

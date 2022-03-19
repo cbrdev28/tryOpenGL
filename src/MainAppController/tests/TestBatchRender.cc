@@ -46,7 +46,6 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
 
   shader_ = std::make_unique<ShaderManager>("test_batch_render.shader");
-  shader_->init();
   shader_->bind();
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);

@@ -35,7 +35,6 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
   shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
-  shader1_->init();
   shader1_->bind();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
@@ -63,7 +62,6 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
 
   shader2_ = std::make_unique<ShaderManager>("basic.shader");
-  shader2_->init();
   shader2_->bind();
   shader2_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader2_);

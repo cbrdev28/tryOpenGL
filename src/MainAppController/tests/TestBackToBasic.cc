@@ -9,14 +9,13 @@ namespace test {
 
 TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx) {
   vb_ = std::make_unique<VertexBuffer>(vertices_.data(), vertices_.size() * sizeof(float));
+  ib_ = std::make_unique<IndexBuffer>(indices_.data(), indices_.size());
 
   va_ = std::make_unique<VertexArray>();
   VertexBufferLayout layout;
   layout.pushFloat(2);
   layout.pushFloat(2);
   va_->addBuffer(*vb_, layout);
-
-  ib_ = std::make_unique<IndexBuffer>(indices_.data(), indices_.size());
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
   shader_->init();

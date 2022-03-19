@@ -13,6 +13,7 @@
 
 constexpr int SHADER_INFO_LOG = 512;
 
+// TODO(cbr): call init during constructor?
 ShaderManager::ShaderManager(std::string filepath) : shaderFilePath_(std::move(filepath)){};
 
 ShaderManager::~ShaderManager() {

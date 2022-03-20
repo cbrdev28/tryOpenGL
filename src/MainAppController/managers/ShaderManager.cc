@@ -4,12 +4,13 @@
 #include "ShaderManager.h"
 
 #include <fmt/core.h>
-#include <openGLErrorHelpers.h>
 
 #include <array>
 #include <fstream>
 #include <sstream>
 #include <utility>
+
+#include "openGLErrorHelpers.h"
 
 constexpr int SHADER_INFO_LOG = 512;
 
@@ -53,11 +54,11 @@ void ShaderManager::setUniformMat4(const std::string& name, const glm::mat4& val
   GLCall(glUniformMatrix4fv(this->getUniformLocation(name), count, transpose, glm::value_ptr(value)));
 }
 
-void ShaderManager::setUniform1i(const std::string& name, const int value) {
+void ShaderManager::setUniform1i(const std::string& name, const GLint value) {
   GLCall(glUniform1i(this->getUniformLocation(name), value));
 }
 
-void ShaderManager::setUniform1iv(const std::string& name, const std::vector<int>& values) {
+void ShaderManager::setUniform1iv(const std::string& name, const std::vector<GLint>& values) {
   GLCall(glUniform1iv(this->getUniformLocation(name), values.size(), values.data()));
 }
 
@@ -125,7 +126,7 @@ auto ShaderManager::compileFragment(const std::string& source) -> ShaderManager&
   return *this;
 }
 
-auto ShaderManager::compile(const unsigned int shaderID) -> ShaderManager& {
+auto ShaderManager::compile(const GLuint shaderID) -> ShaderManager& {
   if (shaderID == 0) {
     fmt::print("ShaderManager error with file: {}\n", shaderFilePath_);
     fmt::print("Invalid shaderID\n");

@@ -7,11 +7,11 @@
 #include <vector>
 
 struct VertexBufferElement {
-  unsigned int type;
-  unsigned int count;
-  unsigned char normalized;
+  GLenum type;
+  GLint count;
+  GLboolean normalized;
 
-  inline static auto getSizeOfType(unsigned int type) -> unsigned int {
+  inline static auto getSizeOfType(GLenum type) -> GLsizei {
     switch (type) {
       case GL_FLOAT:
         return sizeof(GLfloat);
@@ -26,23 +26,23 @@ struct VertexBufferElement {
 class VertexBufferLayout {
  private:
   std::vector<VertexBufferElement> elements_{};
-  unsigned int stride_{0};
+  GLsizei stride_{0};
 
  public:
   VertexBufferLayout() = default;
 
-  inline void pushFloat(unsigned int count) {
-    elements_.push_back({GL_FLOAT, count, static_cast<unsigned char>(GL_FALSE)});
+  inline void pushFloat(GLint count) {
+    elements_.push_back({GL_FLOAT, count, GL_FALSE});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
   }
 
-  inline void pushUInt(unsigned int count) {
-    elements_.push_back({GL_UNSIGNED_INT, count, static_cast<unsigned char>(GL_FALSE)});
+  inline void pushUInt(GLint count) {
+    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
   }
 
   [[nodiscard]] inline auto getElements() const -> const std::vector<VertexBufferElement>& { return elements_; }
-  [[nodiscard]] inline auto getStride() const -> unsigned int { return stride_; }
+  [[nodiscard]] inline auto getStride() const -> GLsizei { return stride_; }
 };
 
 #endif

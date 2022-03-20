@@ -1,14 +1,14 @@
 #ifndef VERTEX_BUFFER_H_
 #define VERTEX_BUFFER_H_
 
-#include <openGLHeaders.h>
+#include "openGLHeaders.h"
 
 class VertexBuffer {
  private:
-  unsigned int identifier_{0};
+  GLuint identifier_{0};
 
  public:
-  VertexBuffer(const void* data, unsigned int size, unsigned int glDrawMode = GL_STATIC_DRAW);
+  VertexBuffer(const GLvoid* data, GLsizeiptr size, GLenum glDrawMode = GL_STATIC_DRAW);
   ~VertexBuffer();
 
   VertexBuffer(const VertexBuffer& other) = delete;
@@ -19,7 +19,7 @@ class VertexBuffer {
   void bind() const;
   void unBind() const;
 
-  void setData(const void* data, unsigned int size);
+  void setData(const GLvoid* data, GLsizeiptr size);
 };
 
 #endif

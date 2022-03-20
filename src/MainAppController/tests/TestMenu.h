@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "Renderer.h"
 #include "Test.h"
 
 namespace test {
@@ -38,6 +39,7 @@ class TestMenu : public Test {
  private:
   Test* currentTest_{nullptr};
   std::vector<std::pair<std::string, std::function<Test*(const TestContext&)>>> tests_;
+  Renderer renderer_;
 };
 
 }  // namespace test

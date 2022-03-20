@@ -3,12 +3,15 @@
 
 #include <string>
 
+#include "openGLHeaders.h"
+
 class Texture {
  private:
-  unsigned int identifier_{0};
+  GLuint identifier_{0};
   std::string filePath_;
   unsigned char* localBuffer_{nullptr};
-  int width_{0}, height_{0}, channelsInFile_{0};
+  GLsizei width_{0}, height_{0};
+  int channelsInFile_{0};
 
  public:
   explicit Texture(std::string filePath);
@@ -21,9 +24,6 @@ class Texture {
 
   void bind(unsigned int slot = 0) const;
   void unBind() const;
-
-  inline auto getWidth() -> int { return width_; }
-  inline auto getHeight() -> int { return height_; }
 };
 
 #endif

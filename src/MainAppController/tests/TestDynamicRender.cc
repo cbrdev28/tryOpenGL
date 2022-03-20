@@ -1,14 +1,13 @@
 #include "TestDynamicRender.h"
 
-#include <MatrixHelper.h>
-#include <VertexBufferLayout.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <vector>
 
 #include "DynamicTriangle.h"
+#include "MatrixHelper.h"
 #include "TileVertex.h"
+#include "VertexBufferLayout.h"
 #include "basicFirstForms.h"
 
 namespace test {
@@ -76,7 +75,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   // Dynamic usage of vertex buffer
   vb3_ = std::make_unique<VertexBuffer>(nullptr, sizeof(float) * kDefaultMaxDynamicTriangleVertices, GL_DYNAMIC_DRAW);
   // Send empty data to initialize it
-  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
+  vb3_->setData(dynamicTriangleVertices_.data(),
+                static_cast<GLsizeiptr>(sizeof(float) * dynamicTriangleVertices_.size()));
 
   VertexBufferLayout layout3;
   layout3.pushFloat(2);  // Each vertex has 2 float values
@@ -85,7 +85,7 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   // Dynamic usage of index buffer
   ib3_ = std::make_unique<IndexBuffer>(nullptr, kDefaultMaxDynamicTriangleIndices, GL_DYNAMIC_DRAW);
   // Send empty data to initialize it
-  ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
+  ib3_->setData(dynamicIndicesVector_.data(), static_cast<GLsizei>(dynamicIndicesVector_.size()));
 
   shader3_ = std::make_unique<ShaderManager>("basic.shader");
   shader3_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
@@ -110,7 +110,7 @@ void TestDynamicRender::onUpdate(float deltaTime) {
 }
 
 void TestDynamicRender::onRender() {
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader1_, *va1_, *ib1_);
   renderer_.draw(*shader2_, *va2_, *ib2_);
   renderer_.draw(*shader3_, *va3_, *ib3_);
@@ -253,11 +253,12 @@ void TestDynamicRender::addDynamicTriangle() {
 
   // Potential refactor: not sending ALL data each time
   vb3_->bind();
-  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
+  vb3_->setData(dynamicTriangleVertices_.data(),
+                static_cast<GLsizeiptr>(sizeof(float) * dynamicTriangleVertices_.size()));
   vb3_->unBind();
   // Update indices in index buffer
   ib3_->bind();
-  ib3_->setData(dynamicIndicesVector_.data(), dynamicIndicesVector_.size());
+  ib3_->setData(dynamicIndicesVector_.data(), static_cast<GLsizei>(dynamicIndicesVector_.size()));
   ib3_->unBind();
 }
 
@@ -304,7 +305,8 @@ void TestDynamicRender::onMoveTriangleTowardCamera(float deltaTime) {
     }
   }
   vb3_->bind();
-  vb3_->setData(dynamicTriangleVertices_.data(), sizeof(float) * dynamicTriangleVertices_.size());
+  vb3_->setData(dynamicTriangleVertices_.data(),
+                static_cast<GLsizeiptr>(sizeof(float) * dynamicTriangleVertices_.size()));
   vb3_->unBind();
 }
 

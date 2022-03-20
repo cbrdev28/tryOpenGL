@@ -1,11 +1,11 @@
 #include "TestBatchRender.h"
 
-#include <VertexBufferLayout.h>
-#include <glmHeaders.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <array>
+
+#include "VertexBufferLayout.h"
+#include "glmHeaders.h"
 
 namespace test {
 
@@ -70,7 +70,7 @@ void TestBatchRender::onUpdate(float deltaTime) {}
 
 void TestBatchRender::onRender() {
   this->setViewProjection(usePerspective_);
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader_, *va_, *ib_);
 }
 

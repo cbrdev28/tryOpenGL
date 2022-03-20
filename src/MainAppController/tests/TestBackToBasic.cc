@@ -3,7 +3,6 @@
 #include "MatrixHelper.h"
 #include "VertexBufferLayout.h"
 #include "imgui.h"
-#include "openGLErrorHelpers.h"
 
 namespace test {
 
@@ -34,7 +33,8 @@ TestBackToBasic::~TestBackToBasic() = default;
 void TestBackToBasic::onUpdate(float deltaTime) {}
 
 void TestBackToBasic::onRender() {
-  GLCall(glClearColor(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2), backgroundColor_.at(3)));
+  renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
+                                 backgroundColor_.at(3));
   renderer_.draw(*shader_, *va_, *ib_);
 }
 

@@ -78,7 +78,7 @@ void WindowManager::updateWindowStats() {
  * Callback
  */
 void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width, int height) {
-  GLCall(glViewport(0, 0, width, height));
+  GLCall(glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height)));
 
   WindowManager::width = width;
   WindowManager::height = height;

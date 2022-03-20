@@ -1,11 +1,11 @@
 #include "TestTexture.h"
 
-#include <VertexBufferLayout.h>
-#include <glmHeaders.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <array>
+
+#include "VertexBufferLayout.h"
+#include "glmHeaders.h"
 
 namespace test {
 
@@ -56,7 +56,7 @@ TestTexture::~TestTexture() = default;
 
 void TestTexture::onUpdate(float deltaTime) {}
 void TestTexture::onRender() {
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader_, *va_, *ib_);
 }
 void TestTexture::onImGuiRender() { ImGui::ColorEdit4("Color", backgroundColor_.data()); }

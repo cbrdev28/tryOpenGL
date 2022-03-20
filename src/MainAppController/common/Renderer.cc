@@ -8,6 +8,11 @@ auto Renderer::clear() -> Renderer& {
   return *this;
 }
 
+auto Renderer::clearColorBackground(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) -> Renderer& {
+  GLCall(glClearColor(red, green, blue, alpha));
+  return *this;
+}
+
 auto Renderer::draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer& {
   shaders.bind();
   va.bind();

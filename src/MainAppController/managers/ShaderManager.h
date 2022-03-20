@@ -1,12 +1,12 @@
 #ifndef SHADER_MANAGER_H_
 #define SHADER_MANAGER_H_
 
-#include <glmHeaders.h>
-#include <openGLHeaders.h>
-
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include "glmHeaders.h"
+#include "openGLHeaders.h"
 
 struct ShaderProgramSource {
   std::string vertexSource;
@@ -31,16 +31,16 @@ class ShaderManager {
 
   auto getUniformLocation(const std::string& name) -> GLint;
   void setUniformMat4(const std::string& name, const glm::mat4& value);
-  void setUniform1i(const std::string& name, const int value);
-  void setUniform1iv(const std::string& name, const std::vector<int>& values);
+  void setUniform1i(const std::string& name, GLint value);
+  void setUniform1iv(const std::string& name, const std::vector<GLint>& values);
 
  private:
   std::string shaderFilePath_;
   std::unordered_map<std::string, GLint> uniformLocationCache_;
 
-  unsigned int vertexShaderID_{0};
-  unsigned int fragmentShaderID_{0};
-  unsigned int shaderProgramID_{0};
+  GLuint vertexShaderID_{0};
+  GLuint fragmentShaderID_{0};
+  GLuint shaderProgramID_{0};
 
   /**
    * Initialize shaders: create, compile, link
@@ -75,7 +75,7 @@ class ShaderManager {
    * @return ShaderManager&
    * @throw -1
    */
-  auto compile(unsigned int shaderID) -> ShaderManager&;
+  auto compile(GLuint shaderID) -> ShaderManager&;
 
   /**
    * Link shaders & check for errors.

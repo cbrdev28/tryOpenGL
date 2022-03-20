@@ -1,12 +1,11 @@
 #include "TestRenderTiles.h"
 
-#include <MatrixHelper.h>
-#include <VertexBufferLayout.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <vector>
 
+#include "MatrixHelper.h"
+#include "VertexBufferLayout.h"
 #include "basicFirstForms.h"
 
 namespace test {
@@ -79,7 +78,7 @@ TestRenderTiles::~TestRenderTiles() { this->getTestContext().inputManager->remov
 void TestRenderTiles::onUpdate(float deltaTime) { frameDeltaTime_ = deltaTime; }
 
 void TestRenderTiles::onRender() {
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader1_, *va1_, *ib1_);
   renderer_.draw(*shader2_, *va2_, *ib2_);
 }

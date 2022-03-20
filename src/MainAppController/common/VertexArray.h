@@ -1,13 +1,13 @@
 #ifndef VERTEX_ARRAY_H_
 #define VERTEX_ARRAY_H_
 
-#include <VertexBuffer.h>
-#include <VertexBufferLayout.h>
+#include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 
 class VertexBufferLayout;
 class VertexArray {
  private:
-  unsigned int identifier_{0};
+  GLuint identifier_{0};
 
  public:
   VertexArray();

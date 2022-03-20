@@ -28,6 +28,7 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
 
   va_->unBind();
   vb_->unBind();
+  vbPositions_->unBind();
   ib_->unBind();
   shader_->unBind();
 }
@@ -41,6 +42,7 @@ void TestBackToBasic::onRender() {
                                  backgroundColor_.at(3));
   // renderer_.draw(*shader_, *va_, *ib_);
   // TODO(cbr): make dynamic draw
+  renderer_.drawInstance(*shader_, *va_, *ib_, static_cast<GLsizei>(instancedTriangle_.positions.size()));
 }
 
 void TestBackToBasic::onImGuiRender() { ImGui::ColorEdit4("Color", backgroundColor_.data()); }

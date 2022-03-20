@@ -20,8 +20,10 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   shader_->bind();
   shader_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   shader_->setUniformMat4("u_view", MatrixHelper::identityMatrix);
-  // Update to ortho
-  shader_->setUniformMat4("u_projection", MatrixHelper::identityMatrix);
+
+  const auto reversedAspectRation = ctx.windowManager->getAspectRatio().reversed();
+  shader_->setUniformMat4("u_projection",
+                          glm::ortho(-1.0F, 1.0F, -reversedAspectRation, reversedAspectRation, -1.0F, 1.0F));
 
   va_->unBind();
   vb_->unBind();

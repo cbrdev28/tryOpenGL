@@ -14,8 +14,8 @@ auto WorldManager::init(const float windowWidth, const float windowHeight) -> Wo
   ibo_ = std::make_unique<IndexBuffer>(basicSquareIndices.data(), basicSquareIndices.size());
 
   VertexBufferLayout layout;
-  layout.pushFloat(basicSquareVertexSize);
-  vao_->addBuffer(*vbo_, layout);
+  layout.pushFloat(basicSquareVertexSize, *vbo_);
+  vao_->setBufferLayout(layout);
 
   // Set our default "look at" camera in the view matrix
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,

@@ -34,6 +34,7 @@ class TestBackToBasic : public Test {
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vb_;
+  std::unique_ptr<VertexBuffer> vbPositions_;
   std::unique_ptr<IndexBuffer> ib_;
   std::unique_ptr<ShaderManager> shader_;
 

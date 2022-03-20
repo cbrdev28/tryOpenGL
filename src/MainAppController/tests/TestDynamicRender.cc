@@ -28,10 +28,10 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
 
   VertexBufferLayout layout;
-  layout.pushFloat(TileVertex::kPosCount);
-  layout.pushFloat(TileVertex::kTextureCoordCount);
-  layout.pushFloat(TileVertex::kTextureIdCount);
-  va1_->addBuffer(*vb1_, layout);
+  layout.pushFloat(TileVertex::kPosCount, *vb1_);
+  layout.pushFloat(TileVertex::kTextureCoordCount, *vb1_);
+  layout.pushFloat(TileVertex::kTextureIdCount, *vb1_);
+  va1_->setBufferLayout(layout);
 
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
@@ -57,8 +57,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
                                         basicTriangleVerticesSizeOf * basicTriangleIndicedVertices.size());
 
   VertexBufferLayout layout2;
-  layout2.pushFloat(basicTriangleVertexSize);
-  va2_->addBuffer(*vb2_, layout2);
+  layout2.pushFloat(basicTriangleVertexSize, *vb2_);
+  va2_->setBufferLayout(layout2);
 
   ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
 
@@ -79,8 +79,8 @@ TestDynamicRender::TestDynamicRender(const TestContext& ctx)
                 static_cast<GLsizeiptr>(sizeof(float) * dynamicTriangleVertices_.size()));
 
   VertexBufferLayout layout3;
-  layout3.pushFloat(2);  // Each vertex has 2 float values
-  va3_->addBuffer(*vb3_, layout3);
+  layout3.pushFloat(2, *vb3_);  // Each vertex has 2 float values
+  va3_->setBufferLayout(layout3);
 
   // Dynamic usage of index buffer
   ib3_ = std::make_unique<IndexBuffer>(nullptr, kDefaultMaxDynamicTriangleIndices, GL_DYNAMIC_DRAW);

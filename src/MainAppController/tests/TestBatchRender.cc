@@ -38,10 +38,10 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   vb_ = std::make_unique<VertexBuffer>(positions.data(), positions.size() * sizeof(float));
 
   VertexBufferLayout layout;
-  layout.pushFloat(2);
-  layout.pushFloat(2);
-  layout.pushFloat(1);
-  va_->addBuffer(*vb_, layout);
+  layout.pushFloat(2, *vb_);
+  layout.pushFloat(2, *vb_);
+  layout.pushFloat(1, *vb_);
+  va_->setBufferLayout(layout);
 
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
 

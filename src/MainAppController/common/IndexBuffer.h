@@ -6,6 +6,7 @@
 class IndexBuffer {
  private:
   GLuint identifier_{0};
+  const GLuint* data_{nullptr};
   GLsizei count_{0};
 
  public:
@@ -23,6 +24,7 @@ class IndexBuffer {
   void setData(const GLvoid* data, GLsizei count);
 
   [[nodiscard]] inline auto getCount() const -> GLsizei { return count_; }
+  [[nodiscard]] inline auto getData() const -> const GLuint* { return data_; }
 };
 
 #endif

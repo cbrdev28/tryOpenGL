@@ -2,7 +2,7 @@
 
 #include "openGLErrorHelpers.h"
 
-IndexBuffer::IndexBuffer(const GLuint* data, GLsizei count, GLenum glDrawMode) : count_(count) {
+IndexBuffer::IndexBuffer(const GLuint* data, GLsizei count, GLenum glDrawMode) : data_(data), count_(count) {
   GLCall(glGenBuffers(1, &identifier_));
   GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identifier_));
   GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, glDrawMode));

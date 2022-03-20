@@ -7,13 +7,15 @@
 namespace test {
 
 TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedTriangle_() {
+  vbPositions_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
   vb_ = std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
   ib_ = std::make_unique<IndexBuffer>(instancedTriangle_.indices.data(), instancedTriangle_.indices.size());
   va_ = std::make_unique<VertexArray>();
 
   VertexBufferLayout layout;
-  layout.pushFloat(2);
-  va_->addBuffer(*vb_, layout);
+  layout.pushFloat(2, *vb_);
+  layout.pushFloat(2, *vbPositions_);
+  va_->setBufferLayout(layout);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
   shader_->bind();
@@ -37,7 +39,8 @@ void TestBackToBasic::onUpdate(float deltaTime) {}
 void TestBackToBasic::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
-  renderer_.draw(*shader_, *va_, *ib_);
+  // renderer_.draw(*shader_, *va_, *ib_);
+  // TODO(cbr): make dynamic draw
 }
 
 void TestBackToBasic::onImGuiRender() { ImGui::ColorEdit4("Color", backgroundColor_.data()); }

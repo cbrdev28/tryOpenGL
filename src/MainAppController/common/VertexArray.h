@@ -18,7 +18,7 @@ class VertexArray {
   auto operator=(const VertexArray& other) -> VertexArray& = delete;
   auto operator=(VertexArray&& other) -> VertexArray& = delete;
 
-  void addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) const;
+  void setBufferLayout(const VertexBufferLayout& layout) const;
 
   void bind() const;
   void unBind() const;

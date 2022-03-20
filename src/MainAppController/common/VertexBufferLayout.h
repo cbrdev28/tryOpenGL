@@ -1,27 +1,12 @@
 #ifndef VERTEX_BUFFER_LAYOUT_H_
 #define VERTEX_BUFFER_LAYOUT_H_
 
-#include <openGLErrorHelpers.h>
-#include <openGLHeaders.h>
-
 #include <vector>
 
-struct VertexBufferElement {
-  GLenum type;
-  GLint count;
-  GLboolean normalized;
-
-  inline static auto getSizeOfType(GLenum type) -> GLsizei {
-    switch (type) {
-      case GL_FLOAT:
-        return sizeof(GLfloat);
-      case GL_UNSIGNED_INT:
-        return sizeof(GLuint);
-    }
-    ASSERT(false)
-    return 0;
-  }
-};
+#include "VertexBuffer.h"
+#include "VertexBufferElement.h"
+#include "openGLErrorHelpers.h"
+#include "openGLHeaders.h"
 
 class VertexBufferLayout {
  private:
@@ -31,13 +16,13 @@ class VertexBufferLayout {
  public:
   VertexBufferLayout() = default;
 
-  inline void pushFloat(GLint count) {
-    elements_.push_back({GL_FLOAT, count, GL_FALSE});
+  inline void pushFloat(GLint count, const VertexBuffer& vb) {
+    elements_.push_back({GL_FLOAT, count, GL_FALSE, vb});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
   }
 
-  inline void pushUInt(GLint count) {
-    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
+  inline void pushUInt(GLint count, const VertexBuffer& vb) {
+    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE, vb});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
   }
 

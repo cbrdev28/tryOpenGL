@@ -13,6 +13,7 @@ class Renderer {
   auto clear() -> Renderer&;
   auto clearColorBackground(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) -> Renderer&;
   auto draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer&;
+  auto drawInstance(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib, GLsizei instancesCount) -> Renderer&;
 };
 
 #endif

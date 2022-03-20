@@ -4,23 +4,24 @@
 #include <array>
 
 #include "../common/glmHeaders.h"
+#include "../common/openGLHeaders.h"
 
-const float basicBackgroundNeonPinkR = 255.0F / 255.0F;
-const float basicBackgroundNeonPinkG = 68.0F / 255.0F;
-const float basicBackgroundNeonPinkB = 205.0F / 255.0F;
+const GLfloat basicBackgroundNeonPinkR = 255.0F / 255.0F;
+const GLfloat basicBackgroundNeonPinkG = 68.0F / 255.0F;
+const GLfloat basicBackgroundNeonPinkB = 205.0F / 255.0F;
 
 /**
  * How far the camera will look from the Z axis.
  * Meaning, "how high" the camera will be.
  * Used with the view matrix.
  */
-const float basicCameraZDelta = 2.0F;
+const GLfloat basicCameraZDelta = 2.0F;
 /**
  * How far the camera will look from the Y axis.
  * Meaning, "how behind" the camera will be.
  * Used with the view matrix.
  */
-const float basicCameraYDelta = 2.0F;
+const GLfloat basicCameraYDelta = 2.0F;
 /**
  * How fast the camera will move
  */
@@ -41,20 +42,20 @@ const glm::vec3 basicCameraUp = glm::vec3(0.0F, 1.0F, 0.0F);
  * The delta from the origin on the X axis for a tile.
  * Meaning, the width of a tile is this value mutliplied by 2.
  */
-const float tileDeltaX = 0.5F;
+const GLfloat tileDeltaX = 0.5F;
 /**
  * The delta from the origin on the Y axis for a tile.
  * Meaning, the length of a tile is this value mutliplied by 2.
  */
-const float tileDeltaY = 0.5F;
+const GLfloat tileDeltaY = 0.5F;
 /**
  * The depth on the Z axis for a tile.
  * Meaning, how far down/deep a tile goes underground.
  * Because each of our tile will always its top at 0 on Z axis.
  */
-// static constexpr const float tileDepthZ = 0.2F;
+// static constexpr const GLfloat tileDepthZ = 0.2F;
 
-const std::array<float, 12> basicSquareVertices = {
+const std::array<GLfloat, 12> basicSquareVertices = {
     // clang-format off
     -tileDeltaX, -tileDeltaY, // Bottom left
     tileDeltaX, -tileDeltaY, // Bottom right
@@ -66,7 +67,7 @@ const std::array<float, 12> basicSquareVertices = {
     // clang-format on
 };
 
-const std::array<float, 8> basicSquareIndicedVertices = {
+const std::array<GLfloat, 8> basicSquareIndicedVertices = {
     // clang-format off
     -tileDeltaX, -tileDeltaY, // Bottom left: indice = 0
     tileDeltaX, -tileDeltaY, // Bottom right: indice = 1
@@ -75,21 +76,21 @@ const std::array<float, 8> basicSquareIndicedVertices = {
     // clang-format on
 };
 
-const std::array<unsigned int, 6> basicSquareIndices = {
+const std::array<GLuint, 6> basicSquareIndices = {
     // clang-format off
     0, 1, 2,
     2, 3, 0
     // clang-format on
 };
 
-const auto basicSquareVertexSize = 2;  // Each vertex for a basic square is made of 2 float values
-const auto basicSquareVerticesSizeOf = sizeof(float);
-const auto basicSquareIndicesSizeOf = sizeof(unsigned int);
+const auto basicSquareVertexSize = 2;  // Each vertex for a basic square is made of 2 GLfloat values
+const auto basicSquareVerticesSizeOf = sizeof(GLfloat);
+const auto basicSquareIndicesSizeOf = sizeof(GLuint);
 
-const float triangleDeltaX = 0.2F;
-const float triangleDeltaY = 0.3F;
+const GLfloat triangleDeltaX = 0.2F;
+const GLfloat triangleDeltaY = 0.3F;
 
-const std::array<float, 6> basicTriangleIndicedVertices = {
+const std::array<GLfloat, 6> basicTriangleIndicedVertices = {
     // clang-format off
     -triangleDeltaX, -triangleDeltaY, // Bottom left: indice = 0
     triangleDeltaX, -triangleDeltaY, // Bottom right: indice = 1
@@ -97,14 +98,14 @@ const std::array<float, 6> basicTriangleIndicedVertices = {
     // clang-format on
 };
 
-const std::array<unsigned int, 3> basicTriangleIndices = {
+const std::array<GLuint, 3> basicTriangleIndices = {
     // clang-format off
     0, 1, 2
     // clang-format on
 };
 
-const auto basicTriangleVertexSize = 2;  // Each vertex for a basic triangle is made of 2 float values
-const auto basicTriangleVerticesSizeOf = sizeof(float);
-const auto basicTriangleIndicesSizeOf = sizeof(unsigned int);
+const auto basicTriangleVertexSize = 2;  // Each vertex for a basic triangle is made of 2 GLfloat values
+const auto basicTriangleVerticesSizeOf = sizeof(GLfloat);
+const auto basicTriangleIndicesSizeOf = sizeof(GLuint);
 
 #endif

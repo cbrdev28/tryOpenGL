@@ -2,6 +2,7 @@
 #define INSTANCED_TRIANGLE_H_
 
 #include <array>
+#include <cstddef>
 #include <random>
 #include <vector>
 
@@ -48,6 +49,10 @@ struct InstancedTriangle {
   auto removeTriangle() -> std::vector<glm::vec2>& {
     positions.pop_back();
     return positions;
+  }
+
+  auto maxPositionsGLSize() -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 2);
   }
 };
 

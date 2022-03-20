@@ -1,28 +1,30 @@
 #shader vertex
 #version 330 core
 
-layout (location = 0) in vec2 modelPos;
+layout (location = 0) in vec2 modelVertex;
+layout (location = 1) in vec2 modelPosition;
 
 uniform mat4 u_model;
 uniform mat4 u_view;
 uniform mat4 u_projection;
 
-out vec2 v_modelPos;
+out vec2 v_modelVertexPosition;
 
 void main()
 {
-    gl_Position = u_projection * u_view * u_model * vec4(modelPos, 0.0, 1.0);
-    v_modelPos = modelPos;
+    vec2 modelVertexPosition = modelVertex + modelPosition;
+    gl_Position = u_projection * u_view * u_model * vec4(modelVertexPosition, 0.0, 1.0);
+    v_modelVertexPosition = modelVertexPosition;
 };
 
 #shader fragment
 #version 330 core
 
-in vec2 v_modelPos;
+in vec2 v_modelVertexPosition;
 
 layout(location = 0) out vec4 fragmentColor;
 
 void main()
 {
-    fragmentColor = vec4(v_modelPos, 0.0, 1.0);
+    fragmentColor = vec4(v_modelVertexPosition, 0.0, 1.0);
 };

@@ -39,9 +39,10 @@ struct InstancedTriangle {
     // The number of triangles is the number of positions
     const auto currentNumberOfTriangles = positions.size();
     ASSERT(currentNumberOfTriangles <= kMaxTriangles);
-    // Convert random number from 0.0<>1.0 to -1.0<>1.0
-    const auto randomPosX = (genRandom() * 2) - 1;
-    const auto randomPosY = (genRandom() * 2) - 1;
+
+    const auto randomPosX = genRandom() - 0.5F;
+    const auto randomPosY = genRandom() - 0.5F;
+
     positions.emplace_back(glm::vec2(randomPosX, randomPosY));
     return positions;
   }
@@ -49,6 +50,10 @@ struct InstancedTriangle {
   auto removeTriangle() -> std::vector<glm::vec2>& {
     positions.pop_back();
     return positions;
+  }
+
+  auto positionsGLSize() -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(positions.size()) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 2);
   }
 
   auto maxPositionsGLSize() -> GLsizeiptr {

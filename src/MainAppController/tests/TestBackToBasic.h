@@ -35,10 +35,11 @@ class TestBackToBasic : public Test {
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vb_;
   std::unique_ptr<VertexBuffer> vbPositions_;
-  std::unique_ptr<IndexBuffer> ib_;
+  // std::unique_ptr<IndexBuffer> ib_;
   std::unique_ptr<ShaderManager> shader_;
 
   InstancedTriangle instancedTriangle_;
+  void addTriangleInstance();
 };
 
 }  // namespace test

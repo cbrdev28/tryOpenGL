@@ -20,6 +20,7 @@ class VertexBuffer {
   void unBind() const;
 
   void setData(const GLvoid* data, GLsizeiptr size);
+  void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize);
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "IndexBuffer.h"
+#include "InstancedTriangle.h"
 #include "Renderer.h"
 #include "ShaderManager.h"
 #include "Test.h"
@@ -36,19 +37,7 @@ class TestBackToBasic : public Test {
   std::unique_ptr<IndexBuffer> ib_;
   std::unique_ptr<ShaderManager> shader_;
 
-  std::array<float, 16> vertices_ = {
-      // clang-format off
-    -0.5F,  -0.5F,
-    0.5F,   -0.5F,
-    0.0F,   0.5F
-      // clang-format on
-  };
-
-  std::array<unsigned int, 6> indices_ = {
-      // clang-format off
-    0, 1, 2
-      // clang-format on
-  };
+  InstancedTriangle instancedTriangle_;
 };
 
 }  // namespace test

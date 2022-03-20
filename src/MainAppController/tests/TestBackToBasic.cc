@@ -6,9 +6,10 @@
 
 namespace test {
 
-TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx) {
-  vb_ = std::make_unique<VertexBuffer>(vertices_.data(), vertices_.size() * sizeof(float));
-  ib_ = std::make_unique<IndexBuffer>(indices_.data(), indices_.size());
+TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedTriangle_() {
+  instancedTriangle_.makeVertices();
+  vb_ = std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
+  ib_ = std::make_unique<IndexBuffer>(instancedTriangle_.indices.data(), instancedTriangle_.indices.size());
   va_ = std::make_unique<VertexArray>();
 
   VertexBufferLayout layout;

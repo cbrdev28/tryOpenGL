@@ -16,6 +16,8 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
       {*vbModelVertex0_, {GL_FLOAT, 2, GL_FALSE}},
       {*vbModelPosition1_, {GL_FLOAT, 2, GL_FALSE}},
   };
+  vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbModelPosition1_->setDivisor(VertexBufferDivisor::FOR_EACH);
   va_->setInstanceBufferElement(buffersAndElements);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");

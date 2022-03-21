@@ -3,9 +3,15 @@
 
 #include "openGLHeaders.h"
 
+enum VertexBufferDivisor {
+  ALWAYS = GLuint(0),
+  FOR_EACH = GLuint(1),
+};
+
 class VertexBuffer {
  private:
   GLuint identifier_{0};
+  GLuint divisor_ = VertexBufferDivisor::ALWAYS;
 
  public:
   VertexBuffer(const GLvoid* data, GLsizeiptr size, GLenum glDrawMode = GL_STATIC_DRAW);
@@ -21,6 +27,9 @@ class VertexBuffer {
 
   void setData(const GLvoid* data, GLsizeiptr size);
   void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize);
+
+  inline void setDivisor(const VertexBufferDivisor& divisor) { divisor_ = divisor; }
+  [[nodiscard]] inline auto getDivisor() const -> GLuint { return divisor_; }
 };
 
 #endif

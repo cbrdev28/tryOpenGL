@@ -35,7 +35,6 @@ class TestBackToBasic : public Test {
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vbModelVertex0_;
   std::unique_ptr<VertexBuffer> vbModelPosition1_;
-  // std::unique_ptr<IndexBuffer> ib_;
   std::unique_ptr<ShaderManager> shader_;
 
   InstancedTriangle instancedTriangle_;

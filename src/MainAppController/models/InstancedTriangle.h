@@ -12,7 +12,7 @@
 
 struct InstancedTriangle {
   static constexpr GLsizei kMaxTriangles = 64;
-  static constexpr GLfloat kSize = 0.2F;
+  static constexpr GLfloat kSize = 0.1F;
 
   std::array<glm::vec2, 3> vertices = resetVertices();
   std::array<GLuint, 3> indices = {0, 1, 2};
@@ -40,8 +40,9 @@ struct InstancedTriangle {
     const auto currentNumberOfTriangles = positions.size();
     ASSERT(currentNumberOfTriangles <= kMaxTriangles);
 
-    const auto randomPosX = genRandom() - 0.5F;
-    const auto randomPosY = genRandom() - 0.5F;
+    const auto expectedValueRange = 0.9F;
+    const auto randomPosX = expectedValueRange - (2 * genRandom() * expectedValueRange);
+    const auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
 
     positions.emplace_back(glm::vec2(randomPosX, randomPosY));
     return positions;

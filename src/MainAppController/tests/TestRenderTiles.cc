@@ -26,10 +26,10 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   vb1_ = std::make_unique<VertexBuffer>(serializedVertices.data(), serializedVertices.size() * sizeof(float));
 
   VertexBufferLayout layout;
-  layout.pushFloat(TileVertex::kPosCount, *vb1_);
-  layout.pushFloat(TileVertex::kTextureCoordCount, *vb1_);
-  layout.pushFloat(TileVertex::kTextureIdCount, *vb1_);
-  va1_->setBufferLayout(layout);
+  layout.pushFloat(TileVertex::kPosCount);
+  layout.pushFloat(TileVertex::kTextureCoordCount);
+  layout.pushFloat(TileVertex::kTextureIdCount);
+  va1_->setBufferLayout(*vb1_, layout);
 
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
@@ -55,8 +55,8 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
                                         basicTriangleVerticesSizeOf * basicTriangleIndicedVertices.size());
 
   VertexBufferLayout layout2;
-  layout2.pushFloat(basicTriangleVertexSize, *vb2_);
-  va2_->setBufferLayout(layout2);
+  layout2.pushFloat(basicTriangleVertexSize);
+  va2_->setBufferLayout(*vb2_, layout2);
 
   ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
 

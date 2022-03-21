@@ -3,9 +3,7 @@
 
 #include <vector>
 
-#include "VertexBuffer.h"
 #include "VertexBufferElement.h"
-#include "openGLErrorHelpers.h"
 #include "openGLHeaders.h"
 
 class VertexBufferLayout {
@@ -16,13 +14,13 @@ class VertexBufferLayout {
  public:
   VertexBufferLayout() = default;
 
-  inline void pushFloat(GLint count, const VertexBuffer& vb) {
-    elements_.push_back({GL_FLOAT, count, GL_FALSE, vb});
+  inline void pushFloat(GLint count) {
+    elements_.push_back({GL_FLOAT, count, GL_FALSE});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
   }
 
-  inline void pushUInt(GLint count, const VertexBuffer& vb) {
-    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE, vb});
+  inline void pushUInt(GLint count) {
+    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
     stride_ = stride_ + VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT) * count;
   }
 

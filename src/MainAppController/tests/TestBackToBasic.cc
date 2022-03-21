@@ -11,10 +11,10 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   va_ = std::make_unique<VertexArray>();
   VertexBufferLayout layout;
   vb_ = std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
-  layout.pushFloat(2, *vb_);
+  layout.pushFloat(2);
   vbPositions_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
-  layout.pushFloat(2, *vbPositions_);
-  va_->setBufferLayout(layout);
+  layout.pushFloat(2);
+  va_->setBufferLayout(*vb_, layout);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
   shader_->bind();

@@ -36,7 +36,7 @@ void VertexArray::setInstanceBufferElement(
     GLCall(glEnableVertexAttribArray(i));
     GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized,
                                  element.count * VertexBufferElement::getSizeOfType(element.type), nullptr));
-    glVertexAttribDivisor(i, buffer.getDivisor());
+    GLCall(glVertexAttribDivisor(i, buffer.getDivisor()));
   }
 }
 

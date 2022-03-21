@@ -1,6 +1,9 @@
 #ifndef VERTEX_ARRAY_H_
 #define VERTEX_ARRAY_H_
 
+#include <utility>
+#include <vector>
+
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
@@ -19,6 +22,9 @@ class VertexArray {
   auto operator=(VertexArray&& other) -> VertexArray& = delete;
 
   void setBufferLayout(const VertexBuffer& vb, const VertexBufferLayout& layout) const;
+
+  void setInstanceBufferElement(
+      const std::vector<std::pair<const VertexBuffer&, const VertexBufferElement&>>& pair) const;
 
   void bind() const;
   void unBind() const;

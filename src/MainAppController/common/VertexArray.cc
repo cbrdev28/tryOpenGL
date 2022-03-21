@@ -26,6 +26,18 @@ void VertexArray::setBufferLayout(const VertexBuffer& vb, const VertexBufferLayo
   }
 }
 
+void VertexArray::setInstanceBufferElement(
+    const std::vector<std::pair<const VertexBuffer&, const VertexBufferElement&>>& bufferElement) const {
+  bind();
+  for (GLuint i = 0; i < bufferElement.size(); i++) {
+    GLCall(glEnableVertexAttribArray(i));
+    bufferElement.at(i).first.bind();
+    const auto& element = bufferElement.at(i).second;
+    GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized,
+                                 element.count * VertexBufferElement::getSizeOfType(element.type), nullptr));
+  }
+}
+
 void VertexArray::bind() const { GLCall(glBindVertexArray(identifier_)); }
 
 void VertexArray::unBind() const { GLCall(glBindVertexArray(0)); }

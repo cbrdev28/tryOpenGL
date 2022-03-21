@@ -1,7 +1,7 @@
 #include "TestBackToBasic.h"
 
 #include "MatrixHelper.h"
-#include "VertexBufferLayout.h"
+#include "VertexBufferElement.h"
 #include "imgui.h"
 
 namespace test {
@@ -9,12 +9,15 @@ namespace test {
 TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedTriangle_() {
   // ib_ = std::make_unique<IndexBuffer>(instancedTriangle_.indices.data(), instancedTriangle_.indices.size());
   va_ = std::make_unique<VertexArray>();
-  VertexBufferLayout layout;
-  vb_ = std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
-  layout.pushFloat(2);
-  vbPositions_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
-  layout.pushFloat(2);
-  va_->setBufferLayout(*vb_, layout);
+  vbModelVertex0_ =
+      std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
+  vbModelPosition1_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
+  // For now, both of our vertex buffer share the same layout element: 2 floats (normalized = false)
+  std::vector<std::pair<const VertexBuffer&, const VertexBufferElement&>> buffersAndElements = {
+      {*vbModelVertex0_, {GL_FLOAT, 2, GL_FALSE}},
+      {*vbModelPosition1_, {GL_FLOAT, 2, GL_FALSE}},
+  };
+  va_->setInstanceBufferElement(buffersAndElements);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
   shader_->bind();
@@ -26,8 +29,8 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
                           glm::ortho(-1.0F, 1.0F, -reversedAspectRation, reversedAspectRation, -1.0F, 1.0F));
 
   va_->unBind();
-  vbPositions_->unBind();
-  vb_->unBind();
+  vbModelPosition1_->unBind();
+  vbModelVertex0_->unBind();
   // ib_->unBind();
   shader_->unBind();
 }
@@ -57,9 +60,9 @@ void TestBackToBasic::addTriangleInstance() {
   // Make
   const auto positions = instancedTriangle_.addTriangle();
   // Add
-  vbPositions_->setInstanceData(positions.data(), instancedTriangle_.positionsGLSize(),
-                                instancedTriangle_.maxPositionsGLSize());
-  vbPositions_->unBind();
+  vbModelPosition1_->setInstanceData(positions.data(), instancedTriangle_.positionsGLSize(),
+                                     instancedTriangle_.maxPositionsGLSize());
+  vbModelPosition1_->unBind();
 }
 
 }  // namespace test

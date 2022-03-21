@@ -2,6 +2,7 @@
 
 #include "MatrixHelper.h"
 #include "VertexBufferElement.h"
+#include "VertexBufferLayout.h"
 #include "imgui.h"
 
 namespace test {
@@ -11,14 +12,27 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   vbModelVertex0_ =
       std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
   vbModelPosition1_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
-  // For now, both of our vertex buffer share the same layout element: 2 floats (normalized = false)
-  std::vector<std::pair<const VertexBuffer&, const VertexBufferElement&>> buffersAndElements = {
-      {*vbModelVertex0_, {GL_FLOAT, 2, GL_FALSE}},
-      {*vbModelPosition1_, {GL_FLOAT, 2, GL_FALSE}},
-  };
+  vbModelTransformation2_ =
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxTransformationsGLSize(), GL_STREAM_DRAW);
   vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbModelPosition1_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  va_->setInstanceBufferElement(buffersAndElements);
+  vbModelTransformation2_->setDivisor(VertexBufferDivisor::FOR_EACH);
+
+  VertexBufferLayout layoutModel;
+  layoutModel.pushFloat(2);
+  VertexBufferLayout layoutPosition;
+  layoutPosition.pushFloat(2);
+  VertexBufferLayout layoutTransformation;
+  layoutTransformation.pushFloat(4);
+  layoutTransformation.pushFloat(4);
+  layoutTransformation.pushFloat(4);
+  layoutTransformation.pushFloat(4);
+  const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
+      {*vbModelVertex0_, layoutModel},
+      {*vbModelPosition1_, layoutPosition},
+      {*vbModelTransformation2_, layoutTransformation},
+  };
+  va_->setInstanceBufferLayout(vectorOfPairs);
 
   shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
   shader_->bind();
@@ -29,6 +43,7 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
   va_->unBind();
+  vbModelTransformation2_->unBind();
   vbModelPosition1_->unBind();
   vbModelVertex0_->unBind();
   shader_->unBind();
@@ -54,10 +69,15 @@ void TestBackToBasic::onImGuiRender() {
 }
 
 void TestBackToBasic::addTriangleInstance() {
-  const auto positions = instancedTriangle_.addTriangle();
-  vbModelPosition1_->setInstanceData(positions.data(), instancedTriangle_.positionsGLSize(),
+  instancedTriangle_.addTriangle();
+  vbModelPosition1_->setInstanceData(instancedTriangle_.positions.data(), instancedTriangle_.positionsGLSize(),
                                      instancedTriangle_.maxPositionsGLSize());
   vbModelPosition1_->unBind();
+
+  vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),
+                                           instancedTriangle_.transformationsGLSize(),
+                                           instancedTriangle_.maxTransformationsGLSize());
+  vbModelTransformation2_->unBind();
 }
 
 }  // namespace test

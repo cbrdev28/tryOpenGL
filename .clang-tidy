@@ -17,4 +17,5 @@ Checks: >
     -cppcoreguidelines-interfaces-global-init,
     -cppcoreguidelines-avoid-magic-numbers,
     -cppcoreguidelines-pro-type-vararg,
-    -bugprone-easily-swappable-parameters
+    -bugprone-easily-swappable-parameters,
+    -cppcoreguidelines-pro-type-union-access

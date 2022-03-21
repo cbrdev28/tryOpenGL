@@ -15,7 +15,6 @@ struct InstancedTriangle {
   static constexpr GLfloat kSize = 0.1F;
 
   std::array<glm::vec2, 3> vertices = resetVertices();
-  std::array<GLuint, 3> indices = {0, 1, 2};
 
   auto resetVertices(const GLfloat size = kSize) -> std::array<glm::vec2, 3>& {
     const auto halfSize = size / 2.0F;
@@ -45,11 +44,13 @@ struct InstancedTriangle {
     const auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
 
     positions.emplace_back(glm::vec2(randomPosX, randomPosY));
+    transformations.emplace_back(glm::mat4(1.0F));
     return positions;
   }
 
   auto removeTriangle() -> std::vector<glm::vec2>& {
     positions.pop_back();
+    transformations.pop_back();
     return positions;
   }
 
@@ -59,6 +60,16 @@ struct InstancedTriangle {
 
   auto maxPositionsGLSize() -> GLsizeiptr {
     return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 2);
+  }
+
+  std::vector<glm::mat4> transformations{};
+
+  auto transformationsGLSize() -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(transformations.size()) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
+  }
+
+  auto maxTransformationsGLSize() -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
   }
 };
 

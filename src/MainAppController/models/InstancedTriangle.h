@@ -34,17 +34,19 @@ struct InstancedTriangle {
 
   std::vector<glm::vec2> positions{};
 
+  // Adding a new triangle is making new:
+  // - positions
+  // - transformation matrix
   auto addTriangle() -> std::vector<glm::vec2>& {
-    // The number of triangles is the number of positions
     const auto currentNumberOfTriangles = positions.size();
-    ASSERT(currentNumberOfTriangles <= kMaxTriangles);
-
+    ASSERT(currentNumberOfTriangles < kMaxTriangles);
+    // Random positions between: -0.9 & 0.9
     const auto expectedValueRange = 0.9F;
     const auto randomPosX = expectedValueRange - (2 * genRandom() * expectedValueRange);
     const auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
 
     positions.emplace_back(glm::vec2(randomPosX, randomPosY));
-    transformations.emplace_back(glm::mat4(1.0F));
+    transformations.emplace_back(glm::translate(glm::mat4(1.0F), glm::vec3(randomPosX, randomPosY, 0.0)));
     return positions;
   }
 
@@ -52,14 +54,6 @@ struct InstancedTriangle {
     positions.pop_back();
     transformations.pop_back();
     return positions;
-  }
-
-  auto positionsGLSize() -> GLsizeiptr {
-    return static_cast<GLsizeiptr>(positions.size()) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 2);
-  }
-
-  auto maxPositionsGLSize() -> GLsizeiptr {
-    return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 2);
   }
 
   std::vector<glm::mat4> transformations{};
@@ -70,6 +64,13 @@ struct InstancedTriangle {
 
   auto maxTransformationsGLSize() -> GLsizeiptr {
     return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
+  }
+
+  // Make triangle rotate
+  void updateTransformation(float deltaTime) {
+    for (auto& transformation : transformations) {
+      transformation = glm::rotate(transformation, glm::radians(deltaTime * 45.0F), glm::vec3(0.0F, 0.0F, 1.0F));
+    }
   }
 };
 

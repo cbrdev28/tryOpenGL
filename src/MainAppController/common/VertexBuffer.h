@@ -25,6 +25,7 @@ class VertexBuffer {
   void bind() const;
   void unBind() const;
 
+  // Experimental: used in TestDynamicRender but we prefer to use `setInstanceData` instead (in TestBackToBasic).
   void setData(const GLvoid* data, GLsizeiptr size);
   void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize);
 

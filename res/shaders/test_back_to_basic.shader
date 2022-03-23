@@ -25,5 +25,5 @@ layout(location = 0) out vec4 fragmentColor;
 
 void main()
 {
-    fragmentColor = v_modelVertexPosition;
+    fragmentColor = vec4(v_modelVertexPosition.x, v_modelVertexPosition.y, 0.5, 1.0);
 };

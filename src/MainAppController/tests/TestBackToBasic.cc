@@ -47,6 +47,7 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
 TestBackToBasic::~TestBackToBasic() = default;
 
 void TestBackToBasic::onUpdate(float deltaTime) {
+  deltaTime_ = deltaTime;
   instancedTriangle_.updateTransformation(deltaTime);
   vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),
                                            instancedTriangle_.transformationsGLSize(),
@@ -62,11 +63,13 @@ void TestBackToBasic::onRender() {
 }
 
 void TestBackToBasic::onImGuiRender() {
+  ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
   ImGui::ColorEdit4("Color", backgroundColor_.data());
   if (ImGui::Button("Add instance")) {
     this->addTriangleInstance();
   }
   ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
+  ImGui::Text("Transformations count: %.zu", instancedTriangle_.transformations.size());
 }
 
 void TestBackToBasic::addTriangleInstance() {

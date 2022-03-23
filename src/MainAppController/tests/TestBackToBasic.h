@@ -30,6 +30,7 @@ class TestBackToBasic : public Test {
 
  private:
   std::array<float, 4> backgroundColor_ = {0.8F, 0.8F, 0.8F, 1.0F};
+  float deltaTime_{0.0F};
 
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;

@@ -1,8 +1,6 @@
 #include "TestMenu.h"
 
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
-#include <openGLHeaders.h>
 
 namespace test {
 
@@ -23,7 +21,7 @@ void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
   } else {
-    GLCall(glClearColor(0.1F, 0.1F, 0.1F, 1.0F));
+    renderer_.clearColorBackground(0.1F, 0.1F, 0.1F, 1.0F);
   }
 }
 

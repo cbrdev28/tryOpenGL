@@ -3,14 +3,14 @@
  */
 #include "MainAppController.h"
 
-#include <TestBatchRender.h>
-#include <TestRenderTiles.h>
-#include <TestTexture.h>
-#include <TestWorldManager.h>
 #include <fmt/core.h>
 
+#include "TestBackToBasic.h"
+#include "TestBatchRender.h"
 #include "TestDynamicRender.h"
-
+#include "TestRenderTiles.h"
+#include "TestTexture.h"
+#include "TestWorldManager.h"
 
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
 
@@ -40,6 +40,7 @@ auto MainAppController::init() -> int {
     testMenu_.registerTest<test::TestBatchRender>("Test Batch Rendering");
     testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
     testMenu_.registerTest<test::TestDynamicRender>("Test Dynamic Render");
+    testMenu_.registerTest<test::TestBackToBasic>("Test Back to Basic");
   } catch (int error) {
     return -1;
   }

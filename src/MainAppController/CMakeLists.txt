@@ -21,6 +21,7 @@ add_library(
     "tests/TestBatchRender.cc"
     "tests/TestRenderTiles.cc"
     "tests/TestDynamicRender.cc"
+    "tests/TestBackToBasic.cc"
 )
 
 target_include_directories(

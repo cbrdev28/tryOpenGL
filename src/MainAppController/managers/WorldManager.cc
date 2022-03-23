@@ -8,9 +8,6 @@
 #include "basicFirstForms.h"
 
 auto WorldManager::init(const float windowWidth, const float windowHeight) -> WorldManager& {
-  // GLCall(glEnable(GL_DEPTH_TEST));
-  shaderManager_.init();
-
   vao_ = std::make_unique<VertexArray>();
   vbo_ = std::make_unique<VertexBuffer>(basicSquareIndicedVertices.data(),
                                         basicSquareVerticesSizeOf * basicSquareIndicedVertices.size());
@@ -18,7 +15,7 @@ auto WorldManager::init(const float windowWidth, const float windowHeight) -> Wo
 
   VertexBufferLayout layout;
   layout.pushFloat(basicSquareVertexSize);
-  vao_->addBuffer(*vbo_, layout);
+  vao_->setBufferLayout(*vbo_, layout);
 
   // Set our default "look at" camera in the view matrix
   matrixHelper_.updateView(cameraPosition_ + basicCameraPositionOffset, cameraPosition_ + basicCameraTarget,
@@ -39,7 +36,7 @@ auto WorldManager::init(const float windowWidth, const float windowHeight) -> Wo
 
 // NOTE: this function is called during the render loop!
 auto WorldManager::render() -> WorldManager& {
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
 
   shaderManager_.bind();
   // Update view matrix for camera movement

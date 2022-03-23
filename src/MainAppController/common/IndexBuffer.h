@@ -1,15 +1,16 @@
 #ifndef INDEX_BUFFER_H_
 #define INDEX_BUFFER_H_
 
-#include <openGLHeaders.h>
+#include "openGLHeaders.h"
 
 class IndexBuffer {
  private:
-  unsigned int identifier_{0};
-  unsigned int count_{0};
+  GLuint identifier_{0};
+  const GLuint* data_{nullptr};
+  GLsizei count_{0};
 
  public:
-  IndexBuffer(const unsigned int* data, unsigned int count, unsigned int glDrawMode = GL_STATIC_DRAW);
+  IndexBuffer(const GLuint* data, GLsizei count, GLenum glDrawMode = GL_STATIC_DRAW);
   ~IndexBuffer();
 
   IndexBuffer(const IndexBuffer& other) = delete;
@@ -20,9 +21,10 @@ class IndexBuffer {
   void bind() const;
   void unBind() const;
 
-  void setData(const void* data, unsigned int count);
+  void setData(const GLvoid* data, GLsizei count);
 
-  [[nodiscard]] inline auto getCount() const -> unsigned int { return count_; }
+  [[nodiscard]] inline auto getCount() const -> GLsizei { return count_; }
+  [[nodiscard]] inline auto getData() const -> const GLuint* { return data_; }
 };
 
 #endif

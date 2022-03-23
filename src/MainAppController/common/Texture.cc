@@ -1,9 +1,9 @@
 #include "Texture.h"
 
 #include <fmt/core.h>
-#include <openGLErrorHelpers.h>
-#include <openGLHeaders.h>
 #include <stb_image.h>
+
+#include "openGLErrorHelpers.h"
 
 Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
   stbi_set_flip_vertically_on_load(1);

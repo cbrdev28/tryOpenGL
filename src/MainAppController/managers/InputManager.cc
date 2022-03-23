@@ -18,8 +18,9 @@ InputManager::~InputManager() {
 }
 
 auto InputManager::init() -> InputManager& {
-  GLFWwindow* window = windowManager_.getWindow();
-  glfwSetCursorPosCallback(window, InputManager::mouseCallback);
+  // NOTE: re-visit this when mouse is actually needed
+  // GLFWwindow* window = windowManager_.getWindow();
+  // glfwSetCursorPosCallback(window, InputManager::mouseCallback);
 
   // NOTE: this may need to be moved in some function
   // Uncomment to tell GLFW to capture our mouse

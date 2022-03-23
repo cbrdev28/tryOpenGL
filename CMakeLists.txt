@@ -33,6 +33,7 @@ configure_file("res/shaders/test_batch_render.shader" ${CMAKE_BINARY_DIR} COPYON
 configure_file("res/shaders/test_render_tiles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file("res/shaders/test_texture.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file("res/shaders/test_dynamic_render.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_back_to_basic.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 
 configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
 configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -45,6 +46,7 @@ install(FILES "res/shaders/test_batch_render.shader" DESTINATION bin)
 install(FILES "res/shaders/test_render_tiles.shader" DESTINATION bin)
 install(FILES "res/shaders/test_texture.shader" DESTINATION bin)
 install(FILES "res/shaders/test_dynamic_render.shader" DESTINATION bin)
+install(FILES "res/shaders/test_back_to_basic.shader" DESTINATION bin)
 
 install(FILES "res/textures/grass.png" DESTINATION bin)
 install(FILES "res/textures/wall.png" DESTINATION bin)

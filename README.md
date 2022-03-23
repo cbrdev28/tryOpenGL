@@ -143,3 +143,52 @@ NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. 
 - Basically, I added:
   - A config/rule file: `.clang-tidy`
   - A script to run clang-tidy: `./scripts/cbr-clang-tidy.sh`
+
+### More environment variable & VS Code extensions
+
+MSYS2 installs some binaries in a different folder than the one set in our environment variables (see beginning of this document).
+For example, VS Code (or Visual Studio) are not able to find `git`. I fixed this by:
+- Adding the following path `C:\msys64\usr\bin` to my users environment variables
+
+VS Code extensions I ended up using:
+- [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+- [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd)
+- [CMake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake)
+- [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
+- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
+
+Dump of my `settings.json`:
+```json
+{
+    "terminal.integrated.profiles.windows": {
+        "MSYS2 MinGW x64": {
+            "path": "C:/msys64/usr/bin/bash.exe",
+            "args": ["--login"],
+            "env": {"MSYSTEM": "MINGW64"}
+        },
+    },
+    "terminal.integrated.defaultProfile.windows": "MSYS2 MinGW x64",
+    "git.path": "C:\\msys64\\usr\\bin\\git.exe",
+    "git.enabled": true,
+    "[cpp]": {
+        "editor.formatOnSave": true
+    },
+    "cSpell.userWords": [
+        "Cherno",
+        "Glfw",
+        "IMGUI",
+        "Lclampf",
+        "Lsizei",
+        "NOLINTNEXTLINE",
+        "OPENGL",
+        "Programiv",
+        "stbi"
+    ],
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnEdit": false,
+    "editor.renderWhitespace": "all",
+    "editor.fontFamily": "Cascadia mono, Consolas, 'Courier New', monospace",
+    "C_Cpp.intelliSenseEngine": "Disabled"
+}
+
+```

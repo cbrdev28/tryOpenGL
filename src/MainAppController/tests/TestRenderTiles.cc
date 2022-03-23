@@ -1,12 +1,12 @@
 #include "TestRenderTiles.h"
 
-#include <MatrixHelper.h>
-#include <VertexBufferLayout.h>
-#include <basicTriangle.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <vector>
+
+#include "MatrixHelper.h"
+#include "VertexBufferLayout.h"
+#include "basicFirstForms.h"
 
 namespace test {
 
@@ -29,12 +29,11 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
   layout.pushFloat(TileVertex::kPosCount);
   layout.pushFloat(TileVertex::kTextureCoordCount);
   layout.pushFloat(TileVertex::kTextureIdCount);
-  va1_->addBuffer(*vb1_, layout);
+  va1_->setBufferLayout(*vb1_, layout);
 
   ib1_ = std::make_unique<IndexBuffer>(gridIndices.data(), gridIndices.size());
 
   shader1_ = std::make_unique<ShaderManager>("test_render_tiles.shader");
-  shader1_->init();
   shader1_->bind();
   shader1_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader1_);
@@ -57,12 +56,11 @@ TestRenderTiles::TestRenderTiles(const TestContext& ctx)
 
   VertexBufferLayout layout2;
   layout2.pushFloat(basicTriangleVertexSize);
-  va2_->addBuffer(*vb2_, layout2);
+  va2_->setBufferLayout(*vb2_, layout2);
 
   ib2_ = std::make_unique<IndexBuffer>(basicTriangleIndices.data(), basicTriangleIndices.size());
 
   shader2_ = std::make_unique<ShaderManager>("basic.shader");
-  shader2_->init();
   shader2_->bind();
   shader2_->setUniformMat4("u_model", MatrixHelper::identityMatrix);
   this->setViewProjection(usePerspective_, *shader2_);
@@ -80,7 +78,7 @@ TestRenderTiles::~TestRenderTiles() { this->getTestContext().inputManager->remov
 void TestRenderTiles::onUpdate(float deltaTime) { frameDeltaTime_ = deltaTime; }
 
 void TestRenderTiles::onRender() {
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader1_, *va1_, *ib1_);
   renderer_.draw(*shader2_, *va2_, *ib2_);
 }

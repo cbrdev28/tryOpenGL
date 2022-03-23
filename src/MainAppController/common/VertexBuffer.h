@@ -1,14 +1,20 @@
 #ifndef VERTEX_BUFFER_H_
 #define VERTEX_BUFFER_H_
 
-#include <openGLHeaders.h>
+#include "openGLHeaders.h"
+
+enum VertexBufferDivisor {
+  ALWAYS = GLuint(0),
+  FOR_EACH = GLuint(1),
+};
 
 class VertexBuffer {
  private:
-  unsigned int identifier_{0};
+  GLuint identifier_{0};
+  GLuint divisor_ = VertexBufferDivisor::ALWAYS;
 
  public:
-  VertexBuffer(const void* data, unsigned int size, unsigned int glDrawMode = GL_STATIC_DRAW);
+  VertexBuffer(const GLvoid* data, GLsizeiptr size, GLenum glDrawMode = GL_STATIC_DRAW);
   ~VertexBuffer();
 
   VertexBuffer(const VertexBuffer& other) = delete;
@@ -19,7 +25,12 @@ class VertexBuffer {
   void bind() const;
   void unBind() const;
 
-  void setData(const void* data, unsigned int size);
+  // Experimental: used in TestDynamicRender but we prefer to use `setInstanceData` instead (in TestBackToBasic).
+  void setData(const GLvoid* data, GLsizeiptr size);
+  void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize);
+
+  inline void setDivisor(const VertexBufferDivisor& divisor) { divisor_ = divisor; }
+  [[nodiscard]] inline auto getDivisor() const -> GLuint { return divisor_; }
 };
 
 #endif

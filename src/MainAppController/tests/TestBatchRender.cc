@@ -1,11 +1,11 @@
 #include "TestBatchRender.h"
 
-#include <VertexBufferLayout.h>
-#include <glmHeaders.h>
 #include <imgui.h>
-#include <openGLErrorHelpers.h>
 
 #include <array>
+
+#include "VertexBufferLayout.h"
+#include "glmHeaders.h"
 
 namespace test {
 
@@ -41,12 +41,11 @@ TestBatchRender::TestBatchRender(const TestContext& ctx) : Test(ctx) {
   layout.pushFloat(2);
   layout.pushFloat(2);
   layout.pushFloat(1);
-  va_->addBuffer(*vb_, layout);
+  va_->setBufferLayout(*vb_, layout);
 
   ib_ = std::make_unique<IndexBuffer>(indices.data(), indices.size());
 
   shader_ = std::make_unique<ShaderManager>("test_batch_render.shader");
-  shader_->init();
   shader_->bind();
   glm::mat4 identityMatrix = glm::mat4{1.0F};
   shader_->setUniformMat4("u_model", identityMatrix);
@@ -71,7 +70,7 @@ void TestBatchRender::onUpdate(float deltaTime) {}
 
 void TestBatchRender::onRender() {
   this->setViewProjection(usePerspective_);
-  GLCall(glClearColor(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]));
+  renderer_.clearColorBackground(backgroundColor_[0], backgroundColor_[1], backgroundColor_[2], backgroundColor_[3]);
   renderer_.draw(*shader_, *va_, *ib_);
 }
 

@@ -28,3 +28,9 @@ void VertexBuffer::setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeip
   // Note: 0 is the start offset (we always set the full set of data)
   GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
 }
+
+void VertexBuffer::setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize, GLintptr offset) {
+  bind();
+  GLCall(glBufferData(GL_ARRAY_BUFFER, maxSize, nullptr, GL_STREAM_DRAW));
+  GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, data));
+}

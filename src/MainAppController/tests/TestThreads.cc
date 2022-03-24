@@ -48,11 +48,16 @@ TestThreads::~TestThreads() = default;
 
 void TestThreads::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
-  instancedTriangle_.updateTransformation(deltaTime);
-  vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),
-                                           instancedTriangle_.transformationsGLSize(),
-                                           instancedTriangle_.maxTransformationsGLSize());
-  vbModelTransformation2_->unBind();
+  if (useThreads_) {
+    onUpdateThreads(deltaTime);
+  } else {
+    onUpdateState_ = "Main";
+    instancedTriangle_.updateTransformation(deltaTime);
+    vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),
+                                             instancedTriangle_.transformationsGLSize(),
+                                             instancedTriangle_.maxTransformationsGLSize());
+    vbModelTransformation2_->unBind();
+  }
 }
 
 void TestThreads::onRender() {
@@ -70,6 +75,8 @@ void TestThreads::onImGuiRender() {
   }
   ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
   ImGui::Text("Transformations count: %.zu", instancedTriangle_.transformations.size());
+  ImGui::Checkbox("Use threads", &useThreads_);
+  ImGui::Text("onUpdate state: %s", onUpdateState_.c_str());
 }
 
 void TestThreads::addTriangleInstance() {
@@ -79,6 +86,12 @@ void TestThreads::addTriangleInstance() {
                                            instancedTriangle_.transformationsGLSize(),
                                            instancedTriangle_.maxTransformationsGLSize());
   vbModelTransformation2_->unBind();
+}
+
+void TestThreads::onUpdateThreads(float /*dtTime*/) {
+  onUpdateState_ = "Using threads";
+  // Threads?
+  // And...
 }
 
 }  // namespace test

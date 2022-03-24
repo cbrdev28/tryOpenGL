@@ -40,6 +40,10 @@ class TestThreads : public Test {
 
   InstancedTriangle instancedTriangle_;
   void addTriangleInstance();
+
+  bool useThreads_{false};
+  std::string onUpdateState_{"None"};
+  void onUpdateThreads(float dtTime);
 };
 
 }  // namespace test

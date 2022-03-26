@@ -44,7 +44,14 @@ TestThreads::TestThreads(const TestContext& ctx) : Test(ctx), instancedTriangle_
   shader_->unBind();
 }
 
-TestThreads::~TestThreads() = default;
+TestThreads::~TestThreads() {
+  if (thread1_ != nullptr) {
+    thread1_->join();
+  }
+  if (thread2_ != nullptr) {
+    thread2_->join();
+  }
+}
 
 void TestThreads::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
@@ -77,6 +84,8 @@ void TestThreads::onImGuiRender() {
   ImGui::Text("Transformations count: %.zu", instancedTriangle_.transformations.size());
   ImGui::Checkbox("Use threads", &useThreads_);
   ImGui::Text("onUpdate state: %s", onUpdateState_.c_str());
+  ImGui::Text("Thread 1 state: %s", threadState1_.c_str());
+  ImGui::Text("Thread 2 state: %s", threadState2_.c_str());
 }
 
 void TestThreads::addTriangleInstance() {

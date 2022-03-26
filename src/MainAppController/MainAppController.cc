@@ -5,20 +5,9 @@
 
 #include <fmt/core.h>
 
-#include "TestBackToBasic.h"
-#include "TestBatchRender.h"
-#include "TestDynamicRender.h"
-#include "TestRenderTiles.h"
-#include "TestTexture.h"
-#include "TestThreads.h"
-#include "TestWorldManager.h"
-
-MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
-
 auto MainAppController::run() -> int {
   fmt::print("run()\n");
-  int initialized = this->init();
-  if (initialized != 0) {
+  if (this->init() != 0) {
     return -1;
   }
   try {
@@ -33,28 +22,18 @@ auto MainAppController::init() -> int {
   fmt::print("init()\n");
   try {
     windowManager_.init();
-    inputManager_.init();
     imGuiManager_.init();
-
-    testMenu_.registerTest<test::TestWorldManager>("Test World");
-    testMenu_.registerTest<test::TestTexture>("Test Texture?");
-    testMenu_.registerTest<test::TestBatchRender>("Test Batch Rendering");
-    testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
-    testMenu_.registerTest<test::TestDynamicRender>("Test Dynamic Render");
-    testMenu_.registerTest<test::TestBackToBasic>("Test Back to Basic");
-    testMenu_.registerTest<test::TestThreads>("Test Threads");
   } catch (int error) {
     return -1;
   }
   return 0;
 }
 
-auto MainAppController::renderLoop() -> MainAppController& {
+auto MainAppController::renderLoop() -> void {
   fmt::print("renderLoop()\n");
 
   GLFWwindow* window = windowManager_.getWindow();
   while (glfwWindowShouldClose(window) == 0) {
-    inputManager_.processKeyboardInput();
     windowManager_.updateWindowStats();
     renderer_.clear();
 
@@ -70,5 +49,4 @@ auto MainAppController::renderLoop() -> MainAppController& {
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-  return *this;
 }

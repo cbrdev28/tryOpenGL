@@ -4,10 +4,10 @@
 #include "WindowManager.h"
 
 #include <fmt/core.h>
-#include <openGLErrorHelpers.h>
-#include <openGLHeaders.h>
 
 #include <chrono>
+
+#include "openGLErrorHelpers.h"
 
 // Initialize static class variables
 int WindowManager::width = WindowManager::defaultWidth;
@@ -16,7 +16,7 @@ std::vector<WindowListener*> WindowManager::listeners_ = {};  // Init to empty
 
 WindowManager::~WindowManager() {
   if (!listeners_.empty()) {
-    fmt::print("Warning: ~WindowManager(): listeners are not empty!\n");
+    fmt::print("WARN: ~WindowManager(): listeners are not empty!\n");
   }
 
   if (window_ != nullptr) {
@@ -29,12 +29,13 @@ WindowManager::~WindowManager() {
 /**
  * Public
  */
-auto WindowManager::init() -> WindowManager& {
+void WindowManager::init() {
   int initialized = glfwInit();
   if (initialized != GLFW_TRUE) {
-    fmt::print("Failed to glfwInit()\n");
+    fmt::print("ERROR: failed to glfwInit()\n");
     throw -1;
   }
+  // TODO(cbr): bump to 4.6
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -46,7 +47,7 @@ auto WindowManager::init() -> WindowManager& {
   WindowManager::height = static_cast<int>(static_cast<float>(WindowManager::width) / aspectRatio_.ratio);
   GLFWwindow* window = glfwCreateWindow(WindowManager::width, WindowManager::height, "WindowManager", nullptr, nullptr);
   if (window == nullptr) {
-    fmt::print("Failed to glfwCreateWindow(...)\n");
+    fmt::print("ERROR: failed to glfwCreateWindow(...)\n");
     throw -1;
   }
   window_ = window;
@@ -55,16 +56,13 @@ auto WindowManager::init() -> WindowManager& {
 
   // NOLINTNEXTLINE(google-readability-casting, cppcoreguidelines-pro-type-cstyle-cast)
   if (gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress)) == 0) {
-    fmt::print("Failed to gladLoadGLLoader(...)\n");
+    fmt::print("ERROR: failed to gladLoadGLLoader(...)\n");
     throw -1;
   }
 
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
   glfwSetKeyCallback(window_, WindowManager::keyCallback);
-  return *this;
 }
-
-auto WindowManager::getWindow() const -> GLFWwindow* { return window_; }
 
 void WindowManager::updateWindowStats() {
   auto nowTime = std::chrono::steady_clock::now();
@@ -95,7 +93,6 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width,
 
 void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
   // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
-
   // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
   //   // Pressed Alt + Enter
   // }

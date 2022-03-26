@@ -10,6 +10,7 @@
 #include "TestDynamicRender.h"
 #include "TestRenderTiles.h"
 #include "TestTexture.h"
+#include "TestThreads.h"
 #include "TestWorldManager.h"
 
 MainAppController::MainAppController() { fmt::print("MainAppController(...)\n"); };
@@ -41,6 +42,7 @@ auto MainAppController::init() -> int {
     testMenu_.registerTest<test::TestRenderTiles>("Test Render Tiles");
     testMenu_.registerTest<test::TestDynamicRender>("Test Dynamic Render");
     testMenu_.registerTest<test::TestBackToBasic>("Test Back to Basic");
+    testMenu_.registerTest<test::TestThreads>("Test Threads");
   } catch (int error) {
     return -1;
   }

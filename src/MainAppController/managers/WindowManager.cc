@@ -28,8 +28,8 @@ void WindowManager::init() {
     throw -1;
   }
   // TODO(cbr): bump to 4.6
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   // For Apple
   // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -50,6 +50,7 @@ void WindowManager::init() {
     fmt::print("ERROR: failed to gladLoadGLLoader(...)\n");
     throw -1;
   }
+  fmt::print("OpenGL version: {}\n", glGetString(GL_VERSION));
 
   glfwSetWindowUserPointer(window_, this);
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);

@@ -1,13 +1,11 @@
-#include "TestBackToBasic.h"
+#include "TestInstanceTriangle.h"
 
-#include "MatrixHelper.h"
-#include "VertexBufferElement.h"
 #include "VertexBufferLayout.h"
 #include "imgui.h"
 
 namespace test {
 
-TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedTriangle_() {
+TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   va_ = std::make_unique<VertexArray>();
   vbModelVertex0_ =
       std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
@@ -31,9 +29,9 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   };
   va_->setInstanceBufferLayout(vectorOfPairs);
 
-  shader_ = std::make_unique<ShaderManager>("test_back_to_basic.shader");
+  shader_ = std::make_unique<ShaderManager>("test_instance_triangle.shader");
   shader_->bind();
-  shader_->setUniformMat4("u_view", MatrixHelper::identityMatrix);
+  shader_->setUniformMat4("u_view", glm::mat4(1.0F));
 
   const auto aspectRatio = ctx.windowManager->getAspectRatio().ratio;
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
@@ -44,9 +42,9 @@ TestBackToBasic::TestBackToBasic(const TestContext& ctx) : Test(ctx), instancedT
   shader_->unBind();
 }
 
-TestBackToBasic::~TestBackToBasic() = default;
+TestInstanceTriangle::~TestInstanceTriangle() = default;
 
-void TestBackToBasic::onUpdate(float deltaTime) {
+void TestInstanceTriangle::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
   instancedTriangle_.updateTransformation(deltaTime);
   vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),
@@ -55,15 +53,17 @@ void TestBackToBasic::onUpdate(float deltaTime) {
   vbModelTransformation2_->unBind();
 }
 
-void TestBackToBasic::onRender() {
+void TestInstanceTriangle::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
   renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(instancedTriangle_.vertices.size()),
                          static_cast<GLsizei>(instancedTriangle_.positions.size()));
 }
 
-void TestBackToBasic::onImGuiRender() {
+void TestInstanceTriangle::onImGuiRender() {
   ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
+  ImGui::Text("Width: %d", this->getTestContext().windowManager->getWidth());
+  ImGui::Text("Height: %d", this->getTestContext().windowManager->getHeight());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
   if (ImGui::Button("Add instance")) {
     this->addTriangleInstance();
@@ -72,7 +72,7 @@ void TestBackToBasic::onImGuiRender() {
   ImGui::Text("Transformations count: %.zu", instancedTriangle_.transformations.size());
 }
 
-void TestBackToBasic::addTriangleInstance() {
+void TestInstanceTriangle::addTriangleInstance() {
   instancedTriangle_.addTriangle();
 
   vbModelTransformation2_->setInstanceData(instancedTriangle_.transformations.data(),

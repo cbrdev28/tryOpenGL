@@ -5,6 +5,8 @@
 
 #include <fmt/core.h>
 
+#include "TestInstanceTriangle.h"
+
 auto MainAppController::run() -> int {
   fmt::print("run()\n");
   if (this->init() != 0) {
@@ -23,6 +25,8 @@ auto MainAppController::init() -> int {
   try {
     windowManager_.init();
     imGuiManager_.init();
+
+    testMenu_.registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
   } catch (int error) {
     return -1;
   }

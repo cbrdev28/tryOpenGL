@@ -13,6 +13,7 @@ add_library(
     "common/VertexArray.cc"
     "common/Texture.cc"
     "tests/TestMenu.cc"
+    "tests/TestInstanceTriangle.cc"
 )
 
 target_include_directories(

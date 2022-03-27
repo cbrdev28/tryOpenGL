@@ -1,5 +1,5 @@
-#ifndef TEST_BACK_TO_BASIC_H_
-#define TEST_BACK_TO_BASIC_H_
+#ifndef TEST_INSTANCE_TRIANGLE_H_
+#define TEST_INSTANCE_TRIANGLE_H_
 
 #include <array>
 #include <memory>
@@ -14,15 +14,15 @@
 
 namespace test {
 
-class TestBackToBasic : public Test {
+class TestInstanceTriangle : public Test {
  public:
-  explicit TestBackToBasic(const TestContext& ctx);
-  ~TestBackToBasic() override;
+  explicit TestInstanceTriangle(const TestContext& ctx);
+  ~TestInstanceTriangle() override;
 
-  TestBackToBasic(const TestBackToBasic& other) = delete;
-  TestBackToBasic(TestBackToBasic&& other) = delete;
-  auto operator=(const TestBackToBasic& other) -> TestBackToBasic& = delete;
-  auto operator=(TestBackToBasic&& other) -> TestBackToBasic& = delete;
+  TestInstanceTriangle(const TestInstanceTriangle& other) = delete;
+  TestInstanceTriangle(TestInstanceTriangle&& other) = delete;
+  auto operator=(const TestInstanceTriangle& other) -> TestInstanceTriangle& = delete;
+  auto operator=(TestInstanceTriangle&& other) -> TestInstanceTriangle& = delete;
 
   void onUpdate(float deltaTime) override;
   void onRender() override;

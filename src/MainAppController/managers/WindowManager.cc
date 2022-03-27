@@ -9,11 +9,6 @@
 
 #include "openGLErrorHelpers.h"
 
-// Initialize static class variables
-int WindowManager::width = WindowManager::defaultWidth;
-int WindowManager::height = 0;
-std::vector<WindowListener*> WindowManager::listeners_ = {};  // Init to empty
-
 WindowManager::~WindowManager() {
   if (!listeners_.empty()) {
     fmt::print("WARN: ~WindowManager(): listeners are not empty!\n");
@@ -26,9 +21,6 @@ WindowManager::~WindowManager() {
   }
 }
 
-/**
- * Public
- */
 void WindowManager::init() {
   int initialized = glfwInit();
   if (initialized != GLFW_TRUE) {
@@ -44,8 +36,7 @@ void WindowManager::init() {
 
   glfwSetErrorCallback(WindowManager::errorCallback);
 
-  WindowManager::height = static_cast<int>(static_cast<float>(WindowManager::width) / aspectRatio_.ratio);
-  GLFWwindow* window = glfwCreateWindow(WindowManager::width, WindowManager::height, "WindowManager", nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(width_, height_, "WindowManager", nullptr, nullptr);
   if (window == nullptr) {
     fmt::print("ERROR: failed to glfwCreateWindow(...)\n");
     throw -1;
@@ -60,8 +51,10 @@ void WindowManager::init() {
     throw -1;
   }
 
+  glfwSetWindowUserPointer(window_, this);
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
   glfwSetKeyCallback(window_, WindowManager::keyCallback);
+  glfwSwapInterval(0);
 }
 
 void WindowManager::updateWindowStats() {
@@ -72,19 +65,22 @@ void WindowManager::updateWindowStats() {
   ++windowStats_.frameCount;
 }
 
+void WindowManager::framebufferSizeCallback(int width, int height) {
+  width_ = width;
+  height_ = height;
+  GLCall(glViewport(0, 0, static_cast<GLsizei>(width_), static_cast<GLsizei>(height_)));
+
+  for (auto* listener : listeners_) {
+    listener->onResize(width_, height_);
+  }
+}
+
 /**
  * Callback
  */
-void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width, int height) {
-  GLCall(glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height)));
-
-  WindowManager::width = width;
-  WindowManager::height = height;
-
-  for (WindowListener* listener : WindowManager::listeners_) {
-    listener->onResize(width, height);
-  }
-
+void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+  auto* windowManager = static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
+  windowManager->framebufferSizeCallback(width, height);
   // Debug
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
   // const auto testSize = WindowManager::listeners_.size();
@@ -92,14 +88,13 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* /* window */, int width,
 }
 
 void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
+  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
+    glfwSetWindowShouldClose(window, 1 /* true */);
+  }
   // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
   // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
   //   // Pressed Alt + Enter
   // }
-
-  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
-    glfwSetWindowShouldClose(window, 1 /* true */);
-  }
 }
 
 void WindowManager::errorCallback(int code, const char* description) {

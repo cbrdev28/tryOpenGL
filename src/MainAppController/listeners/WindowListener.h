@@ -10,7 +10,7 @@ class WindowListener {
   WindowListener() = default;
   virtual ~WindowListener() = default;
 
-  virtual void onResize(int width, int height) = 0;
+  virtual void onResize(int /* width */, int /* height */) {}
 
   WindowListener(const WindowListener& other) = default;
   WindowListener(WindowListener&& other) = delete;

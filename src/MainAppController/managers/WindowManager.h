@@ -34,8 +34,8 @@ class WindowManager {
   void updateWindowStats();
 
   [[nodiscard]] inline auto getWindow() const -> GLFWwindow* { return window_; };
-  [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
-  [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
+  [[nodiscard]] inline auto getWidth() const -> int { return width_; };
+  [[nodiscard]] inline auto getHeight() const -> int { return height_; };
   [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
   [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
 
@@ -57,9 +57,11 @@ class WindowManager {
   AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
   WindowStats windowStats_;
 
-  static int width;
-  static int height;
-  static std::vector<WindowListener*> listeners_;
+  int width_{WindowManager::defaultWidth};
+  int height_{static_cast<int>(static_cast<float>(width_) / aspectRatio_.ratio)};
+  std::vector<WindowListener*> listeners_{};
+  void framebufferSizeCallback(int width, int height);
+
   /**
    * Callback
    */

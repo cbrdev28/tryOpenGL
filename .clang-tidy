@@ -9,13 +9,11 @@ Checks: >
     modernize-*,
     performance-*,
     portability-*,
-    readability-*
+    readability-*,
 
     -readability-convert-member-functions-to-static,
-    -cppcoreguidelines-avoid-non-const-global-variables,
-    -misc-non-private-member-variables-in-classes,
-    -cppcoreguidelines-interfaces-global-init,
     -cppcoreguidelines-avoid-magic-numbers,
-    -cppcoreguidelines-pro-type-vararg,
+    -readability-magic-numbers,
     -bugprone-easily-swappable-parameters,
+    -misc-non-private-member-variables-in-classes,
     -cppcoreguidelines-pro-type-union-access

@@ -31,7 +31,9 @@ struct InstancedTriangle {
     return vertices;
   }
 
-  auto verticesGLSize() -> GLsizeiptr { return static_cast<GLsizeiptr>(vertices.size() * 2 * sizeof(GLfloat)); }
+  [[nodiscard]] auto verticesGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(vertices.size() * 2 * sizeof(GLfloat));
+  }
 
   std::default_random_engine gen{std::random_device{}()};
   auto genRandom() -> GLfloat {
@@ -61,7 +63,7 @@ struct InstancedTriangle {
     return positions;
   }
 
-  auto transformationsGLSize() -> GLsizeiptr {
+  [[nodiscard]] auto transformationsGLSize() const -> GLsizeiptr {
     return static_cast<GLsizeiptr>(transformations.size()) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
   }
 

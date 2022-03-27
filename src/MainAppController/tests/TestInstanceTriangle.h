@@ -35,7 +35,8 @@ class TestInstanceTriangle : public Test {
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vbModelVertex0_;
-  std::unique_ptr<VertexBuffer> vbModelTransformation2_;
+  std::unique_ptr<VertexBuffer> vbModelPositions2_;
+  std::unique_ptr<VertexBuffer> vbModelZRotationAngle3_;
   std::unique_ptr<Shader> shader_;
 
   InstancedTriangle instancedTriangle_;

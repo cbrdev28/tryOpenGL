@@ -16,11 +16,29 @@ struct InstancedTriangle {
 
   std::array<glm::vec2, 3> vertices = resetVertices();
   std::vector<glm::vec2> positions{};
-  std::vector<glm::mat4> transformations{};
+  std::vector<GLfloat> zRotationAngles{};
 
   InstancedTriangle() {
     positions.reserve(kMaxTriangles / 2);
-    transformations.reserve(kMaxTriangles / 2);
+    zRotationAngles.reserve(kMaxTriangles / 2);
+  }
+
+  [[nodiscard]] auto verticesGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(vertices.size() * sizeof(glm::vec2));
+  }
+
+  [[nodiscard]] auto positionsGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(positions.size() * sizeof(glm::vec2));
+  }
+  [[nodiscard]] auto maxPositionsGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(kMaxTriangles * sizeof(glm::vec2));
+  }
+
+  [[nodiscard]] auto zRotationAnglesGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(zRotationAngles.size() * sizeof(GLfloat));
+  }
+  [[nodiscard]] auto maxZRotationAnglesGLSize() const -> GLsizeiptr {
+    return static_cast<GLsizeiptr>(kMaxTriangles * sizeof(GLfloat));
   }
 
   auto resetVertices(const GLfloat size = kSize) -> std::array<glm::vec2, 3>& {
@@ -29,10 +47,6 @@ struct InstancedTriangle {
     vertices.at(1) = glm::vec2(halfSize, -halfSize);
     vertices.at(2) = glm::vec2(0.0F, halfSize);
     return vertices;
-  }
-
-  [[nodiscard]] auto verticesGLSize() const -> GLsizeiptr {
-    return static_cast<GLsizeiptr>(vertices.size() * 2 * sizeof(GLfloat));
   }
 
   std::default_random_engine gen{std::random_device{}()};
@@ -53,29 +67,14 @@ struct InstancedTriangle {
     const auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
 
     positions.emplace_back(randomPosX, randomPosY);
-    transformations.emplace_back(glm::translate(glm::mat4(1.0F), glm::vec3(randomPosX, randomPosY, 0.0)));
+    zRotationAngles.emplace_back(45.0F);
     return positions;
   }
 
   auto removeTriangle() -> std::vector<glm::vec2>& {
     positions.pop_back();
-    transformations.pop_back();
+    zRotationAngles.pop_back();
     return positions;
-  }
-
-  [[nodiscard]] auto transformationsGLSize() const -> GLsizeiptr {
-    return static_cast<GLsizeiptr>(transformations.size()) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
-  }
-
-  auto maxTransformationsGLSize() -> GLsizeiptr {
-    return static_cast<GLsizeiptr>(kMaxTriangles) * static_cast<GLsizeiptr>(sizeof(GLfloat) * 16);
-  }
-
-  // Make triangle rotate
-  void updateTransformation(float deltaTime) {
-    for (auto& transformation : transformations) {
-      transformation = glm::rotate(transformation, glm::radians(deltaTime * 45.0F), glm::vec3(0.0F, 0.0F, 1.0F));
-    }
   }
 };
 

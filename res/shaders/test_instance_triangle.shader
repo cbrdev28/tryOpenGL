@@ -42,8 +42,10 @@ out vec4 v_modelVertexPosition;
 
 void main()
 {
-    // TODO: remove scaling since we don't use it for now
-    mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle) * scaleMatrix(vec3(1.0, 1.0, 1.0));
+    // Uncomment & update to start using scaling matrix transformation
+    // mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle) * scaleMatrix(vec3(1.0, 1.0, 1.0));
+
+    mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle);
     gl_Position = u_projection * u_view * modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
 
     // Output value

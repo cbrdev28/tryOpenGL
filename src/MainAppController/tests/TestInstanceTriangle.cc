@@ -10,16 +10,22 @@ TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   vbModelVertex0_ =
       std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
   vbModelPositions2_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
+  vbModelZRotationAngle3_ =
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
   vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbModelPositions2_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbModelZRotationAngle3_->setDivisor(VertexBufferDivisor::FOR_EACH);
 
   VertexBufferLayout layoutModel;
   layoutModel.pushFloat(2);
   VertexBufferLayout layoutPosition;
   layoutPosition.pushFloat(2);
+  VertexBufferLayout layoutRotationAngle;
+  layoutRotationAngle.pushFloat(1);
   const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
       {*vbModelVertex0_, layoutModel},
       {*vbModelPositions2_, layoutPosition},
+      {*vbModelZRotationAngle3_, layoutRotationAngle},
   };
   va_->setInstanceBufferLayout(vectorOfPairs);
 
@@ -31,6 +37,7 @@ TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
   va_->unBind();
+  vbModelZRotationAngle3_->unBind();
   vbModelPositions2_->unBind();
   vbModelVertex0_->unBind();
   shader_->unBind();
@@ -40,7 +47,12 @@ TestInstanceTriangle::~TestInstanceTriangle() = default;
 
 void TestInstanceTriangle::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
-  // TODO(cbr): update rotation angle
+
+  instancedTriangle_.updateRotationAngle(deltaTime);
+  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+                                           instancedTriangle_.zRotationAnglesGLSize(),
+                                           instancedTriangle_.maxZRotationAnglesGLSize());
+  vbModelZRotationAngle3_->unBind();
 }
 
 void TestInstanceTriangle::onRender() {
@@ -67,6 +79,10 @@ void TestInstanceTriangle::addTriangleInstance() {
   vbModelPositions2_->setInstanceData(instancedTriangle_.positions.data(), instancedTriangle_.positionsGLSize(),
                                       instancedTriangle_.maxPositionsGLSize());
   vbModelPositions2_->unBind();
+  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+                                           instancedTriangle_.zRotationAnglesGLSize(),
+                                           instancedTriangle_.maxZRotationAnglesGLSize());
+  vbModelZRotationAngle3_->unBind();
 }
 
 }  // namespace test

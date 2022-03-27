@@ -67,7 +67,7 @@ struct InstancedTriangle {
     const auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
 
     positions.emplace_back(randomPosX, randomPosY);
-    zRotationAngles.emplace_back(45.0F);
+    zRotationAngles.emplace_back(0.0F);
     return positions;
   }
 
@@ -75,6 +75,12 @@ struct InstancedTriangle {
     positions.pop_back();
     zRotationAngles.pop_back();
     return positions;
+  }
+
+  void updateRotationAngle(float dt) {
+    for (auto& angle : zRotationAngles) {
+      angle += 5.0F * dt;
+    }
   }
 };
 

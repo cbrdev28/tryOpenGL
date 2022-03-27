@@ -3,17 +3,17 @@ add_subdirectory("lib")
 add_library(
     MainAppController
     MainAppController.cc
-    "managers/WindowManager.cc"
-    "managers/ImGuiManager.cc"
-    "managers/ShaderManager.cc"
-    "helpers/openGLErrorHelpers.cc"
-    "common/Renderer.cc"
-    "common/VertexBuffer.cc"
     "common/IndexBuffer.cc"
-    "common/VertexArray.cc"
+    "common/Renderer.cc"
+    "common/Shader.cc"
     "common/Texture.cc"
-    "tests/TestMenu.cc"
+    "common/VertexArray.cc"
+    "common/VertexBuffer.cc"
+    "helpers/openGLErrorHelpers.cc"
+    "managers/ImGuiManager.cc"
+    "managers/WindowManager.cc"
     "tests/TestInstanceTriangle.cc"
+    "tests/TestMenu.cc"
 )
 
 target_include_directories(

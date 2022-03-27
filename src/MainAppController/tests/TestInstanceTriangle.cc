@@ -29,7 +29,7 @@ TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   };
   va_->setInstanceBufferLayout(vectorOfPairs);
 
-  shader_ = std::make_unique<ShaderManager>("test_instance_triangle.shader");
+  shader_ = std::make_unique<Shader>("test_instance_triangle.shader");
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));
 

@@ -7,7 +7,7 @@
 #include "IndexBuffer.h"
 #include "InstancedTriangle.h"
 #include "Renderer.h"
-#include "ShaderManager.h"
+#include "Shader.h"
 #include "Test.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -36,7 +36,7 @@ class TestInstanceTriangle : public Test {
   std::unique_ptr<VertexArray> va_;
   std::unique_ptr<VertexBuffer> vbModelVertex0_;
   std::unique_ptr<VertexBuffer> vbModelTransformation2_;
-  std::unique_ptr<ShaderManager> shader_;
+  std::unique_ptr<Shader> shader_;
 
   InstancedTriangle instancedTriangle_;
   void addTriangleInstance();

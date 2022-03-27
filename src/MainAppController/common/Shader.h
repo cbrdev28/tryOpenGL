@@ -1,5 +1,5 @@
-#ifndef SHADER_MANAGER_H_
-#define SHADER_MANAGER_H_
+#ifndef SHADER_H_
+#define SHADER_H_
 
 #include <string>
 #include <unordered_map>
@@ -16,15 +16,15 @@ struct ShaderProgramSource {
 /**
  * Shader manager helper
  */
-class ShaderManager {
+class Shader {
  public:
-  explicit ShaderManager(std::string filepath);
-  ~ShaderManager();
+  explicit Shader(std::string filepath);
+  ~Shader();
 
-  ShaderManager(const ShaderManager& other) = delete;
-  ShaderManager(ShaderManager&& other) = delete;
-  auto operator=(const ShaderManager& other) -> ShaderManager& = delete;
-  auto operator=(ShaderManager&& other) -> ShaderManager& = delete;
+  Shader(const Shader& other) = delete;
+  Shader(Shader&& other) = delete;
+  auto operator=(const Shader& other) -> Shader& = delete;
+  auto operator=(Shader&& other) -> Shader& = delete;
 
   void bind() const;
   void unBind() const;
@@ -44,10 +44,10 @@ class ShaderManager {
 
   /**
    * Initialize shaders: create, compile, link
-   * @return ShaderManager&
+   * @return Shader&
    * @throw -1
    */
-  auto init() -> ShaderManager&;
+  auto init() -> Shader&;
 
   /**
    * Parse shader from a file
@@ -58,32 +58,32 @@ class ShaderManager {
 
   /**
    * Compile vertex shader
-   * @return ShaderManager&
+   * @return Shader&
    * @throw -1
    */
-  auto compileVertex(const std::string& source) -> ShaderManager&;
+  auto compileVertex(const std::string& source) -> Shader&;
 
   /**
    * Compile fragment shader
-   * @return ShaderManager&
+   * @return Shader&
    * @throw -1
    */
-  auto compileFragment(const std::string& source) -> ShaderManager&;
+  auto compileFragment(const std::string& source) -> Shader&;
 
   /**
    * Compile a shader & check for errors
-   * @return ShaderManager&
+   * @return Shader&
    * @throw -1
    */
-  auto compile(GLuint shaderID) -> ShaderManager&;
+  auto compile(GLuint shaderID) -> Shader&;
 
   /**
    * Link shaders & check for errors.
    * Delete unused resources.
-   * @return ShaderManager&
+   * @return Shader&
    * @throw -1
    */
-  auto link() -> ShaderManager&;
+  auto link() -> Shader&;
 };
 
 #endif

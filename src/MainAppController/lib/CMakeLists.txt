@@ -32,7 +32,8 @@ set(GLFW_INSTALL OFF CACHE INTERNAL "NOT Generate installation target")
 FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
-    GIT_TAG v1.87
+    # GIT_TAG v1.87
+    GIT_TAG docking
     UPDATE_DISCONNECTED YES
 )
 FetchContent_MakeAvailable(imgui)

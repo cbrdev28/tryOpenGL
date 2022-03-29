@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "Test.h"
+#include "ThreadPoolManager.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 
@@ -41,6 +42,10 @@ class TestInstanceTriangle : public Test {
 
   InstancedTriangle instancedTriangle_;
   void addTriangleInstance();
+
+  bool useThreads_{false};
+  std::string updateStatus_{"Idle"};
+  ThreadPoolManager threadPool;
 };
 
 }  // namespace test

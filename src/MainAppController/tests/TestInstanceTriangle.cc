@@ -1,5 +1,7 @@
 #include "TestInstanceTriangle.h"
 
+#include <chrono>
+
 #include "VertexBufferLayout.h"
 #include "imgui.h"
 
@@ -48,11 +50,54 @@ TestInstanceTriangle::~TestInstanceTriangle() = default;
 void TestInstanceTriangle::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
 
-  instancedTriangle_.updateRotationAngle(deltaTime);
-  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
-                                           instancedTriangle_.zRotationAnglesGLSize(),
-                                           instancedTriangle_.maxZRotationAnglesGLSize());
-  vbModelZRotationAngle3_->unBind();
+  if (!useThreads_) {
+    updateStatus_ = "Main";
+    instancedTriangle_.updateRotationAngle(deltaTime);
+    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+                                             instancedTriangle_.zRotationAnglesGLSize(),
+                                             instancedTriangle_.maxZRotationAnglesGLSize());
+    vbModelZRotationAngle3_->unBind();
+  } else {
+    updateStatus_ = "Thread";
+    auto threadUsageCount = threadPool.getThreadCount() / 2;
+    auto instanceCount = instancedTriangle_.zRotationAngles.size();
+    if (instanceCount >= threadUsageCount) {
+      updateStatus_ = "Threading...";
+      auto instanceCountPerThread = instanceCount / threadUsageCount;
+
+      std::vector<std::future<void>> futures = {};
+      futures.reserve(threadUsageCount);
+
+      for (int i = 0; i < threadUsageCount; i++) {
+        updateStatus_ = "Queuing...";
+        auto startIndex = i * instanceCountPerThread;
+        auto endIndex = startIndex + instanceCountPerThread;
+        // Make sure the last thread will update the rest of all instances
+        if (i == threadUsageCount - 1) {
+          endIndex = instanceCount;
+        }
+        ASSERT(endIndex <= instanceCount);
+
+        futures.emplace_back(threadPool.queueTask([&, startIndex, endIndex](std::promise<void> promise) {
+          for (unsigned int j = startIndex; j < endIndex; j++) {
+            auto& angle = instancedTriangle_.zRotationAngles.at(j);
+            angle += 5.0F * deltaTime;
+          }
+          promise.set_value();
+        }));
+      }
+
+      for (auto& future : futures) {
+        updateStatus_ = "Waiting...";
+        future.wait();
+      }
+
+      vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+                                               instancedTriangle_.zRotationAnglesGLSize(),
+                                               instancedTriangle_.maxZRotationAnglesGLSize());
+      vbModelZRotationAngle3_->unBind();
+    }
+  }
 }
 
 void TestInstanceTriangle::onRender() {
@@ -64,6 +109,17 @@ void TestInstanceTriangle::onRender() {
 
 void TestInstanceTriangle::onImGuiRender() {
   ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
+
+  auto frameCount = this->getTestContext().windowManager->getWindowStats().frameCount;
+  auto startTime = this->getTestContext().windowManager->getWindowStats().startTime;
+  auto endTime = this->getTestContext().windowManager->getWindowStats().endTime;
+  ImGui::Text("Avg FPS: %.2f",
+              static_cast<float>(frameCount) /
+                  std::chrono::duration_cast<std::chrono::duration<float>>(endTime - startTime).count());
+  ImGui::Text("Avg rendering: %.2f ms",
+              std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(endTime - startTime).count() /
+                  static_cast<float>(frameCount));
+
   ImGui::Text("Width: %d", this->getTestContext().windowManager->getWidth());
   ImGui::Text("Height: %d", this->getTestContext().windowManager->getHeight());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
@@ -71,6 +127,9 @@ void TestInstanceTriangle::onImGuiRender() {
     this->addTriangleInstance();
   }
   ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
+
+  ImGui::Checkbox("Use threads", &useThreads_);
+  ImGui::Text("Update status: %s", updateStatus_.c_str());
 }
 
 void TestInstanceTriangle::addTriangleInstance() {

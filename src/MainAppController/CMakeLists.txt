@@ -11,6 +11,7 @@ add_library(
     "common/VertexBuffer.cc"
     "helpers/openGLErrorHelpers.cc"
     "managers/ImGuiManager.cc"
+    "managers/ThreadPoolManager.cc"
     "managers/WindowManager.cc"
     "tests/TestInstanceTriangle.cc"
     "tests/TestMenu.cc"

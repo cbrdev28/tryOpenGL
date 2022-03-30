@@ -24,7 +24,7 @@ class TestMenu : public Test {
 
   template <typename S>
   inline void registerTest(const std::string& name) {
-    tests_.push_back(std::make_pair(name, &TestMenu::newTest<S>));
+    tests_.emplace_back(std::make_pair(name, &TestMenu::newTest<S>));
   }
 
   template <typename T>

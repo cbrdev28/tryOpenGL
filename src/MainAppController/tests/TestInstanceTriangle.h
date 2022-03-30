@@ -44,8 +44,9 @@ class TestInstanceTriangle : public Test {
   void addTriangleInstance();
 
   bool useThreads_{false};
-  std::string updateStatus_{"Idle"};
+  std::string debugUpdateStatus_{"Idle"};
   ThreadPoolManager threadPool;
+  void onThreadedUpdate(float dt);
 };
 
 }  // namespace test

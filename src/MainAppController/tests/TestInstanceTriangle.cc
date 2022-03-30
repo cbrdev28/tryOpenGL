@@ -9,11 +9,13 @@ namespace test {
 
 TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   va_ = std::make_unique<VertexArray>();
+
   vbModelVertex0_ =
       std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
   vbModelPositions2_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
   vbModelZRotationAngle3_ =
       std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
+
   vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbModelPositions2_->setDivisor(VertexBufferDivisor::FOR_EACH);
   vbModelZRotationAngle3_->setDivisor(VertexBufferDivisor::FOR_EACH);
@@ -24,6 +26,7 @@ TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   layoutPosition.pushFloat(2);
   VertexBufferLayout layoutRotationAngle;
   layoutRotationAngle.pushFloat(1);
+
   const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
       {*vbModelVertex0_, layoutModel},
       {*vbModelPositions2_, layoutPosition},
@@ -51,52 +54,15 @@ void TestInstanceTriangle::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
 
   if (!useThreads_) {
-    updateStatus_ = "Main";
-    instancedTriangle_.updateRotationAngle(deltaTime);
+    debugUpdateStatus_ = "Main";
+    instancedTriangle_.onUpdateRotationAngle(deltaTime);
     vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
                                              instancedTriangle_.zRotationAnglesGLSize(),
                                              instancedTriangle_.maxZRotationAnglesGLSize());
     vbModelZRotationAngle3_->unBind();
   } else {
-    updateStatus_ = "Thread";
-    auto threadUsageCount = threadPool.getThreadCount() / 2;
-    auto instanceCount = instancedTriangle_.zRotationAngles.size();
-    if (instanceCount >= threadUsageCount) {
-      updateStatus_ = "Threading...";
-      auto instanceCountPerThread = instanceCount / threadUsageCount;
-
-      std::vector<std::future<void>> futures = {};
-      futures.reserve(threadUsageCount);
-
-      for (int i = 0; i < threadUsageCount; i++) {
-        updateStatus_ = "Queuing...";
-        auto startIndex = i * instanceCountPerThread;
-        auto endIndex = startIndex + instanceCountPerThread;
-        // Make sure the last thread will update the rest of all instances
-        if (i == threadUsageCount - 1) {
-          endIndex = instanceCount;
-        }
-        ASSERT(endIndex <= instanceCount);
-
-        futures.emplace_back(threadPool.queueTask([&, startIndex, endIndex](std::promise<void> promise) {
-          for (unsigned int j = startIndex; j < endIndex; j++) {
-            auto& angle = instancedTriangle_.zRotationAngles.at(j);
-            angle += 5.0F * deltaTime;
-          }
-          promise.set_value();
-        }));
-      }
-
-      for (auto& future : futures) {
-        updateStatus_ = "Waiting...";
-        future.wait();
-      }
-
-      vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
-                                               instancedTriangle_.zRotationAnglesGLSize(),
-                                               instancedTriangle_.maxZRotationAnglesGLSize());
-      vbModelZRotationAngle3_->unBind();
-    }
+    debugUpdateStatus_ = "Thread";
+    onThreadedUpdate(deltaTime);
   }
 }
 
@@ -129,7 +95,7 @@ void TestInstanceTriangle::onImGuiRender() {
   ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
 
   ImGui::Checkbox("Use threads", &useThreads_);
-  ImGui::Text("Update status: %s", updateStatus_.c_str());
+  ImGui::Text("Update status: %s", debugUpdateStatus_.c_str());
 }
 
 void TestInstanceTriangle::addTriangleInstance() {
@@ -142,6 +108,47 @@ void TestInstanceTriangle::addTriangleInstance() {
                                            instancedTriangle_.zRotationAnglesGLSize(),
                                            instancedTriangle_.maxZRotationAnglesGLSize());
   vbModelZRotationAngle3_->unBind();
+}
+
+void TestInstanceTriangle::onThreadedUpdate(float dt) {
+  auto threadUsageCount = threadPool.getThreadCount() / 2;
+  auto instanceCount = instancedTriangle_.zRotationAngles.size();
+  if (instanceCount >= threadUsageCount) {
+    debugUpdateStatus_ = "Threading...";
+    auto instanceCountPerThread = instanceCount / threadUsageCount;
+
+    std::vector<std::future<void>> futures = {};
+    futures.reserve(threadUsageCount);
+
+    for (int i = 0; i < threadUsageCount; i++) {
+      debugUpdateStatus_ = "Queuing...";
+      auto startIndex = i * instanceCountPerThread;
+      auto endIndex = startIndex + instanceCountPerThread;
+      // Make sure the last thread will update the rest of all instances
+      if (i == threadUsageCount - 1) {
+        endIndex = instanceCount;
+      }
+      ASSERT(endIndex <= instanceCount);
+
+      futures.emplace_back(threadPool.queueTask([&, startIndex, endIndex](std::promise<void> promise) {
+        for (unsigned int j = startIndex; j < endIndex; j++) {
+          auto& angle = instancedTriangle_.zRotationAngles.at(j);
+          angle += 1.0F * InstancedTriangle::kRotationSpeed * dt;
+        }
+        promise.set_value();
+      }));
+    }
+
+    for (auto& future : futures) {
+      debugUpdateStatus_ = "Waiting...";
+      future.wait();
+    }
+
+    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+                                             instancedTriangle_.zRotationAnglesGLSize(),
+                                             instancedTriangle_.maxZRotationAnglesGLSize());
+    vbModelZRotationAngle3_->unBind();
+  }
 }
 
 }  // namespace test

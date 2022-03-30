@@ -13,10 +13,11 @@
 struct InstancedTriangle {
   static constexpr GLsizei kMaxTriangles = 64;
   static constexpr GLfloat kSize = 0.1F;
+  static constexpr GLfloat kRotationSpeed = 1.0F;
 
   std::array<glm::vec2, 3> vertices = resetVertices();
-  std::vector<glm::vec2> positions{};
-  std::vector<GLfloat> zRotationAngles{};
+  std::vector<glm::vec2> positions;
+  std::vector<GLfloat> zRotationAngles;
 
   InstancedTriangle() {
     positions.reserve(kMaxTriangles / 2);
@@ -55,10 +56,7 @@ struct InstancedTriangle {
     return dist(gen);
   }
 
-  // Adding a new triangle is making new:
-  // - positions
-  // - transformation matrix
-  auto addTriangle() -> std::vector<glm::vec2>& {
+  void addTriangle() {
     const auto currentNumberOfTriangles = positions.size();
     ASSERT(currentNumberOfTriangles < kMaxTriangles);
     // Random positions between: -0.9 & 0.9
@@ -68,18 +66,16 @@ struct InstancedTriangle {
 
     positions.emplace_back(randomPosX, randomPosY);
     zRotationAngles.emplace_back(0.0F);
-    return positions;
   }
 
-  auto removeTriangle() -> std::vector<glm::vec2>& {
+  void removeTriangle() {
     positions.pop_back();
     zRotationAngles.pop_back();
-    return positions;
   }
 
-  void updateRotationAngle(float dt) {
+  void onUpdateRotationAngle(float dt) {
     for (auto& angle : zRotationAngles) {
-      angle += 5.0F * dt;
+      angle += 1.0F * kRotationSpeed * dt;
     }
   }
 };

@@ -74,8 +74,8 @@ void TestInstanceTriangle::onRender() {
 }
 
 void TestInstanceTriangle::onImGuiRender() {
+  ImGui::NewLine();
   ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
-
   auto frameCount = this->getTestContext().windowManager->getWindowStats().frameCount;
   auto startTime = this->getTestContext().windowManager->getWindowStats().startTime;
   auto endTime = this->getTestContext().windowManager->getWindowStats().endTime;
@@ -89,17 +89,28 @@ void TestInstanceTriangle::onImGuiRender() {
   ImGui::Text("Width: %d", this->getTestContext().windowManager->getWidth());
   ImGui::Text("Height: %d", this->getTestContext().windowManager->getHeight());
   ImGui::ColorEdit4("Color", backgroundColor_.data());
+
+  ImGui::NewLine();
+  ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
   if (ImGui::Button("Add instance")) {
     this->addTriangleInstance();
   }
-  ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
 
-  ImGui::Checkbox("Use threads", &useThreads_);
+  ImGui::NewLine();
   ImGui::Text("Update status: %s", debugUpdateStatus_.c_str());
+  ImGui::Checkbox("Use threads", &useThreads_);
+
+  ImGui::NewLine();
+  ImGui::SliderInt("Spawn count", &newInstancesCount_, 1, 100, "count = %d");
+  if (ImGui::Button("Spawn MANY")) {
+    this->addTriangleInstance(newInstancesCount_);
+  }
 }
 
-void TestInstanceTriangle::addTriangleInstance() {
-  instancedTriangle_.addTriangle();
+void TestInstanceTriangle::addTriangleInstance(int count) {
+  for (int i = 0; i < count; ++i) {
+    instancedTriangle_.addTriangle();
+  }
 
   vbModelPositions2_->setInstanceData(instancedTriangle_.positions.data(), instancedTriangle_.positionsGLSize(),
                                       instancedTriangle_.maxPositionsGLSize());

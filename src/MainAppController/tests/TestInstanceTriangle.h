@@ -41,12 +41,14 @@ class TestInstanceTriangle : public Test {
   std::unique_ptr<Shader> shader_;
 
   InstancedTriangle instancedTriangle_;
-  void addTriangleInstance();
+  void addTriangleInstance(int count = 1);
 
   bool useThreads_{false};
   std::string debugUpdateStatus_{"Idle"};
   ThreadPoolManager threadPool;  // Next time, use unique_ptr
   void onThreadedUpdate(float dt);
+
+  int newInstancesCount_{1};
 };
 
 }  // namespace test

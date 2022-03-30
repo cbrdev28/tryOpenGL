@@ -9,7 +9,6 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "Test.h"
-#include "ThreadPoolManager.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 
@@ -42,13 +41,11 @@ class TestInstanceTriangle : public Test {
 
   std::unique_ptr<InstancedTriangle> instancedTriangle_ = std::make_unique<InstancedTriangle>();
   void addTriangleInstance(int count = 1);
+  int newInstancesCount_{1};
 
   bool useThreads_{false};
   std::string debugUpdateStatus_{"Idle"};
-  ThreadPoolManager threadPool;  // Next time, use unique_ptr
   void onThreadedUpdate(float dt);
-
-  int newInstancesCount_{1};
 };
 
 }  // namespace test

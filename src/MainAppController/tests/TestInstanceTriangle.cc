@@ -124,6 +124,7 @@ void TestInstanceTriangle::addTriangleInstance(int count) {
 }
 
 void TestInstanceTriangle::onThreadedUpdate(float dt) {
+  auto threadPool = this->getTestContext().threadPoolManager;
   unsigned int instancesCount = instancedTriangle_->zRotationAngles.size();
   // Start using thread if we have a "large" amount of instances
   if (instancesCount >= 200) {
@@ -140,13 +141,14 @@ void TestInstanceTriangle::onThreadedUpdate(float dt) {
         batchEndIndex = instancesCount;
       }
 
-      futures.emplace_back(threadPool.queueTask([&, currentBatchStartIndex, batchEndIndex](std::promise<void> promise) {
-        for (unsigned int i = currentBatchStartIndex; i < batchEndIndex; ++i) {
-          auto& angle = instancedTriangle_->zRotationAngles.at(i);
-          angle += 1.0F * InstancedTriangle::kRotationSpeed * dt;
-        }
-        promise.set_value();
-      }));
+      futures.emplace_back(
+          threadPool->queueTask([&, currentBatchStartIndex, batchEndIndex](std::promise<void> promise) {
+            for (unsigned int i = currentBatchStartIndex; i < batchEndIndex; ++i) {
+              auto& angle = instancedTriangle_->zRotationAngles.at(i);
+              angle += 1.0F * InstancedTriangle::kRotationSpeed * dt;
+            }
+            promise.set_value();
+          }));
 
       currentBatchStartIndex += instancesPerBatch;
     } while (currentBatchStartIndex < instancesCount);

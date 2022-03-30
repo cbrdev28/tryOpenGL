@@ -3,12 +3,14 @@
 
 #include <memory>
 
+#include "ThreadPoolManager.h"
 #include "WindowManager.h"
 
 namespace test {
 
 struct TestContext {
   std::shared_ptr<WindowManager> windowManager;
+  std::shared_ptr<ThreadPoolManager> threadPoolManager;
 };
 
 }  // namespace test

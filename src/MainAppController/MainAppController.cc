@@ -23,7 +23,7 @@ auto MainAppController::run() -> int {
 auto MainAppController::init() -> int {
   fmt::print("init()\n");
   try {
-    windowManager_.init();
+    windowManager_->init();
     imGuiManager_.init();
 
     testMenu_.registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
@@ -36,14 +36,14 @@ auto MainAppController::init() -> int {
 auto MainAppController::renderLoop() -> void {
   fmt::print("renderLoop()\n");
 
-  GLFWwindow* window = windowManager_.getWindow();
+  GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {
-    windowManager_.updateWindowStats();
+    windowManager_->updateWindowStats();
     renderer_.clear();
 
     imGuiManager_.renderFrame();
 
-    testMenu_.onUpdate(windowManager_.getWindowStats().frameDeltaTime.count());
+    testMenu_.onUpdate(windowManager_->getWindowStats().frameDeltaTime.count());
     testMenu_.onRender();
     testMenu_.onImGuiRender();
 

@@ -1,6 +1,8 @@
 #ifndef MAIN_APP_CONTROLLER_H_
 #define MAIN_APP_CONTROLLER_H_
 
+#include <memory>
+
 #include "ImGuiManager.h"
 #include "Renderer.h"
 #include "TestContext.h"
@@ -19,10 +21,10 @@ class MainAppController {
   auto run() -> int;
 
  private:
-  WindowManager windowManager_;
-  ImGuiManager imGuiManager_{windowManager_};
+  std::shared_ptr<WindowManager> windowManager_ = std::make_shared<WindowManager>();
+  ImGuiManager imGuiManager_{*windowManager_};
   Renderer renderer_;
-  test::TestContext testCtx_{&windowManager_};
+  test::TestContext testCtx_{windowManager_};
   test::TestMenu testMenu_{testCtx_};
 
   /**

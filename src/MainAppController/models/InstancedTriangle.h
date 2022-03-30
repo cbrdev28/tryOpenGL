@@ -11,7 +11,7 @@
 #include "../helpers/openGLErrorHelpers.h"
 
 struct InstancedTriangle {
-  static constexpr GLsizei kMaxTriangles = 64;
+  static constexpr GLsizei kMaxTriangles = 1000;
   static constexpr GLfloat kSize = 0.1F;
   static constexpr GLfloat kRotationSpeed = 1.0F;
 

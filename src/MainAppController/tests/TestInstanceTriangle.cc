@@ -124,9 +124,9 @@ void TestInstanceTriangle::addTriangleInstance(int count) {
 void TestInstanceTriangle::onThreadedUpdate(float dt) {
   unsigned int instancesCount = instancedTriangle_.zRotationAngles.size();
   // Start using thread if we have a "large" amount of instances
-  if (instancesCount >= 29) {
+  if (instancesCount >= 200) {
     debugUpdateStatus_ = "Threading...";
-    unsigned int instancesPerBatch = 23;
+    unsigned int instancesPerBatch = 100;
     unsigned int currentBatchStartIndex = 0;
     std::vector<std::future<void>> futures = {};
     futures.reserve((instancesCount / instancesPerBatch) + 1);

@@ -26,7 +26,7 @@ auto MainAppController::init() -> int {
     windowManager_->init();
     imGuiManager_->init();
 
-    testMenu_.registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
+    testMenu_->registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
   } catch (int error) {
     return -1;
   }
@@ -43,9 +43,9 @@ auto MainAppController::renderLoop() -> void {
 
     imGuiManager_->renderFrame();
 
-    testMenu_.onUpdate(windowManager_->getWindowStats().frameDeltaTime.count());
-    testMenu_.onRender();
-    testMenu_.onImGuiRender();
+    testMenu_->onUpdate(windowManager_->getWindowStats().frameDeltaTime.count());
+    testMenu_->onRender();
+    testMenu_->onImGuiRender();
 
     // imGuiManager_->renderExample();
     imGuiManager_->render();

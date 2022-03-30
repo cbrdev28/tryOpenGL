@@ -23,9 +23,11 @@ class MainAppController {
  private:
   std::shared_ptr<WindowManager> windowManager_ = std::make_shared<WindowManager>();
   std::unique_ptr<ImGuiManager> imGuiManager_ = std::make_unique<ImGuiManager>(*windowManager_);
-  Renderer renderer_;
+
   test::TestContext testCtx_{windowManager_};
-  test::TestMenu testMenu_{testCtx_};
+  std::unique_ptr<test::TestMenu> testMenu_ = std::make_unique<test::TestMenu>(testCtx_);
+
+  Renderer renderer_;
 
   /**
    * Initialize the app & managers

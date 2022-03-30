@@ -111,43 +111,51 @@ void TestInstanceTriangle::addTriangleInstance() {
 }
 
 void TestInstanceTriangle::onThreadedUpdate(float dt) {
-  auto threadUsageCount = threadPool.getThreadCount() / 2;
-  auto instanceCount = instancedTriangle_.zRotationAngles.size();
-  if (instanceCount >= threadUsageCount) {
+  unsigned int instancesCount = instancedTriangle_.zRotationAngles.size();
+  // Start using thread if we have a "large" amount of instances
+  if (instancesCount >= 29) {
     debugUpdateStatus_ = "Threading...";
-    auto instanceCountPerThread = instanceCount / threadUsageCount;
-
+    unsigned int instancesPerBatch = 23;
+    unsigned int currentBatchStartIndex = 0;
     std::vector<std::future<void>> futures = {};
-    futures.reserve(threadUsageCount);
+    futures.reserve((instancesCount / instancesPerBatch) + 1);
 
-    for (int i = 0; i < threadUsageCount; i++) {
+    do {
       debugUpdateStatus_ = "Queuing...";
-      auto startIndex = i * instanceCountPerThread;
-      auto endIndex = startIndex + instanceCountPerThread;
-      // Make sure the last thread will update the rest of all instances
-      if (i == threadUsageCount - 1) {
-        endIndex = instanceCount;
+      unsigned int batchEndIndex = currentBatchStartIndex + instancesPerBatch;
+      if (batchEndIndex > instancesCount) {
+        batchEndIndex = instancesCount;
       }
-      ASSERT(endIndex <= instanceCount);
 
-      futures.emplace_back(threadPool.queueTask([&, startIndex, endIndex](std::promise<void> promise) {
-        for (unsigned int j = startIndex; j < endIndex; j++) {
-          auto& angle = instancedTriangle_.zRotationAngles.at(j);
+      futures.emplace_back(threadPool.queueTask([&, currentBatchStartIndex, batchEndIndex](std::promise<void> promise) {
+        for (unsigned int i = currentBatchStartIndex; i < batchEndIndex; ++i) {
+          auto& angle = instancedTriangle_.zRotationAngles.at(i);
           angle += 1.0F * InstancedTriangle::kRotationSpeed * dt;
         }
         promise.set_value();
       }));
-    }
+
+      currentBatchStartIndex += instancesPerBatch;
+    } while (currentBatchStartIndex < instancesCount);
 
     for (auto& future : futures) {
       debugUpdateStatus_ = "Waiting...";
       future.wait();
     }
 
+    debugUpdateStatus_ = "Sending...";
     vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
                                              instancedTriangle_.zRotationAnglesGLSize(),
                                              instancedTriangle_.maxZRotationAnglesGLSize());
     vbModelZRotationAngle3_->unBind();
+  } else {
+    debugUpdateStatus_ = "NOT Threading...";
+    // Uncomment to update all instances
+    // instancedTriangle_.onUpdateRotationAngle(dt);
+    // vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
+    //                                          instancedTriangle_.zRotationAnglesGLSize(),
+    //                                          instancedTriangle_.maxZRotationAnglesGLSize());
+    // vbModelZRotationAngle3_->unBind();
   }
 }
 

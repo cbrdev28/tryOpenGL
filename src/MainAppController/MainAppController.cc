@@ -24,7 +24,7 @@ auto MainAppController::init() -> int {
   fmt::print("init()\n");
   try {
     windowManager_->init();
-    imGuiManager_.init();
+    imGuiManager_->init();
 
     testMenu_.registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
   } catch (int error) {
@@ -41,14 +41,14 @@ auto MainAppController::renderLoop() -> void {
     windowManager_->updateWindowStats();
     renderer_.clear();
 
-    imGuiManager_.renderFrame();
+    imGuiManager_->renderFrame();
 
     testMenu_.onUpdate(windowManager_->getWindowStats().frameDeltaTime.count());
     testMenu_.onRender();
     testMenu_.onImGuiRender();
 
-    // imGuiManager_.renderExample();
-    imGuiManager_.render();
+    // imGuiManager_->renderExample();
+    imGuiManager_->render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

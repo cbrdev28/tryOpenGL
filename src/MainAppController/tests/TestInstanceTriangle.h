@@ -45,7 +45,7 @@ class TestInstanceTriangle : public Test {
 
   bool useThreads_{false};
   std::string debugUpdateStatus_{"Idle"};
-  ThreadPoolManager threadPool;
+  ThreadPoolManager threadPool;  // Next time, use unique_ptr
   void onThreadedUpdate(float dt);
 };
 

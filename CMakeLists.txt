@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Needed for clang-tidy
 
 add_subdirectory("src/MainAppController")
 
-add_executable(tryOpenGL main.cc)
+add_executable(tryOpenGL "src/main.cc")
 
 target_compile_options(tryOpenGL PRIVATE -Wall)
 if(NOT MSVC)

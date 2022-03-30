@@ -40,7 +40,7 @@ class TestInstanceTriangle : public Test {
   std::unique_ptr<VertexBuffer> vbModelZRotationAngle3_;
   std::unique_ptr<Shader> shader_;
 
-  InstancedTriangle instancedTriangle_;
+  std::unique_ptr<InstancedTriangle> instancedTriangle_ = std::make_unique<InstancedTriangle>();
   void addTriangleInstance(int count = 1);
 
   bool useThreads_{false};

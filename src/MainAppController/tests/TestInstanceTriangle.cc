@@ -6,17 +6,17 @@
 
 #include "VertexBufferLayout.h"
 
-
 namespace test {
 
 TestInstanceTriangle::TestInstanceTriangle(const TestContext& ctx) : Test(ctx) {
   va_ = std::make_unique<VertexArray>();
 
   vbModelVertex0_ =
-      std::make_unique<VertexBuffer>(instancedTriangle_.vertices.data(), instancedTriangle_.verticesGLSize());
-  vbModelPositions2_ = std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxPositionsGLSize(), GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
+  vbModelPositions2_ =
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxPositionsGLSize(), GL_STREAM_DRAW);
   vbModelZRotationAngle3_ =
-      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_.maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
 
   vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbModelPositions2_->setDivisor(VertexBufferDivisor::FOR_EACH);
@@ -57,10 +57,10 @@ void TestInstanceTriangle::onUpdate(float deltaTime) {
 
   if (!useThreads_) {
     debugUpdateStatus_ = "Main";
-    instancedTriangle_.onUpdateRotationAngle(deltaTime);
-    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
-                                             instancedTriangle_.zRotationAnglesGLSize(),
-                                             instancedTriangle_.maxZRotationAnglesGLSize());
+    instancedTriangle_->onUpdateRotationAngle(deltaTime);
+    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                             instancedTriangle_->zRotationAnglesGLSize(),
+                                             instancedTriangle_->maxZRotationAnglesGLSize());
     vbModelZRotationAngle3_->unBind();
   } else {
     debugUpdateStatus_ = "Thread";
@@ -71,8 +71,8 @@ void TestInstanceTriangle::onUpdate(float deltaTime) {
 void TestInstanceTriangle::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
-  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(instancedTriangle_.vertices.size()),
-                         static_cast<GLsizei>(instancedTriangle_.positions.size()));
+  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
+                         static_cast<GLsizei>(instancedTriangle_->positions.size()));
 }
 
 void TestInstanceTriangle::onImGuiRender() {
@@ -93,7 +93,7 @@ void TestInstanceTriangle::onImGuiRender() {
   ImGui::ColorEdit4("Color", backgroundColor_.data());
 
   ImGui::NewLine();
-  ImGui::Text("Positions count: %.zu", instancedTriangle_.positions.size());
+  ImGui::Text("Positions count: %.zu", instancedTriangle_->positions.size());
   if (ImGui::Button("Add instance")) {
     this->addTriangleInstance();
   }
@@ -111,20 +111,20 @@ void TestInstanceTriangle::onImGuiRender() {
 
 void TestInstanceTriangle::addTriangleInstance(int count) {
   for (int i = 0; i < count; ++i) {
-    instancedTriangle_.addTriangle();
+    instancedTriangle_->addTriangle();
   }
 
-  vbModelPositions2_->setInstanceData(instancedTriangle_.positions.data(), instancedTriangle_.positionsGLSize(),
-                                      instancedTriangle_.maxPositionsGLSize());
+  vbModelPositions2_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),
+                                      instancedTriangle_->maxPositionsGLSize());
   vbModelPositions2_->unBind();
-  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
-                                           instancedTriangle_.zRotationAnglesGLSize(),
-                                           instancedTriangle_.maxZRotationAnglesGLSize());
+  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                           instancedTriangle_->zRotationAnglesGLSize(),
+                                           instancedTriangle_->maxZRotationAnglesGLSize());
   vbModelZRotationAngle3_->unBind();
 }
 
 void TestInstanceTriangle::onThreadedUpdate(float dt) {
-  unsigned int instancesCount = instancedTriangle_.zRotationAngles.size();
+  unsigned int instancesCount = instancedTriangle_->zRotationAngles.size();
   // Start using thread if we have a "large" amount of instances
   if (instancesCount >= 200) {
     debugUpdateStatus_ = "Threading...";
@@ -142,7 +142,7 @@ void TestInstanceTriangle::onThreadedUpdate(float dt) {
 
       futures.emplace_back(threadPool.queueTask([&, currentBatchStartIndex, batchEndIndex](std::promise<void> promise) {
         for (unsigned int i = currentBatchStartIndex; i < batchEndIndex; ++i) {
-          auto& angle = instancedTriangle_.zRotationAngles.at(i);
+          auto& angle = instancedTriangle_->zRotationAngles.at(i);
           angle += 1.0F * InstancedTriangle::kRotationSpeed * dt;
         }
         promise.set_value();
@@ -157,9 +157,9 @@ void TestInstanceTriangle::onThreadedUpdate(float dt) {
     }
 
     debugUpdateStatus_ = "Sending...";
-    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_.zRotationAngles.data(),
-                                             instancedTriangle_.zRotationAnglesGLSize(),
-                                             instancedTriangle_.maxZRotationAnglesGLSize());
+    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                             instancedTriangle_->zRotationAnglesGLSize(),
+                                             instancedTriangle_->maxZRotationAnglesGLSize());
     vbModelZRotationAngle3_->unBind();
   } else {
     debugUpdateStatus_ = "NOT Threading...";

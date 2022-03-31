@@ -22,7 +22,7 @@ class WindowManager {
   auto operator=(const WindowManager& other) -> WindowManager& = delete;
   auto operator=(WindowManager&& other) -> WindowManager& = delete;
 
-  static constexpr int defaultWidth = 1800;
+  static constexpr int defaultWidth = 1024;
   static constexpr int defaultKeyModMask = GLFW_MOD_SHIFT | GLFW_MOD_CONTROL | GLFW_MOD_ALT | GLFW_MOD_SUPER;
 
   /**
@@ -54,7 +54,7 @@ class WindowManager {
 
  private:
   GLFWwindow* window_{nullptr};
-  AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
+  AspectRatio aspectRatio_{16, 9, 16.0F / 9.0F};
   WindowStats windowStats_;
 
   int width_{WindowManager::defaultWidth};

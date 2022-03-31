@@ -1,5 +1,5 @@
 #shader vertex
-#version 460 core
+#version 410 core
 
 layout (location = 0) in vec2 i_modelVertex;
 layout (location = 1) in vec2 i_modelPosition;
@@ -42,19 +42,13 @@ out vec4 v_modelVertexPosition;
 
 void main()
 {
-    // Uncomment & update to start using scaling matrix transformation
-    // mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle) * scaleMatrix(vec3(1.0, 1.0, 1.0));
-
     mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle);
     gl_Position = u_projection * u_view * modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
-
-    // Output value
-    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);;
+    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
 };
 
-
 #shader fragment
-#version 330 core
+#version 410 core
 
 in vec4 v_modelVertexPosition;
 

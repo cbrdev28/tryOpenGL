@@ -17,7 +17,8 @@ void ImGuiManager::init() {
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   ImGui_ImplGlfw_InitForOpenGL(windowManager_.getWindow(), true);
-  ImGui_ImplOpenGL3_Init("#version 130");
+  // ImGui_ImplOpenGL3_Init("#version 130");
+  ImGui_ImplOpenGL3_Init("#version 150");
 }
 
 void ImGuiManager::renderFrame() {

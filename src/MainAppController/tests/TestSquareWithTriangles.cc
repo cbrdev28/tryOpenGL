@@ -9,45 +9,8 @@
 namespace test {
 
 TestSquareWithTriangles::TestSquareWithTriangles(const TestContext& ctx) : Test(ctx) {
-  vaTriangles_ = std::make_unique<VertexArray>();
-
-  vbTrianglesVertices_ =
-      std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
-  vbTrianglesPositions_ =
-      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxPositionsGLSize(), GL_STREAM_DRAW);
-  vbTrianglesZAngles_ =
-      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
-
-  vbTrianglesVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
-  vbTrianglesPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  vbTrianglesZAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
-
-  VertexBufferLayout layoutModel;
-  layoutModel.pushFloat(2);
-  VertexBufferLayout layoutPosition;
-  layoutPosition.pushFloat(2);
-  VertexBufferLayout layoutRotationAngle;
-  layoutRotationAngle.pushFloat(1);
-
-  const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
-      {*vbTrianglesVertices_, layoutModel},
-      {*vbTrianglesPositions_, layoutPosition},
-      {*vbTrianglesZAngles_, layoutRotationAngle},
-  };
-  vaTriangles_->setInstanceBufferLayout(vectorOfPairs);
-
-  shaderTriangles_ = std::make_unique<Shader>("test_instance_triangle.shader");
-  shaderTriangles_->bind();
-  shaderTriangles_->setUniformMat4("u_view", glm::mat4(1.0F));
-
-  const auto aspectRatio = ctx.windowManager->getAspectRatio().ratio;
-  shaderTriangles_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
-
-  vaTriangles_->unBind();
-  vbTrianglesZAngles_->unBind();
-  vbTrianglesPositions_->unBind();
-  vbTrianglesVertices_->unBind();
-  shaderTriangles_->unBind();
+  this->initTriangles();
+  this->initSquare();
 }
 
 TestSquareWithTriangles::~TestSquareWithTriangles() = default;
@@ -73,6 +36,9 @@ void TestSquareWithTriangles::onRender() {
                                  backgroundColor_.at(3));
   renderer_.drawInstance(*shaderTriangles_, *vaTriangles_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
                          static_cast<GLsizei>(instancedTriangle_->positions.size()));
+
+  renderer_.drawInstance(*shaderSquare_, *vaSquare_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
+                         static_cast<GLsizei>(1));
 }
 
 void TestSquareWithTriangles::onImGuiRender() {
@@ -173,6 +139,88 @@ void TestSquareWithTriangles::onThreadedUpdate(float dt) {
     //                                          instancedTriangle_.maxZRotationAnglesGLSize());
     // vbModelZRotationAngle3_->unBind();
   }
+}
+
+void TestSquareWithTriangles::initTriangles() {
+  vaTriangles_ = std::make_unique<VertexArray>();
+
+  vbTrianglesVertices_ =
+      std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
+  vbTrianglesPositions_ =
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxPositionsGLSize(), GL_STREAM_DRAW);
+  vbTrianglesZAngles_ =
+      std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
+
+  vbTrianglesVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbTrianglesPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbTrianglesZAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
+
+  VertexBufferLayout layoutModel;
+  layoutModel.pushFloat(2);
+  VertexBufferLayout layoutPosition;
+  layoutPosition.pushFloat(2);
+  VertexBufferLayout layoutRotationAngle;
+  layoutRotationAngle.pushFloat(1);
+
+  const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
+      {*vbTrianglesVertices_, layoutModel},
+      {*vbTrianglesPositions_, layoutPosition},
+      {*vbTrianglesZAngles_, layoutRotationAngle},
+  };
+  vaTriangles_->setInstanceBufferLayout(vectorOfPairs);
+
+  shaderTriangles_ = std::make_unique<Shader>("test_instance_triangle.shader");
+  shaderTriangles_->bind();
+  shaderTriangles_->setUniformMat4("u_view", glm::mat4(1.0F));
+
+  const auto aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
+  shaderTriangles_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
+
+  vaTriangles_->unBind();
+  vbTrianglesZAngles_->unBind();
+  vbTrianglesPositions_->unBind();
+  vbTrianglesVertices_->unBind();
+  shaderTriangles_->unBind();
+}
+
+void TestSquareWithTriangles::initSquare() {
+  vaSquare_ = std::make_unique<VertexArray>();
+
+  vbSquareVertices_ =
+      std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
+  vbSquarePosition_ = std::make_unique<VertexBuffer>(&squarePosition_, sizeof(squarePosition_), GL_STREAM_DRAW);
+  vbSquareZAngle_ = std::make_unique<VertexBuffer>(&squareAngle_, sizeof(squareAngle_), GL_STREAM_DRAW);
+
+  vbSquareVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbSquarePosition_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbSquareZAngle_->setDivisor(VertexBufferDivisor::FOR_EACH);
+
+  VertexBufferLayout layoutModel;
+  layoutModel.pushFloat(2);
+  VertexBufferLayout layoutPosition;
+  layoutPosition.pushFloat(2);
+  VertexBufferLayout layoutRotationAngle;
+  layoutRotationAngle.pushFloat(1);
+
+  const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
+      {*vbSquareVertices_, layoutModel},
+      {*vbSquarePosition_, layoutPosition},
+      {*vbSquareZAngle_, layoutRotationAngle},
+  };
+  vaSquare_->setInstanceBufferLayout(vectorOfPairs);
+
+  shaderSquare_ = std::make_unique<Shader>("test_instance_triangle.shader");
+  shaderSquare_->bind();
+  shaderSquare_->setUniformMat4("u_view", glm::mat4(1.0F));
+
+  const auto aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
+  shaderSquare_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
+
+  vaSquare_->unBind();
+  vbSquareZAngle_->unBind();
+  vbSquarePosition_->unBind();
+  vbSquareVertices_->unBind();
+  shaderSquare_->unBind();
 }
 
 }  // namespace test

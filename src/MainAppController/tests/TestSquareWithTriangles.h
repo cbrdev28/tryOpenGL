@@ -11,6 +11,7 @@
 #include "Test.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "glmHeaders.h"
 
 namespace test {
 
@@ -38,6 +39,7 @@ class TestSquareWithTriangles : public Test {
   std::unique_ptr<VertexBuffer> vbTrianglesPositions_;
   std::unique_ptr<VertexBuffer> vbTrianglesZAngles_;
   std::unique_ptr<Shader> shaderTriangles_;
+  void initTriangles();
 
   std::unique_ptr<InstancedTriangle> instancedTriangle_ = std::make_unique<InstancedTriangle>();
   void addTriangleInstance(int count = 1);
@@ -46,6 +48,16 @@ class TestSquareWithTriangles : public Test {
   bool useThreads_{false};
   std::string debugUpdateStatus_{"Idle"};
   void onThreadedUpdate(float dt);
+
+  std::unique_ptr<VertexArray> vaSquare_;
+  std::unique_ptr<VertexBuffer> vbSquareVertices_;
+  std::unique_ptr<VertexBuffer> vbSquarePosition_;
+  std::unique_ptr<VertexBuffer> vbSquareZAngle_;
+  std::unique_ptr<Shader> shaderSquare_;
+  void initSquare();
+
+  glm::vec2 squarePosition_ = {0.0F, 0.0F};
+  float squareAngle_ = glm::radians(180.0F);
 };
 
 }  // namespace test

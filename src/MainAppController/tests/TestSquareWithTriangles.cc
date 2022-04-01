@@ -9,18 +9,18 @@
 namespace test {
 
 TestSquareWithTriangles::TestSquareWithTriangles(const TestContext& ctx) : Test(ctx) {
-  va_ = std::make_unique<VertexArray>();
+  vaTriangles_ = std::make_unique<VertexArray>();
 
-  vbModelVertex0_ =
+  vbTrianglesVertices_ =
       std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
-  vbModelPositions2_ =
+  vbTrianglesPositions_ =
       std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxPositionsGLSize(), GL_STREAM_DRAW);
-  vbModelZRotationAngle3_ =
+  vbTrianglesZAngles_ =
       std::make_unique<VertexBuffer>(nullptr, instancedTriangle_->maxZRotationAnglesGLSize(), GL_STREAM_DRAW);
 
-  vbModelVertex0_->setDivisor(VertexBufferDivisor::ALWAYS);
-  vbModelPositions2_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  vbModelZRotationAngle3_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbTrianglesVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbTrianglesPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbTrianglesZAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
 
   VertexBufferLayout layoutModel;
   layoutModel.pushFloat(2);
@@ -30,24 +30,24 @@ TestSquareWithTriangles::TestSquareWithTriangles(const TestContext& ctx) : Test(
   layoutRotationAngle.pushFloat(1);
 
   const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>> vectorOfPairs = {
-      {*vbModelVertex0_, layoutModel},
-      {*vbModelPositions2_, layoutPosition},
-      {*vbModelZRotationAngle3_, layoutRotationAngle},
+      {*vbTrianglesVertices_, layoutModel},
+      {*vbTrianglesPositions_, layoutPosition},
+      {*vbTrianglesZAngles_, layoutRotationAngle},
   };
-  va_->setInstanceBufferLayout(vectorOfPairs);
+  vaTriangles_->setInstanceBufferLayout(vectorOfPairs);
 
-  shader_ = std::make_unique<Shader>("test_instance_triangle.shader");
-  shader_->bind();
-  shader_->setUniformMat4("u_view", glm::mat4(1.0F));
+  shaderTriangles_ = std::make_unique<Shader>("test_instance_triangle.shader");
+  shaderTriangles_->bind();
+  shaderTriangles_->setUniformMat4("u_view", glm::mat4(1.0F));
 
   const auto aspectRatio = ctx.windowManager->getAspectRatio().ratio;
-  shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
+  shaderTriangles_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
-  va_->unBind();
-  vbModelZRotationAngle3_->unBind();
-  vbModelPositions2_->unBind();
-  vbModelVertex0_->unBind();
-  shader_->unBind();
+  vaTriangles_->unBind();
+  vbTrianglesZAngles_->unBind();
+  vbTrianglesPositions_->unBind();
+  vbTrianglesVertices_->unBind();
+  shaderTriangles_->unBind();
 }
 
 TestSquareWithTriangles::~TestSquareWithTriangles() = default;
@@ -58,10 +58,10 @@ void TestSquareWithTriangles::onUpdate(float deltaTime) {
   if (!useThreads_) {
     debugUpdateStatus_ = "Main";
     instancedTriangle_->onUpdateRotationAngle(deltaTime);
-    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
-                                             instancedTriangle_->zRotationAnglesGLSize(),
-                                             instancedTriangle_->maxZRotationAnglesGLSize());
-    vbModelZRotationAngle3_->unBind();
+    vbTrianglesZAngles_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                         instancedTriangle_->zRotationAnglesGLSize(),
+                                         instancedTriangle_->maxZRotationAnglesGLSize());
+    vbTrianglesZAngles_->unBind();
   } else {
     debugUpdateStatus_ = "Thread";
     onThreadedUpdate(deltaTime);
@@ -71,7 +71,7 @@ void TestSquareWithTriangles::onUpdate(float deltaTime) {
 void TestSquareWithTriangles::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
-  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
+  renderer_.drawInstance(*shaderTriangles_, *vaTriangles_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
                          static_cast<GLsizei>(instancedTriangle_->positions.size()));
 }
 
@@ -115,13 +115,13 @@ void TestSquareWithTriangles::addTriangleInstance(int count) {
     instancedTriangle_->spawnTriangle({0.0F, 0.0F});
   }
 
-  vbModelPositions2_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),
-                                      instancedTriangle_->maxPositionsGLSize());
-  vbModelPositions2_->unBind();
-  vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
-                                           instancedTriangle_->zRotationAnglesGLSize(),
-                                           instancedTriangle_->maxZRotationAnglesGLSize());
-  vbModelZRotationAngle3_->unBind();
+  vbTrianglesPositions_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),
+                                         instancedTriangle_->maxPositionsGLSize());
+  vbTrianglesPositions_->unBind();
+  vbTrianglesZAngles_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                       instancedTriangle_->zRotationAnglesGLSize(),
+                                       instancedTriangle_->maxZRotationAnglesGLSize());
+  vbTrianglesZAngles_->unBind();
 }
 
 void TestSquareWithTriangles::onThreadedUpdate(float dt) {
@@ -160,10 +160,10 @@ void TestSquareWithTriangles::onThreadedUpdate(float dt) {
     }
 
     debugUpdateStatus_ = "Sending...";
-    vbModelZRotationAngle3_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
-                                             instancedTriangle_->zRotationAnglesGLSize(),
-                                             instancedTriangle_->maxZRotationAnglesGLSize());
-    vbModelZRotationAngle3_->unBind();
+    vbTrianglesZAngles_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                         instancedTriangle_->zRotationAnglesGLSize(),
+                                         instancedTriangle_->maxZRotationAnglesGLSize());
+    vbTrianglesZAngles_->unBind();
   } else {
     debugUpdateStatus_ = "NOT Threading...";
     // Uncomment to update all instances

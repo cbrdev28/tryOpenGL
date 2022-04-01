@@ -33,11 +33,11 @@ class TestSquareWithTriangles : public Test {
   float deltaTime_{0.0F};
 
   Renderer renderer_;
-  std::unique_ptr<VertexArray> va_;
-  std::unique_ptr<VertexBuffer> vbModelVertex0_;
-  std::unique_ptr<VertexBuffer> vbModelPositions2_;
-  std::unique_ptr<VertexBuffer> vbModelZRotationAngle3_;
-  std::unique_ptr<Shader> shader_;
+  std::unique_ptr<VertexArray> vaTriangles_;
+  std::unique_ptr<VertexBuffer> vbTrianglesVertices_;
+  std::unique_ptr<VertexBuffer> vbTrianglesPositions_;
+  std::unique_ptr<VertexBuffer> vbTrianglesZAngles_;
+  std::unique_ptr<Shader> shaderTriangles_;
 
   std::unique_ptr<InstancedTriangle> instancedTriangle_ = std::make_unique<InstancedTriangle>();
   void addTriangleInstance(int count = 1);

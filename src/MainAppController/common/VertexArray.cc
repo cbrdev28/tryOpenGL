@@ -37,7 +37,7 @@ void VertexArray::setInstanceBufferLayout(
     uint64_t offset = 0;
     for (GLuint j = 0; j < aLayout.getElements().size(); j++) {
       // NOLINTNEXTLINE(google-readability-casting, performance-no-int-to-ptr, cppcoreguidelines-pro-type-cstyle-cast)
-      auto glOffset = (GLvoid*)offset;
+      auto* glOffset = (GLvoid*)offset;
       const auto& element = aLayout.getElements().at(j);
       GLCall(glEnableVertexAttribArray(i + j));
       GLCall(

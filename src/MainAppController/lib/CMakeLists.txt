@@ -32,7 +32,8 @@ set(GLFW_INSTALL OFF CACHE INTERNAL "NOT Generate installation target")
 FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
-    GIT_TAG v1.87
+    # GIT_TAG v1.87
+    GIT_TAG docking
     UPDATE_DISCONNECTED YES
 )
 FetchContent_MakeAvailable(imgui)
@@ -46,7 +47,6 @@ add_library(
     ${imgui_SOURCE_DIR}/imgui_widgets.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-    ${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp
 )
 target_include_directories(
     imgui
@@ -66,7 +66,6 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/microsoft/GSL"
     GIT_TAG "v4.0.0"
 )
-
 FetchContent_MakeAvailable(GSL)
 
 add_library(

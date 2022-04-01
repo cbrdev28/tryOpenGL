@@ -19,5 +19,6 @@ void IndexBuffer::unBind() const { GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 
 
 void IndexBuffer::setData(const GLvoid* data, GLsizei count) {
   // Note: 0 is the start offset (we always set the full set of data)
+  // Refactor: this may need to call `glBufferData` first (see VertexBuffer)
   GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, count * sizeof(GLuint), data));
 }

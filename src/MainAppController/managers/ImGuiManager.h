@@ -1,12 +1,12 @@
 #ifndef IM_GUI_MANAGER_H_
 #define IM_GUI_MANAGER_H_
 
-#include <WindowManager.h>
-#include <openGLHeaders.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "WindowManager.h"
+#include "openGLHeaders.h"
 
 class ImGuiManager {
  public:

@@ -10,7 +10,6 @@ struct AspectRatio {
   int denominator{1};
   float ratio{static_cast<float>(numerator) / static_cast<float>(denominator)};
   auto formattedValue() -> std::string { return fmt::format("Ratio: {}/{}", numerator, denominator); }
-  auto reversed() -> float { return (1.0F / ratio); }
 };
 
 #endif

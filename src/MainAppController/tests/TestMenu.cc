@@ -26,10 +26,12 @@ void TestMenu::onRender() {
 }
 
 void TestMenu::onImGuiRender() {
+  ImGui::Begin("Test Menu");
   if (currentTest_ != nullptr) {
     if (ImGui::Button("Back")) {
       delete currentTest_;
       currentTest_ = nullptr;
+      ImGui::End();
       return;
     }
     currentTest_->onImGuiRender();
@@ -40,6 +42,7 @@ void TestMenu::onImGuiRender() {
       }
     }
   }
+  ImGui::End();
 }
 
 }  // namespace test

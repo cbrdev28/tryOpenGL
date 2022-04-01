@@ -1,12 +1,14 @@
 #ifndef MAIN_APP_CONTROLLER_H_
 #define MAIN_APP_CONTROLLER_H_
 
-#include <ImGuiManager.h>
-#include <InputManager.h>
-#include <Renderer.h>
-#include <TestContext.h>
-#include <TestMenu.h>
-#include <WindowManager.h>
+#include <memory>
+
+#include "ImGuiManager.h"
+#include "Renderer.h"
+#include "TestContext.h"
+#include "TestMenu.h"
+#include "ThreadPoolManager.h"
+#include "WindowManager.h"
 
 /**
  * This file is the main app controller: the first entry in our app.
@@ -14,31 +16,20 @@
 class MainAppController {
  public:
   /**
-   * Constructor
-   */
-  MainAppController();
-  ~MainAppController() = default;
-
-  // Get rid of constructor we don't plan to use (learning purpose)
-  // Copy constructor
-  MainAppController(const MainAppController& other) = delete;
-  MainAppController(MainAppController&& other) = delete;
-  auto operator=(const MainAppController& other) -> MainAppController& = delete;
-  auto operator=(MainAppController&& other) -> MainAppController& = delete;
-
-  /**
    * Run the main application
    * @return -1 if an error occurred, 0 otherwise
    */
   auto run() -> int;
 
  private:
-  WindowManager windowManager_;
-  InputManager inputManager_{windowManager_};
-  ImGuiManager imGuiManager_{windowManager_};
+  std::shared_ptr<WindowManager> windowManager_ = std::make_shared<WindowManager>();
+  std::unique_ptr<ImGuiManager> imGuiManager_ = std::make_unique<ImGuiManager>(*windowManager_);
+  std::shared_ptr<ThreadPoolManager> threadPoolManager_ = std::make_shared<ThreadPoolManager>();
+
+  test::TestContext testCtx_{windowManager_, threadPoolManager_};
+  std::unique_ptr<test::TestMenu> testMenu_ = std::make_unique<test::TestMenu>(testCtx_);
+
   Renderer renderer_;
-  test::TestContext testCtx_{&windowManager_, &inputManager_};
-  test::TestMenu testMenu_{testCtx_};
 
   /**
    * Initialize the app & managers
@@ -48,10 +39,8 @@ class MainAppController {
 
   /**
    * Start a basic render loop
-   * @return MainAppController&
-   * @throw -1
    */
-  auto renderLoop() -> MainAppController&;
+  void renderLoop();
 };
 
 #endif

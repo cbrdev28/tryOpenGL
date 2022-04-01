@@ -1,13 +1,13 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
-#include <AspectRatio.h>
-#include <WindowListener.h>
-#include <WindowStats.h>
-#include <openGLHeaders.h>
-
 #include <algorithm>
 #include <vector>
+
+#include "AspectRatio.h"
+#include "WindowListener.h"
+#include "WindowStats.h"
+#include "openGLHeaders.h"
 
 /**
  * Window manager for glfw
@@ -22,24 +22,20 @@ class WindowManager {
   auto operator=(const WindowManager& other) -> WindowManager& = delete;
   auto operator=(WindowManager&& other) -> WindowManager& = delete;
 
-  /**
-   * Constants
-   */
-  static const int defaultWidth = 2048;
+  static constexpr int defaultWidth = 1280;
   static constexpr int defaultKeyModMask = GLFW_MOD_SHIFT | GLFW_MOD_CONTROL | GLFW_MOD_ALT | GLFW_MOD_SUPER;
 
   /**
    * Initialize window manager: glfw, glad.
    * Create a window & set callbacks: framebuffer size & error
    * @throw -1
-   * @return WindowManager&
    */
-  auto init() -> WindowManager&;
+  void init();
+  void updateWindowStats();
 
-  [[nodiscard]] auto getWindow() const -> GLFWwindow*;
-
-  [[nodiscard]] inline auto getWidth() const -> int { return WindowManager::width; };
-  [[nodiscard]] inline auto getHeight() const -> int { return WindowManager::height; };
+  [[nodiscard]] inline auto getWindow() const -> GLFWwindow* { return window_; };
+  [[nodiscard]] inline auto getWidth() const -> int { return width_; };
+  [[nodiscard]] inline auto getHeight() const -> int { return height_; };
   [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
   [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
 
@@ -56,16 +52,16 @@ class WindowManager {
     return *this;
   }
 
-  void updateWindowStats();
-
  private:
   GLFWwindow* window_{nullptr};
-  AspectRatio aspectRatio_{16, 10, 16.0F / 10.0F};
+  AspectRatio aspectRatio_{16, 9, 16.0F / 9.0F};
   WindowStats windowStats_;
 
-  static int width;
-  static int height;
-  static std::vector<WindowListener*> listeners_;
+  int width_{WindowManager::defaultWidth};
+  int height_{static_cast<int>(static_cast<float>(width_) / aspectRatio_.ratio)};
+  std::vector<WindowListener*> listeners_{};
+  void framebufferSizeCallback(int width, int height);
+
   /**
    * Callback
    */

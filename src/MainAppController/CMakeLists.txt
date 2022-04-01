@@ -3,26 +3,18 @@ add_subdirectory("lib")
 add_library(
     MainAppController
     MainAppController.cc
-    "managers/WindowManager.cc"
-    "managers/ImGuiManager.cc"
-    "managers/InputManager.cc"
-    "managers/WorldManager.cc"
-    "managers/ShaderManager.cc"
-    "helpers/MatrixHelper.cc"
-    "helpers/openGLErrorHelpers.cc"
-    "common/Renderer.cc"
-    "common/VertexBuffer.cc"
     "common/IndexBuffer.cc"
-    "common/VertexArray.cc"
+    "common/Renderer.cc"
+    "common/Shader.cc"
     "common/Texture.cc"
-    "tests/TestWorldManager.cc"
+    "common/VertexArray.cc"
+    "common/VertexBuffer.cc"
+    "helpers/openGLErrorHelpers.cc"
+    "managers/ImGuiManager.cc"
+    "managers/ThreadPoolManager.cc"
+    "managers/WindowManager.cc"
+    "tests/TestInstanceTriangle.cc"
     "tests/TestMenu.cc"
-    "tests/TestTexture.cc"
-    "tests/TestBatchRender.cc"
-    "tests/TestRenderTiles.cc"
-    "tests/TestDynamicRender.cc"
-    "tests/TestBackToBasic.cc"
-    "tests/TestThreads.cc"
 )
 
 target_include_directories(
@@ -35,10 +27,10 @@ target_include_directories(
 target_include_directories(
     MainAppController
     PUBLIC
-    "managers"
     "common"
-    "listeners"
     "helpers"
+    "listeners"
+    "managers"
     "models"
     "tests"
 )

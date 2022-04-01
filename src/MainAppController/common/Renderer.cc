@@ -13,7 +13,7 @@ auto Renderer::clearColorBackground(GLclampf red, GLclampf green, GLclampf blue,
   return *this;
 }
 
-auto Renderer::draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer& {
+auto Renderer::draw(Shader& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer& {
   shaders.bind();
   va.bind();
   ib.bind();
@@ -24,8 +24,7 @@ auto Renderer::draw(ShaderManager& shaders, VertexArray& va, IndexBuffer& ib) ->
   return *this;
 }
 
-auto Renderer::drawInstance(ShaderManager& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount)
-    -> Renderer& {
+auto Renderer::drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount) -> Renderer& {
   shaders.bind();
   va.bind();
   GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, count, instancesCount));

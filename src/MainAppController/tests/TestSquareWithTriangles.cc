@@ -37,7 +37,7 @@ void TestSquareWithTriangles::onRender() {
   renderer_.drawInstance(*shaderTriangles_, *vaTriangles_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
                          static_cast<GLsizei>(instancedTriangle_->positions.size()));
 
-  renderer_.drawInstance(*shaderSquare_, *vaSquare_, static_cast<GLsizei>(instancedTriangle_->vertices.size()),
+  renderer_.drawInstance(*shaderSquare_, *vaSquare_, static_cast<GLsizei>(targetSquare_->vertices.size()),
                          static_cast<GLsizei>(1));
 }
 
@@ -186,10 +186,11 @@ void TestSquareWithTriangles::initTriangles() {
 void TestSquareWithTriangles::initSquare() {
   vaSquare_ = std::make_unique<VertexArray>();
 
-  vbSquareVertices_ =
-      std::make_unique<VertexBuffer>(instancedTriangle_->vertices.data(), instancedTriangle_->verticesGLSize());
-  vbSquarePosition_ = std::make_unique<VertexBuffer>(&squarePosition_, sizeof(squarePosition_), GL_STREAM_DRAW);
-  vbSquareZAngle_ = std::make_unique<VertexBuffer>(&squareAngle_, sizeof(squareAngle_), GL_STREAM_DRAW);
+  vbSquareVertices_ = std::make_unique<VertexBuffer>(targetSquare_->vertices.data(), targetSquare_->verticesGLSize());
+  vbSquarePosition_ =
+      std::make_unique<VertexBuffer>(&targetSquare_->position, sizeof(targetSquare_->position), GL_STREAM_DRAW);
+  vbSquareZAngle_ =
+      std::make_unique<VertexBuffer>(&targetSquare_->zAngle, sizeof(targetSquare_->zAngle), GL_STREAM_DRAW);
 
   vbSquareVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbSquarePosition_->setDivisor(VertexBufferDivisor::FOR_EACH);

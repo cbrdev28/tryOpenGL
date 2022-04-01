@@ -8,6 +8,7 @@
 #include "InstancedTriangle.h"
 #include "Renderer.h"
 #include "Shader.h"
+#include "TargetSquare.h"
 #include "Test.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
@@ -56,8 +57,7 @@ class TestSquareWithTriangles : public Test {
   std::unique_ptr<Shader> shaderSquare_;
   void initSquare();
 
-  glm::vec2 squarePosition_ = {0.0F, 0.0F};
-  float squareAngle_ = glm::radians(180.0F);
+  std::unique_ptr<TargetSquare> targetSquare_ = std::make_unique<TargetSquare>();
 };
 
 }  // namespace test

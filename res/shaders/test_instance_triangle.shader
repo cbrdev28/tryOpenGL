@@ -14,7 +14,7 @@ mat4 zRotationMatrix(float angle) {
          -s,   c, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
-        );
+    );
 }
 
 mat4 translationMatrix(vec3 dir) {
@@ -23,7 +23,7 @@ mat4 translationMatrix(vec3 dir) {
           0.0,   1.0,   0.0, 0.0,
           0.0,   0.0,   1.0, 0.0,
         dir.x, dir.y, dir.z, 1.0
-        );
+    );
 }
 
 mat4 scaleMatrix(vec3 scale) {
@@ -32,7 +32,7 @@ mat4 scaleMatrix(vec3 scale) {
             0.0, scale.y,     0.0, 0.0,
             0.0,     0.0, scale.z, 0.0,
             0.0,     0.0,     0.0, 1.0
-        );
+    );
 }
 
 uniform mat4 u_view;
@@ -42,9 +42,9 @@ out vec4 v_modelVertexPosition;
 
 void main()
 {
+    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
     mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle);
     gl_Position = u_projection * u_view * modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
-    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
 };
 
 #shader fragment

@@ -11,7 +11,7 @@ pushd ${REPO_DIR}
 # This command may need to be refactored when adding more files
 # And use a `find` to list files
 clang-format --style=file --verbose -i\
-    ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
+    ./src/*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
     ./src/MainAppController/common/*.cc ./src/MainAppController/common/*.h\
     ./src/MainAppController/helpers/*.cc ./src/MainAppController/helpers/*.h\
     ./src/MainAppController/listeners/*.h\

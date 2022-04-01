@@ -10,7 +10,7 @@ REPO_DIR="${SCRIPT_DIR}/.."
 pushd ${REPO_DIR}
 # This command may need to be refactored when adding more files
 clang-tidy -p ./build\
-    ./*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
+    ./src/*.cc ./src/MainAppController/*.cc ./src/MainAppController/*.h\
     ./src/MainAppController/common/*.cc ./src/MainAppController/common/*.h\
     ./src/MainAppController/helpers/*.cc ./src/MainAppController/helpers/*.h\
     ./src/MainAppController/listeners/*.h\

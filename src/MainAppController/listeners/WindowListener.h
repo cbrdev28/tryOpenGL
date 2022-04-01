@@ -12,7 +12,9 @@ class WindowListener {
 
   virtual void onResize(int /* width */, int /* height */) {}
 
+  // TODO(cbr): check if this set as `default` on purpose?
   WindowListener(const WindowListener& other) = default;
+
   WindowListener(WindowListener&& other) = delete;
   auto operator=(const WindowListener& other) -> WindowListener& = delete;
   auto operator=(WindowListener&& other) -> WindowListener& = delete;

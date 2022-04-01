@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "openGLErrorHelpers.h"
+
 /**
  * Renderer class
  */

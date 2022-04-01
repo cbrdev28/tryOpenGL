@@ -42,10 +42,10 @@ out vec4 v_modelVertexPosition;
 
 void main()
 {
-    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
     mat4 modelTransformation = translationMatrix(vec3(i_modelPosition, 0.0)) * zRotationMatrix(i_modelRotationAngle);
     gl_Position = u_projection * u_view * modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
-};
+    v_modelVertexPosition = modelTransformation * vec4(i_modelVertex, 0.0, 1.0);
+}
 
 #shader fragment
 #version 410 core
@@ -57,4 +57,4 @@ layout(location = 0) out vec4 fragmentColor;
 void main()
 {
     fragmentColor = vec4(v_modelVertexPosition.x, v_modelVertexPosition.y, 0.5, 1.0);
-};
+}

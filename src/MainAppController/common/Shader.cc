@@ -171,6 +171,8 @@ auto Shader::link() -> Shader& {
     throw -1;
   }
   GLCall(glDeleteShader(vertexShaderID_));
+  vertexShaderID_ = 0;
   GLCall(glDeleteShader(fragmentShaderID_));
+  fragmentShaderID_ = 0;
   return *this;
 }

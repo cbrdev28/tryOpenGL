@@ -40,6 +40,7 @@ target_link_libraries(
 )
 
 configure_file("res/shaders/test_instance_triangle.shader" ${CMAKE_BINARY_DIR} COPYONLY)
+configure_file("res/shaders/test_square_triangle.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
 # configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -48,6 +49,7 @@ configure_file("res/shaders/test_instance_triangle.shader" ${CMAKE_BINARY_DIR} C
 install(TARGETS tryOpenGL DESTINATION bin)
 
 install(FILES "res/shaders/test_instance_triangle.shader" DESTINATION bin)
+install(FILES "res/shaders/test_square_triangle.shader" DESTINATION bin)
 
 # install(FILES "res/textures/grass.png" DESTINATION bin)
 # install(FILES "res/textures/wall.png" DESTINATION bin)

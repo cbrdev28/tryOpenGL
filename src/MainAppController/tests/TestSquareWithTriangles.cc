@@ -210,7 +210,7 @@ void TestSquareWithTriangles::initSquare() {
   };
   vaSquare_->setInstanceBufferLayout(vectorOfPairs);
 
-  shaderSquare_ = std::make_unique<Shader>("test_instance_triangle.shader");
+  shaderSquare_ = std::make_unique<Shader>("test_square_triangle.shader");
   shaderSquare_->bind();
   shaderSquare_->setUniformMat4("u_view", glm::mat4(1.0F));
 

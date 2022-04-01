@@ -6,6 +6,7 @@
 #include <fmt/core.h>
 
 #include "TestInstanceTriangle.h"
+#include "TestSquareWithTriangles.h"
 
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");
@@ -27,6 +28,7 @@ auto MainAppController::init() -> int {
     imGuiManager_->init();
 
     testMenu_->registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
+    testMenu_->registerTest<test::TestSquareWithTriangles>("Test Square & Triangles");
   } catch (int error) {
     return -1;
   }

@@ -14,6 +14,7 @@ add_library(
     "managers/ThreadPoolManager.cc"
     "managers/WindowManager.cc"
     "tests/TestInstanceTriangle.cc"
+    "tests/TestSquareWithTriangles.cc"
     "tests/TestMenu.cc"
 )
 

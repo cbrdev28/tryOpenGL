@@ -17,11 +17,11 @@ void ImGuiManager::init() {
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   ImGui_ImplGlfw_InitForOpenGL(windowManager_.getWindow(), true);
-  #ifdef CBR_APPLE
+#ifdef CBR_APPLE
   ImGui_ImplOpenGL3_Init("#version 150");
-  #else
+#else
   ImGui_ImplOpenGL3_Init("#version 130");
-  #endif
+#endif
 }
 
 void ImGuiManager::renderFrame() {

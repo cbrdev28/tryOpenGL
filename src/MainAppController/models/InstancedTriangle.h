@@ -68,6 +68,31 @@ struct InstancedTriangle {
     zRotationAngles.emplace_back(0.0F);
   }
 
+  void spawnTriangle(const glm::vec2& targetPosition) {
+    const auto currentNumberOfTriangles = positions.size();
+    ASSERT(currentNumberOfTriangles < kMaxTriangles);
+    // Random positions between: -0.9 & 0.9
+    const auto expectedValueRange = 0.9F;
+    auto randomPosX = expectedValueRange - (2 * genRandom() * expectedValueRange);
+    auto randomPosY = expectedValueRange - (2 * genRandom() * expectedValueRange);
+
+    // If the triangle is within "a close" range from the target, push it away
+    const float rangeOffset = 0.5F;
+    glm::vec2 deltaTriangleTarget = {randomPosX - targetPosition.x, randomPosY - targetPosition.y};
+    if (glm::abs(deltaTriangleTarget.x) < rangeOffset && glm::abs(deltaTriangleTarget.y) < rangeOffset) {
+      float xMultiplier = deltaTriangleTarget.x > 0 ? 1.0F : -1.0F;
+      float yMultiplier = deltaTriangleTarget.y > 0 ? 1.0F : -1.0F;
+      float xOffset = rangeOffset - glm::abs(deltaTriangleTarget.x);
+      float yOffset = rangeOffset - glm::abs(deltaTriangleTarget.y);
+
+      randomPosX += xOffset * xMultiplier;
+      randomPosY += yOffset * yMultiplier;
+    }
+
+    positions.emplace_back(randomPosX, randomPosY);
+    zRotationAngles.emplace_back(0.0F);
+  }
+
   void removeTriangle() {
     positions.pop_back();
     zRotationAngles.pop_back();

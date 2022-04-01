@@ -41,6 +41,7 @@ auto MainAppController::renderLoop() -> void {
   GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     windowManager_->updateWindowStats();
+    windowManager_->processKeyInput();
     renderer_.clear();
 
     imGuiManager_->renderFrame();

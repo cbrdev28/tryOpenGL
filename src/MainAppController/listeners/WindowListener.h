@@ -12,6 +12,8 @@ class WindowListener {
 
   virtual void onResize(int /* width */, int /* height */) {}
 
+  virtual void onKeyADown() {}
+
   // TODO(cbr): check if this set as `default` on purpose?
   WindowListener(const WindowListener& other) = default;
 

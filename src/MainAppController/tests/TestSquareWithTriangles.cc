@@ -11,9 +11,13 @@ namespace test {
 TestSquareWithTriangles::TestSquareWithTriangles(const TestContext& ctx) : Test(ctx) {
   this->initTriangles();
   this->initSquare();
+  ctx.windowManager->addWindowListener(this);
 }
 
-TestSquareWithTriangles::~TestSquareWithTriangles() = default;
+TestSquareWithTriangles::~TestSquareWithTriangles() {
+  // More?
+  this->getTestContext().windowManager->removeWindowListener(this);
+}
 
 void TestSquareWithTriangles::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
@@ -73,6 +77,11 @@ void TestSquareWithTriangles::onImGuiRender() {
   if (ImGui::Button("Spawn MANY")) {
     this->addTriangleInstance(newInstancesCount_);
   }
+}
+
+void TestSquareWithTriangles::onKeyADown() {
+  fmt::print("A key down\n");
+  // Move square
 }
 
 void TestSquareWithTriangles::addTriangleInstance(int count) {

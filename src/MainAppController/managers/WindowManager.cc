@@ -66,6 +66,14 @@ void WindowManager::updateWindowStats() {
   ++windowStats_.frameCount;
 }
 
+void WindowManager::processKeyInput() {
+  if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyADown();
+    }
+  }
+}
+
 void WindowManager::framebufferSizeCallback(int width, int height) {
   width_ = width;
   height_ = height;

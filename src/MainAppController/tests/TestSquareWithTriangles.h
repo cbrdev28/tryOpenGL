@@ -12,11 +12,12 @@
 #include "Test.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "WindowListener.h"
 #include "glmHeaders.h"
 
 namespace test {
 
-class TestSquareWithTriangles : public Test {
+class TestSquareWithTriangles : public Test, public WindowListener {
  public:
   explicit TestSquareWithTriangles(const TestContext& ctx);
   ~TestSquareWithTriangles() override;
@@ -29,6 +30,8 @@ class TestSquareWithTriangles : public Test {
   void onUpdate(float deltaTime) override;
   void onRender() override;
   void onImGuiRender() override;
+
+  void onKeyADown() override;
 
  private:
   std::array<float, 4> backgroundColor_ = {0.8F, 0.8F, 0.8F, 1.0F};

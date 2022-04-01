@@ -7,6 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Needed for clang-tidy
 
+# Check platform
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    message(STATUS "CBR: Platform is Mac OS X")
+    add_definitions(-DCBR_APPLE)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    message(STATUS "CBR: Platform is Windows")
+    add_definitions(-DCBR_WINDOWS)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+
 add_subdirectory("src/MainAppController")
 
 add_executable(tryOpenGL "src/main.cc")

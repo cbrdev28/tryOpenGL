@@ -8,7 +8,7 @@
 #include "TestInstanceTriangle.h"
 
 auto MainAppController::run() -> int {
-  fmt::print("run()\n");
+  fmt::print("Run main application\n");
   if (this->init() != 0) {
     return -1;
   }
@@ -21,7 +21,7 @@ auto MainAppController::run() -> int {
 }
 
 auto MainAppController::init() -> int {
-  fmt::print("init()\n");
+  fmt::print("Init main application & managers\n");
   try {
     windowManager_->init();
     imGuiManager_->init();
@@ -34,7 +34,7 @@ auto MainAppController::init() -> int {
 }
 
 auto MainAppController::renderLoop() -> void {
-  fmt::print("renderLoop()\n");
+  fmt::print("Start main render loop\n");
 
   GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {

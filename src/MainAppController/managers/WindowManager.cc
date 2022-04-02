@@ -72,6 +72,21 @@ void WindowManager::processKeyInput() {
       listener->onKeyADown();
     }
   }
+  if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyWDown();
+    }
+  }
+  if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeySDown();
+    }
+  }
+  if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyDDown();
+    }
+  }
 }
 
 void WindowManager::framebufferSizeCallback(int width, int height) {

@@ -85,6 +85,27 @@ void TestSquareWithTriangles::onKeyADown() {
   vbSquarePosition_->unBind();
 }
 
+void TestSquareWithTriangles::onKeyWDown() {
+  targetSquare_->position.y += 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
+                                     sizeof(targetSquare_->position));
+  vbSquarePosition_->unBind();
+}
+
+void TestSquareWithTriangles::onKeySDown() {
+  targetSquare_->position.y -= 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
+                                     sizeof(targetSquare_->position));
+  vbSquarePosition_->unBind();
+}
+
+void TestSquareWithTriangles::onKeyDDown() {
+  targetSquare_->position.x += 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
+                                     sizeof(targetSquare_->position));
+  vbSquarePosition_->unBind();
+}
+
 void TestSquareWithTriangles::addTriangleInstance(int count) {
   for (int i = 0; i < count; ++i) {
     instancedTriangle_->spawnTriangle(targetSquare_->position);

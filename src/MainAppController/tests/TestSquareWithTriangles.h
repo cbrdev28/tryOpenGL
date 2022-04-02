@@ -32,6 +32,9 @@ class TestSquareWithTriangles : public Test, public WindowListener {
   void onImGuiRender() override;
 
   void onKeyADown() override;
+  void onKeySDown() override;
+  void onKeyDDown() override;
+  void onKeyWDown() override;
 
  private:
   std::array<float, 4> backgroundColor_ = {0.8F, 0.8F, 0.8F, 1.0F};

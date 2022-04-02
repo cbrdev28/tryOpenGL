@@ -87,8 +87,7 @@ void TestSquareWithTriangles::onKeyADown() {
 
 void TestSquareWithTriangles::addTriangleInstance(int count) {
   for (int i = 0; i < count; ++i) {
-    // instancedTriangle_->addTriangle();
-    instancedTriangle_->spawnTriangle({0.0F, 0.0F});
+    instancedTriangle_->spawnTriangle(targetSquare_->position);
   }
 
   vbTrianglesPositions_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),

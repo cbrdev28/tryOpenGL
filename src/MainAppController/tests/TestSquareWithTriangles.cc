@@ -80,6 +80,7 @@ void TestSquareWithTriangles::onImGuiRender() {
 
 void TestSquareWithTriangles::onKeyADown() {
   targetSquare_->position.x -= 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  this->checkSquareCollisions();
   vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
                                      sizeof(targetSquare_->position));
   vbSquarePosition_->unBind();
@@ -87,6 +88,7 @@ void TestSquareWithTriangles::onKeyADown() {
 
 void TestSquareWithTriangles::onKeyWDown() {
   targetSquare_->position.y += 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  this->checkSquareCollisions();
   vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
                                      sizeof(targetSquare_->position));
   vbSquarePosition_->unBind();
@@ -94,6 +96,7 @@ void TestSquareWithTriangles::onKeyWDown() {
 
 void TestSquareWithTriangles::onKeySDown() {
   targetSquare_->position.y -= 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  this->checkSquareCollisions();
   vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
                                      sizeof(targetSquare_->position));
   vbSquarePosition_->unBind();
@@ -101,6 +104,7 @@ void TestSquareWithTriangles::onKeySDown() {
 
 void TestSquareWithTriangles::onKeyDDown() {
   targetSquare_->position.x += 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  this->checkSquareCollisions();
   vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
                                      sizeof(targetSquare_->position));
   vbSquarePosition_->unBind();
@@ -252,6 +256,28 @@ void TestSquareWithTriangles::initSquare() {
   vbSquarePosition_->unBind();
   vbSquareVertices_->unBind();
   shaderSquare_->unBind();
+}
+
+void TestSquareWithTriangles::checkSquareCollisions() {
+  for (unsigned int i = 0; i < instancedTriangle_->positions.size(); ++i) {
+    const auto& trianglePosition = instancedTriangle_->positions.at(i);
+    const auto squareTopLeft =
+        glm::vec2(targetSquare_->position.x - TargetSquare::kSize, targetSquare_->position.y + TargetSquare::kSize);
+    const auto squareBottomRight =
+        glm::vec2(targetSquare_->position.x + TargetSquare::kSize, targetSquare_->position.y - TargetSquare::kSize);
+    if (trianglePosition.x >= squareTopLeft.x && trianglePosition.x <= squareBottomRight.x &&
+        trianglePosition.y <= squareTopLeft.y && trianglePosition.y >= squareBottomRight.y) {
+      instancedTriangle_->eraseTriangle(i);
+    }
+  }
+
+  vbTrianglesPositions_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),
+                                         instancedTriangle_->maxPositionsGLSize());
+  vbTrianglesPositions_->unBind();
+  vbTrianglesZAngles_->setInstanceData(instancedTriangle_->zRotationAngles.data(),
+                                       instancedTriangle_->zRotationAnglesGLSize(),
+                                       instancedTriangle_->maxZRotationAnglesGLSize());
+  vbTrianglesZAngles_->unBind();
 }
 
 }  // namespace test

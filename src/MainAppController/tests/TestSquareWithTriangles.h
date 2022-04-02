@@ -64,6 +64,7 @@ class TestSquareWithTriangles : public Test, public WindowListener {
   void initSquare();
 
   std::unique_ptr<TargetSquare> targetSquare_ = std::make_unique<TargetSquare>();
+  void checkSquareCollisions();
 };
 
 }  // namespace test

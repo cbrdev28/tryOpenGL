@@ -9,6 +9,7 @@
 
 struct TargetSquare {
   static constexpr GLfloat kSize = 0.1F;
+  static constexpr GLfloat kMoveSpeed = 1.0F;
 
   std::array<glm::vec2, 6> vertices = resetVertices();
   glm::vec2 position = {0.0F, 0.0F};

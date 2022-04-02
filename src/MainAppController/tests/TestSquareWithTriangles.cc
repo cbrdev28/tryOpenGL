@@ -15,7 +15,6 @@ TestSquareWithTriangles::TestSquareWithTriangles(const TestContext& ctx) : Test(
 }
 
 TestSquareWithTriangles::~TestSquareWithTriangles() {
-  // More?
   this->getTestContext().windowManager->removeWindowListener(this);
 }
 
@@ -80,8 +79,10 @@ void TestSquareWithTriangles::onImGuiRender() {
 }
 
 void TestSquareWithTriangles::onKeyADown() {
-  fmt::print("A key down\n");
-  // Move square
+  targetSquare_->position.x -= 1.0F * TargetSquare::kMoveSpeed * deltaTime_;
+  vbSquarePosition_->setInstanceData(&targetSquare_->position, sizeof(targetSquare_->position),
+                                     sizeof(targetSquare_->position));
+  vbSquarePosition_->unBind();
 }
 
 void TestSquareWithTriangles::addTriangleInstance(int count) {

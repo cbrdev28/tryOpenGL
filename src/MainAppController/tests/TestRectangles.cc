@@ -173,11 +173,12 @@ void TestRectangles::mainSquareCollisionRect() {
     if (smallRectPos.x >= squareTopLeft.x && smallRectPos.x <= squareBottomRight.x &&
         smallRectPos.y <= squareTopLeft.y && smallRectPos.y >= squareBottomRight.y) {
       // Collision with small rectangle!
+      // TODO(cbr): store indexes & erase them AFTER the loop?
       smallRectPositions_.erase(smallRectPositions_.begin() + i);
       smallRectAngles_.erase(smallRectAngles_.begin() + i);
       smallRectScales_.erase(smallRectScales_.begin() + i);
-      // TODO(cbr): store indexes & erase them AFTER the loop?
       // For now we stop when found the first collision
+      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
       break;
     }
   }
@@ -187,11 +188,12 @@ void TestRectangles::mainSquareCollisionRect() {
     if (mediumRectPos.x >= squareTopLeft.x && mediumRectPos.x <= squareBottomRight.x &&
         mediumRectPos.y <= squareTopLeft.y && mediumRectPos.y >= squareBottomRight.y) {
       // Collision with medium rectangle!
+      // TODO(cbr): store indexes & erase them AFTER the loop?
       mediumRectPositions_.erase(mediumRectPositions_.begin() + i);
       mediumRectAngles_.erase(mediumRectAngles_.begin() + i);
       mediumRectScales_.erase(mediumRectScales_.begin() + i);
-      // TODO(cbr): store indexes & erase them AFTER the loop?
       // For now we stop when found the first collision
+      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
       break;
     }
   }

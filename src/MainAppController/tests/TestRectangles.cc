@@ -126,10 +126,10 @@ void TestRectangles::onImGuiRender() {
   ImGui::Text("Medium pos: %zu", mediumRectPositions_.size());
   ImGui::Text("Total pos: %d", this->currentRectCount());
   if (ImGui::Button("Spawn small")) {
-    this->spawnReact(true);
+    this->spawnReact(true, mainSquaresPositions_.at(0));
   }
   if (ImGui::Button("Spawn medium")) {
-    this->spawnReact(false);
+    this->spawnReact(false, mainSquaresPositions_.at(0));
   }
 }
 

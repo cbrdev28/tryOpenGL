@@ -6,6 +6,7 @@
 #include <fmt/core.h>
 
 #include "TestInstanceTriangle.h"
+#include "TestRectangles.h"
 #include "TestSquareWithTriangles.h"
 
 auto MainAppController::run() -> int {
@@ -29,6 +30,7 @@ auto MainAppController::init() -> int {
 
     testMenu_->registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
     testMenu_->registerTest<test::TestSquareWithTriangles>("Test Square & Triangles");
+    testMenu_->registerTest<test::TestRectangles>("Test Rectangles");
   } catch (int error) {
     return -1;
   }

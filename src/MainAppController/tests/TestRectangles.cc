@@ -29,7 +29,7 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   VertexBufferLayout rectPositionsLayout;
   rectPositionsLayout.pushFloat(2);  // Each position is made of 2 floats
   VertexBufferLayout rectAnglesLayout;
-  rectPositionsLayout.pushFloat(1);  // An angle is a single float
+  rectAnglesLayout.pushFloat(1);  // An angle is a single float
 
   vaRect_->setInstanceBufferLayout({
       {*vbRectVertices_, rectVerticesLayout},
@@ -47,6 +47,8 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   vbRectPositions_->unBind();
   vbRectVertices_->unBind();
   shaderRect_->unBind();
+
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 TestRectangles::~TestRectangles() { this->getTestContext().windowManager->removeWindowListener(this); }
@@ -54,7 +56,9 @@ TestRectangles::~TestRectangles() { this->getTestContext().windowManager->remove
 void TestRectangles::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
 
-  if (!useThreads_) {
+  if (useThreads_) {
+    onThreadedUpdate(deltaTime);
+  } else {
     for (auto& smallRectAngle : smallRectAngles_) {
       smallRectAngle += TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
     }
@@ -62,16 +66,13 @@ void TestRectangles::onUpdate(float deltaTime) {
       mediumRectAngle -= TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
     }
     this->setVBAngles();
-  } else {
-    onThreadedUpdate(deltaTime);
   }
 }
 
 void TestRectangles::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
-  renderer_.drawInstance(*shaderRect_, *vaRect_, static_cast<GLsizei>(rectVertices.size()),
-                         static_cast<GLsizei>(smallRectPositions_.size() + mediumRectPositions_.size()));
+  renderer_.drawInstance(*shaderRect_, *vaRect_, static_cast<GLsizei>(rectVertices.size()), this->currentRectCount());
 }
 
 void TestRectangles::onImGuiRender() {
@@ -94,6 +95,17 @@ void TestRectangles::onImGuiRender() {
 
   ImGui::NewLine();
   ImGui::Checkbox("Use threads", &useThreads_);
+
+  ImGui::NewLine();
+  ImGui::Text("Small pos: %zu", smallRectPositions_.size());
+  ImGui::Text("Medium pos: %zu", mediumRectPositions_.size());
+  ImGui::Text("Total pos: %d", this->currentRectCount());
+  if (ImGui::Button("Spawn small")) {
+    this->spawnReact(true);
+  }
+  if (ImGui::Button("Spawn medium")) {
+    this->spawnReact(false);
+  }
 }
 
 void TestRectangles::onKeyADown() {}
@@ -110,8 +122,7 @@ void TestRectangles::onThreadedUpdate(float dt) {
 }
 
 void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
-  const auto currentRectCount = smallRectPositions_.size() + mediumRectAngles_.size();
-  ASSERT(currentRectCount < TestRectangles::kMaxRect);
+  ASSERT(this->currentRectCount() < TestRectangles::kMaxRect);
   // Random positions between: -0.9 & 0.9
   const auto expectedValueRange = 0.9F;
   auto randomPosX = expectedValueRange - (2 * this->genRandom() * expectedValueRange);
@@ -146,9 +157,9 @@ void TestRectangles::setVBPositions() {
   vbRectPositions_->setInstanceData(smallRectPositions_.data(),
                                     static_cast<GLsizeiptr>(sizeof(glm::vec2) * smallRectPositions_.size()),
                                     sizeof(glm::vec2) * kMaxRect);
-  vbRectPositions_->setInstanceDataOffset(
-      mediumRectPositions_.data(), static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectPositions_.size()),
-      sizeof(glm::vec2) * kMaxRect, static_cast<GLsizeiptr>(sizeof(glm::vec2) * smallRectPositions_.size()));
+  vbRectPositions_->setInstanceDataOffset(mediumRectPositions_.data(),
+                                          static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectPositions_.size()),
+                                          static_cast<GLintptr>(sizeof(glm::vec2) * smallRectPositions_.size()));
   vbRectPositions_->unBind();
 }
 
@@ -156,9 +167,9 @@ void TestRectangles::setVBAngles() {
   vbRectAngles_->setInstanceData(smallRectAngles_.data(),
                                  static_cast<GLsizeiptr>(sizeof(GLfloat) * smallRectAngles_.size()),
                                  sizeof(GLfloat) * kMaxRect);
-  vbRectAngles_->setInstanceDataOffset(
-      mediumRectAngles_.data(), static_cast<GLsizeiptr>(sizeof(GLfloat) * mediumRectAngles_.size()),
-      sizeof(GLfloat) * kMaxRect, static_cast<GLsizeiptr>(sizeof(GLfloat) * smallRectAngles_.size()));
+  vbRectAngles_->setInstanceDataOffset(mediumRectAngles_.data(),
+                                       static_cast<GLsizeiptr>(sizeof(GLfloat) * mediumRectAngles_.size()),
+                                       static_cast<GLintptr>(sizeof(GLfloat) * smallRectAngles_.size()));
   vbRectAngles_->unBind();
 }
 

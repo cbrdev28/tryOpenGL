@@ -28,7 +28,7 @@ class VertexBuffer {
   // Experimental: used in TestDynamicRender but we prefer to use `setInstanceData` instead (in TestBackToBasic).
   void setData(const GLvoid* data, GLsizeiptr size);
   void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize) const;
-  void setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize, GLintptr offset) const;
+  void setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLintptr offset) const;
 
   inline void setDivisor(const VertexBufferDivisor& divisor) { divisor_ = divisor; }
   [[nodiscard]] inline auto getDivisor() const -> GLuint { return divisor_; }

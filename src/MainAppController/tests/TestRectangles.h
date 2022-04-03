@@ -54,10 +54,10 @@ class TestRectangles : public Test, public WindowListener {
   static constexpr GLsizei kMaxSmallRect = 1000;
   static constexpr GLsizei kMaxMediumRect = 100;
   static constexpr GLsizei kMaxRect = kMaxSmallRect + kMaxMediumRect;
-  static constexpr GLfloat kRotationSpeed = 1.0F;
+  static constexpr GLfloat kRotationSpeed = 100.0F;
   static constexpr GLfloat kRotationAngle = glm::radians(1.0F);
 
-  static constexpr GLfloat kRectangleSize = 0.01F;
+  static constexpr GLfloat kRectangleSize = 0.05F;
   std::array<glm::vec2, 6> rectVertices = {
       glm::vec2(-kRectangleSize / 2.0F, -kRectangleSize / 2.0F),
       glm::vec2(kRectangleSize / 2.0F, -kRectangleSize / 2.0F),
@@ -73,6 +73,11 @@ class TestRectangles : public Test, public WindowListener {
 
   std::vector<glm::vec2> mediumRectPositions_;
   std::vector<GLfloat> mediumRectAngles_;
+
+  // Helper
+  inline auto currentRectCount() -> GLsizei {
+    return static_cast<GLsizei>(smallRectPositions_.size() + mediumRectPositions_.size());
+  }
 
   // Helper to return random number within range of: 0.0 - 1.0
   std::default_random_engine gen{std::random_device{}()};

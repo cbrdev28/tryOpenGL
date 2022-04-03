@@ -19,6 +19,13 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   mediumRectAngles_.reserve(TestRectangles::kMaxMediumRect);
   mediumRectScales_.reserve(TestRectangles::kMaxMediumRect);
 
+  mainSquaresPositions_.reserve(TestRectangles::kMaxMainSquares);
+  mainSquaresAngles_.reserve(TestRectangles::kMaxMainSquares);
+  mainSquaresScales_.reserve(TestRectangles::kMaxMainSquares);
+  mainSquaresPositions_.emplace_back(0.0F, 0.0F);
+  mainSquaresAngles_.emplace_back(glm::radians(0.0F));
+  mainSquaresScales_.emplace_back(1.0F, 1.0F);
+
   vbRectVertices_ = std::make_unique<VertexBuffer>(rectVertices.data(), sizeof(rectVertices));
   vbRectPositions_ = std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * kMaxRect, GL_STREAM_DRAW);
   vbRectAngles_ = std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * kMaxRect, GL_STREAM_DRAW);
@@ -56,6 +63,10 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   vbRectPositions_->unBind();
   vbRectVertices_->unBind();
   shaderRect_->unBind();
+
+  this->setVBPositions();
+  this->setVBAngles();
+  this->setVBScales();
 }
 
 TestRectangles::~TestRectangles() { this->getTestContext().windowManager->removeWindowListener(this); }
@@ -156,10 +167,12 @@ void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
   }
 
   if (small) {
+    ASSERT(smallRectPositions_.size() < TestRectangles::kMaxSmallRect);
     smallRectPositions_.emplace_back(randomPosX, randomPosY);
     smallRectAngles_.emplace_back(0.0F);
     smallRectScales_.emplace_back(1.0F, 2.0F);
   } else {
+    ASSERT(mediumRectPositions_.size() < TestRectangles::kMaxMediumRect);
     mediumRectPositions_.emplace_back(randomPosX, randomPosY);
     mediumRectAngles_.emplace_back(0.0F);
     mediumRectScales_.emplace_back(1.5F, 3.0F);
@@ -177,6 +190,10 @@ void TestRectangles::setVBPositions() {
   vbRectPositions_->setInstanceDataOffset(mediumRectPositions_.data(),
                                           static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectPositions_.size()),
                                           static_cast<GLintptr>(sizeof(glm::vec2) * smallRectPositions_.size()));
+  vbRectPositions_->setInstanceDataOffset(mainSquaresPositions_.data(),
+                                          static_cast<GLsizeiptr>(sizeof(glm::vec2) * mainSquaresPositions_.size()),
+                                          static_cast<GLintptr>(sizeof(glm::vec2) * smallRectPositions_.size()) +
+                                              static_cast<GLintptr>(sizeof(glm::vec2) * mediumRectPositions_.size()));
   vbRectPositions_->unBind();
 }
 
@@ -187,6 +204,10 @@ void TestRectangles::setVBAngles() {
   vbRectAngles_->setInstanceDataOffset(mediumRectAngles_.data(),
                                        static_cast<GLsizeiptr>(sizeof(GLfloat) * mediumRectAngles_.size()),
                                        static_cast<GLintptr>(sizeof(GLfloat) * smallRectAngles_.size()));
+  vbRectAngles_->setInstanceDataOffset(mainSquaresAngles_.data(),
+                                       static_cast<GLsizeiptr>(sizeof(GLfloat) * mainSquaresAngles_.size()),
+                                       static_cast<GLintptr>(sizeof(GLfloat) * smallRectAngles_.size()) +
+                                           static_cast<GLintptr>(sizeof(GLfloat) * mediumRectAngles_.size()));
   vbRectAngles_->unBind();
 }
 
@@ -197,6 +218,10 @@ void TestRectangles::setVBScales() {
   vbRectScales_->setInstanceDataOffset(mediumRectScales_.data(),
                                        static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectScales_.size()),
                                        static_cast<GLintptr>(sizeof(glm::vec2) * smallRectScales_.size()));
+  vbRectScales_->setInstanceDataOffset(mainSquaresScales_.data(),
+                                       static_cast<GLsizeiptr>(sizeof(glm::vec2) * mainSquaresScales_.size()),
+                                       static_cast<GLintptr>(sizeof(glm::vec2) * smallRectScales_.size()) +
+                                           static_cast<GLintptr>(sizeof(glm::vec2) * mediumRectScales_.size()));
   vbRectScales_->unBind();
 }
 

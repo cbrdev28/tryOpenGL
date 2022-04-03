@@ -136,26 +136,69 @@ void TestRectangles::onImGuiRender() {
 void TestRectangles::onKeyADown() {
   mainSquaresPositions_.at(0).x -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
   this->setVBPositions();
+  this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeyWDown() {
   mainSquaresPositions_.at(0).y += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
   this->setVBPositions();
+  this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeySDown() {
   mainSquaresPositions_.at(0).y -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
   this->setVBPositions();
+  this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeyDDown() {
   mainSquaresPositions_.at(0).x += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
   this->setVBPositions();
+  this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onThreadedUpdate(float dt) {
   // auto threadPool = this->getTestContext().threadPoolManager;
   // Do something with threads
+}
+
+void TestRectangles::mainSquareCollisionRect() {
+  const auto squareTopLeft = glm::vec2(mainSquaresPositions_.at(0).x - TestRectangles::kRectangleSize,
+                                       mainSquaresPositions_.at(0).y + TestRectangles::kRectangleSize);
+  const auto squareBottomRight = glm::vec2(mainSquaresPositions_.at(0).x + TestRectangles::kRectangleSize,
+                                           mainSquaresPositions_.at(0).y - TestRectangles::kRectangleSize);
+
+  for (unsigned int i = 0; i < smallRectPositions_.size(); ++i) {
+    const auto& smallRectPos = smallRectPositions_.at(i);
+    if (smallRectPos.x >= squareTopLeft.x && smallRectPos.x <= squareBottomRight.x &&
+        smallRectPos.y <= squareTopLeft.y && smallRectPos.y >= squareBottomRight.y) {
+      // Collision with small rectangle!
+      smallRectPositions_.erase(smallRectPositions_.begin() + i);
+      smallRectAngles_.erase(smallRectAngles_.begin() + i);
+      smallRectScales_.erase(smallRectScales_.begin() + i);
+      // TODO(cbr): store indexes & erase them AFTER the loop?
+      // For now we stop when found the first collision
+      break;
+    }
+  }
+
+  for (unsigned int i = 0; i < mediumRectPositions_.size(); ++i) {
+    const auto& mediumRectPos = mediumRectPositions_.at(i);
+    if (mediumRectPos.x >= squareTopLeft.x && mediumRectPos.x <= squareBottomRight.x &&
+        mediumRectPos.y <= squareTopLeft.y && mediumRectPos.y >= squareBottomRight.y) {
+      // Collision with medium rectangle!
+      mediumRectPositions_.erase(mediumRectPositions_.begin() + i);
+      mediumRectAngles_.erase(mediumRectAngles_.begin() + i);
+      mediumRectScales_.erase(mediumRectScales_.begin() + i);
+      // TODO(cbr): store indexes & erase them AFTER the loop?
+      // For now we stop when found the first collision
+      break;
+    }
+  }
+
+  this->setVBPositions();
+  this->setVBAngles();
+  this->setVBScales();
 }
 
 void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {

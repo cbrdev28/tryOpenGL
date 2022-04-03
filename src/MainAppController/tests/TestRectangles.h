@@ -83,6 +83,7 @@ class TestRectangles : public Test, public WindowListener {
   std::vector<glm::vec2> mainSquaresPositions_;
   std::vector<GLfloat> mainSquaresAngles_;
   std::vector<glm::vec2> mainSquaresScales_;
+  void mainSquareCollisionRect();
 
   // Helper
   inline auto currentRectCount() -> GLsizei {

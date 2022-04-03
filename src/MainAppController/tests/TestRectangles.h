@@ -41,6 +41,7 @@ class TestRectangles : public Test, public WindowListener {
   std::unique_ptr<VertexBuffer> vbRectVertices_;
   std::unique_ptr<VertexBuffer> vbRectPositions_;
   std::unique_ptr<VertexBuffer> vbRectAngles_;
+  std::unique_ptr<VertexBuffer> vbRectScales_;
   std::unique_ptr<Shader> shaderRect_ = std::make_unique<Shader>("test_rectangles.shader");
 
   bool usePolygons_{false};
@@ -71,9 +72,11 @@ class TestRectangles : public Test, public WindowListener {
 
   std::vector<glm::vec2> smallRectPositions_;
   std::vector<GLfloat> smallRectAngles_;
+  std::vector<glm::vec2> smallRectScales_;
 
   std::vector<glm::vec2> mediumRectPositions_;
   std::vector<GLfloat> mediumRectAngles_;
+  std::vector<glm::vec2> mediumRectScales_;
 
   // Helper
   inline auto currentRectCount() -> GLsizei {
@@ -92,6 +95,7 @@ class TestRectangles : public Test, public WindowListener {
 
   void setVBPositions();
   void setVBAngles();
+  void setVBScales();
 };
 
 }  // namespace test

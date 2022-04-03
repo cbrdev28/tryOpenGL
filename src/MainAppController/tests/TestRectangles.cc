@@ -14,16 +14,20 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
 
   smallRectPositions_.reserve(TestRectangles::kMaxSmallRect);
   smallRectAngles_.reserve(TestRectangles::kMaxSmallRect);
+  smallRectScales_.reserve(TestRectangles::kMaxSmallRect);
   mediumRectPositions_.reserve(TestRectangles::kMaxMediumRect);
   mediumRectAngles_.reserve(TestRectangles::kMaxMediumRect);
+  mediumRectScales_.reserve(TestRectangles::kMaxMediumRect);
 
   vbRectVertices_ = std::make_unique<VertexBuffer>(rectVertices.data(), sizeof(rectVertices));
   vbRectPositions_ = std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * kMaxRect, GL_STREAM_DRAW);
   vbRectAngles_ = std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * kMaxRect, GL_STREAM_DRAW);
+  vbRectScales_ = std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * kMaxRect, GL_STREAM_DRAW);
 
   vbRectVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbRectPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
   vbRectAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbRectScales_->setDivisor(VertexBufferDivisor::FOR_EACH);
 
   VertexBufferLayout rectVerticesLayout;
   rectVerticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
@@ -31,11 +35,14 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   rectPositionsLayout.pushFloat(2);  // Each position is made of 2 floats
   VertexBufferLayout rectAnglesLayout;
   rectAnglesLayout.pushFloat(1);  // An angle is a single float
+  VertexBufferLayout rectScalesLayout;
+  rectScalesLayout.pushFloat(2);  // Each scale is made of 2 floats
 
   vaRect_->setInstanceBufferLayout({
       {*vbRectVertices_, rectVerticesLayout},
       {*vbRectPositions_, rectPositionsLayout},
       {*vbRectAngles_, rectAnglesLayout},
+      {*vbRectScales_, rectScalesLayout},
   });
 
   shaderRect_->bind();
@@ -44,6 +51,7 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   shaderRect_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
   vaRect_->unBind();
+  vbRectScales_->unBind();
   vbRectAngles_->unBind();
   vbRectPositions_->unBind();
   vbRectVertices_->unBind();
@@ -150,13 +158,16 @@ void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
   if (small) {
     smallRectPositions_.emplace_back(randomPosX, randomPosY);
     smallRectAngles_.emplace_back(0.0F);
+    smallRectScales_.emplace_back(1.0F, 2.0F);
   } else {
     mediumRectPositions_.emplace_back(randomPosX, randomPosY);
     mediumRectAngles_.emplace_back(0.0F);
+    mediumRectScales_.emplace_back(1.5F, 3.0F);
   }
 
   this->setVBPositions();
   this->setVBAngles();
+  this->setVBScales();
 }
 
 void TestRectangles::setVBPositions() {
@@ -177,6 +188,16 @@ void TestRectangles::setVBAngles() {
                                        static_cast<GLsizeiptr>(sizeof(GLfloat) * mediumRectAngles_.size()),
                                        static_cast<GLintptr>(sizeof(GLfloat) * smallRectAngles_.size()));
   vbRectAngles_->unBind();
+}
+
+void TestRectangles::setVBScales() {
+  vbRectScales_->setInstanceData(smallRectScales_.data(),
+                                 static_cast<GLsizeiptr>(sizeof(glm::vec2) * smallRectScales_.size()),
+                                 sizeof(glm::vec2) * kMaxRect);
+  vbRectScales_->setInstanceDataOffset(mediumRectScales_.data(),
+                                       static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectScales_.size()),
+                                       static_cast<GLintptr>(sizeof(glm::vec2) * smallRectScales_.size()));
+  vbRectScales_->unBind();
 }
 
 }  // namespace test

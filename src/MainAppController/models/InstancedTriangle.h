@@ -100,6 +100,7 @@ struct InstancedTriangle {
 
   void onUpdateRotationAngle(float dt) {
     for (auto& angle : zRotationAngles) {
+      // TODO(cbr): change to using radians
       angle += 1.0F * kRotationSpeed * dt;
     }
   }

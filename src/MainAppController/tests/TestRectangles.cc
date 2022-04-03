@@ -8,7 +8,46 @@
 
 namespace test {
 
-TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) { ctx.windowManager->addWindowListener(this); }
+TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
+  ctx.windowManager->addWindowListener(this);
+
+  smallRectPositions_.reserve(TestRectangles::kMaxSmallRect);
+  smallRectAngles_.reserve(TestRectangles::kMaxSmallRect);
+  mediumRectPositions_.reserve(TestRectangles::kMaxMediumRect);
+  mediumRectAngles_.reserve(TestRectangles::kMaxMediumRect);
+
+  vbRectVertices_ = std::make_unique<VertexBuffer>(rectVertices.data(), sizeof(rectVertices));
+  vbRectPositions_ = std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * kMaxRect, GL_STREAM_DRAW);
+  vbRectAngles_ = std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * kMaxRect, GL_STREAM_DRAW);
+
+  vbRectVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbRectPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbRectAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
+
+  VertexBufferLayout rectVerticesLayout;
+  rectVerticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
+  VertexBufferLayout rectPositionsLayout;
+  rectPositionsLayout.pushFloat(2);  // Each position is made of 2 floats
+  VertexBufferLayout rectAnglesLayout;
+  rectPositionsLayout.pushFloat(1);  // An angle is a single float
+
+  vaRect_->setInstanceBufferLayout({
+      {*vbRectVertices_, rectVerticesLayout},
+      {*vbRectPositions_, rectPositionsLayout},
+      {*vbRectAngles_, rectAnglesLayout},
+  });
+
+  shaderRect_->bind();
+  shaderRect_->setUniformMat4("u_view", glm::mat4(1.0F));
+  const auto aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
+  shaderRect_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
+
+  vaRect_->unBind();
+  vbRectAngles_->unBind();
+  vbRectPositions_->unBind();
+  vbRectVertices_->unBind();
+  shaderRect_->unBind();
+}
 
 TestRectangles::~TestRectangles() { this->getTestContext().windowManager->removeWindowListener(this); }
 
@@ -25,7 +64,8 @@ void TestRectangles::onUpdate(float deltaTime) {
 void TestRectangles::onRender() {
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
-  // Add renderer draw call
+  renderer_.drawInstance(*shaderRect_, *vaRect_, static_cast<GLsizei>(rectVertices.size()),
+                         static_cast<GLsizei>(smallRectPositions_.size() + mediumRectPositions_.size()));
 }
 
 void TestRectangles::onImGuiRender() {

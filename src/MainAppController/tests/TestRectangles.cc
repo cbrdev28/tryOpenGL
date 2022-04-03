@@ -55,7 +55,13 @@ void TestRectangles::onUpdate(float deltaTime) {
   deltaTime_ = deltaTime;
 
   if (!useThreads_) {
-    // Some update in the main thread
+    for (auto& smallRectAngle : smallRectAngles_) {
+      smallRectAngle += TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
+    }
+    for (auto& mediumRectAngle : mediumRectAngles_) {
+      mediumRectAngle -= TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
+    }
+    this->setVBAngles();
   } else {
     onThreadedUpdate(deltaTime);
   }
@@ -101,6 +107,59 @@ void TestRectangles::onKeyDDown() {}
 void TestRectangles::onThreadedUpdate(float dt) {
   // auto threadPool = this->getTestContext().threadPoolManager;
   // Do something with threads
+}
+
+void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
+  const auto currentRectCount = smallRectPositions_.size() + mediumRectAngles_.size();
+  ASSERT(currentRectCount < TestRectangles::kMaxRect);
+  // Random positions between: -0.9 & 0.9
+  const auto expectedValueRange = 0.9F;
+  auto randomPosX = expectedValueRange - (2 * this->genRandom() * expectedValueRange);
+  auto randomPosY = expectedValueRange - (2 * this->genRandom() * expectedValueRange);
+
+  // If the triangle is within "a close" range from the target, push it away
+  const float rangeOffset = 0.5F;
+  glm::vec2 deltaTriangleTarget = {randomPosX - target.x, randomPosY - target.y};
+  if (glm::abs(deltaTriangleTarget.x) < rangeOffset && glm::abs(deltaTriangleTarget.y) < rangeOffset) {
+    float xMultiplier = deltaTriangleTarget.x > 0 ? 1.0F : -1.0F;
+    float yMultiplier = deltaTriangleTarget.y > 0 ? 1.0F : -1.0F;
+    float xOffset = rangeOffset - glm::abs(deltaTriangleTarget.x);
+    float yOffset = rangeOffset - glm::abs(deltaTriangleTarget.y);
+
+    randomPosX += xOffset * xMultiplier;
+    randomPosY += yOffset * yMultiplier;
+  }
+
+  if (small) {
+    smallRectPositions_.emplace_back(randomPosX, randomPosY);
+    smallRectAngles_.emplace_back(0.0F);
+  } else {
+    mediumRectPositions_.emplace_back(randomPosX, randomPosY);
+    mediumRectAngles_.emplace_back(0.0F);
+  }
+
+  this->setVBPositions();
+  this->setVBAngles();
+}
+
+void TestRectangles::setVBPositions() {
+  vbRectPositions_->setInstanceData(smallRectPositions_.data(),
+                                    static_cast<GLsizeiptr>(sizeof(glm::vec2) * smallRectPositions_.size()),
+                                    sizeof(glm::vec2) * kMaxRect);
+  vbRectPositions_->setInstanceDataOffset(
+      mediumRectPositions_.data(), static_cast<GLsizeiptr>(sizeof(glm::vec2) * mediumRectPositions_.size()),
+      sizeof(glm::vec2) * kMaxRect, static_cast<GLsizeiptr>(sizeof(glm::vec2) * smallRectPositions_.size()));
+  vbRectPositions_->unBind();
+}
+
+void TestRectangles::setVBAngles() {
+  vbRectAngles_->setInstanceData(smallRectAngles_.data(),
+                                 static_cast<GLsizeiptr>(sizeof(GLfloat) * smallRectAngles_.size()),
+                                 sizeof(GLfloat) * kMaxRect);
+  vbRectAngles_->setInstanceDataOffset(
+      mediumRectAngles_.data(), static_cast<GLsizeiptr>(sizeof(GLfloat) * mediumRectAngles_.size()),
+      sizeof(GLfloat) * kMaxRect, static_cast<GLsizeiptr>(sizeof(GLfloat) * smallRectAngles_.size()));
+  vbRectAngles_->unBind();
 }
 
 }  // namespace test

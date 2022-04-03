@@ -3,6 +3,7 @@
 
 #include <array>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include "IndexBuffer.h"
@@ -31,11 +32,6 @@ class TestRectangles : public Test, public WindowListener {
   void onRender() override;
   void onImGuiRender() override;
 
-  void onKeyADown() override;
-  void onKeySDown() override;
-  void onKeyDDown() override;
-  void onKeyWDown() override;
-
  private:
   std::array<float, 4> backgroundColor_ = {0.8F, 0.8F, 0.8F, 1.0F};
   float deltaTime_{0.0F};
@@ -50,9 +46,16 @@ class TestRectangles : public Test, public WindowListener {
   bool useThreads_{false};
   void onThreadedUpdate(float dt);
 
+  void onKeyADown() override;
+  void onKeySDown() override;
+  void onKeyDDown() override;
+  void onKeyWDown() override;
+
   static constexpr GLsizei kMaxSmallRect = 1000;
   static constexpr GLsizei kMaxMediumRect = 100;
   static constexpr GLsizei kMaxRect = kMaxSmallRect + kMaxMediumRect;
+  static constexpr GLfloat kRotationSpeed = 1.0F;
+  static constexpr GLfloat kRotationAngle = glm::radians(1.0F);
 
   static constexpr GLfloat kRectangleSize = 0.01F;
   std::array<glm::vec2, 6> rectVertices = {
@@ -70,6 +73,19 @@ class TestRectangles : public Test, public WindowListener {
 
   std::vector<glm::vec2> mediumRectPositions_;
   std::vector<GLfloat> mediumRectAngles_;
+
+  // Helper to return random number within range of: 0.0 - 1.0
+  std::default_random_engine gen{std::random_device{}()};
+  auto genRandom() -> GLfloat {
+    std::uniform_real_distribution<GLfloat> dist(0.0F, 1.0F);
+    return dist(gen);
+  }
+  // Spawn rectangle with random positions & away from given target
+  // For now, we only specify whether the rectangle is small or not
+  void spawnReact(const bool& small, const glm::vec2& target = {0.0F, 0.0F});
+
+  void setVBPositions();
+  void setVBAngles();
 };
 
 }  // namespace test

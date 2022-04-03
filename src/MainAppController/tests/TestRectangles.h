@@ -43,6 +43,7 @@ class TestRectangles : public Test, public WindowListener {
   std::unique_ptr<VertexBuffer> vbRectAngles_;
   std::unique_ptr<Shader> shaderRect_ = std::make_unique<Shader>("test_rectangles.shader");
 
+  bool usePolygons_{false};
   bool useThreads_{false};
   void onThreadedUpdate(float dt);
 

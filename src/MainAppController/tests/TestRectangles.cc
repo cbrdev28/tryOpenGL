@@ -5,6 +5,7 @@
 #include <chrono>
 
 #include "VertexBufferLayout.h"
+#include "openGLErrorHelpers.h"
 
 namespace test {
 
@@ -47,8 +48,6 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   vbRectPositions_->unBind();
   vbRectVertices_->unBind();
   shaderRect_->unBind();
-
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 TestRectangles::~TestRectangles() { this->getTestContext().windowManager->removeWindowListener(this); }
@@ -70,6 +69,12 @@ void TestRectangles::onUpdate(float deltaTime) {
 }
 
 void TestRectangles::onRender() {
+  if (usePolygons_) {
+    GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+  } else {
+    GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+  }
+
   renderer_.clearColorBackground(backgroundColor_.at(0), backgroundColor_.at(1), backgroundColor_.at(2),
                                  backgroundColor_.at(3));
   renderer_.drawInstance(*shaderRect_, *vaRect_, static_cast<GLsizei>(rectVertices.size()), this->currentRectCount());
@@ -95,6 +100,7 @@ void TestRectangles::onImGuiRender() {
 
   ImGui::NewLine();
   ImGui::Checkbox("Use threads", &useThreads_);
+  ImGui::Checkbox("Set polygon", &usePolygons_);
 
   ImGui::NewLine();
   ImGui::Text("Small pos: %zu", smallRectPositions_.size());

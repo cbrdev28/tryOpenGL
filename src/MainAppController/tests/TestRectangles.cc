@@ -133,13 +133,25 @@ void TestRectangles::onImGuiRender() {
   }
 }
 
-void TestRectangles::onKeyADown() {}
+void TestRectangles::onKeyADown() {
+  mainSquaresPositions_.at(0).x -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  this->setVBPositions();
+}
 
-void TestRectangles::onKeyWDown() {}
+void TestRectangles::onKeyWDown() {
+  mainSquaresPositions_.at(0).y += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  this->setVBPositions();
+}
 
-void TestRectangles::onKeySDown() {}
+void TestRectangles::onKeySDown() {
+  mainSquaresPositions_.at(0).y -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  this->setVBPositions();
+}
 
-void TestRectangles::onKeyDDown() {}
+void TestRectangles::onKeyDDown() {
+  mainSquaresPositions_.at(0).x += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  this->setVBPositions();
+}
 
 void TestRectangles::onThreadedUpdate(float dt) {
   // auto threadPool = this->getTestContext().threadPoolManager;

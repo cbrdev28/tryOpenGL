@@ -93,11 +93,6 @@ struct InstancedTriangle {
     zRotationAngles.emplace_back(0.0F);
   }
 
-  void popTriangle() {
-    positions.pop_back();
-    zRotationAngles.pop_back();
-  }
-
   void eraseTriangle(unsigned int index) {
     positions.erase(positions.begin() + index);
     zRotationAngles.erase(zRotationAngles.begin() + index);

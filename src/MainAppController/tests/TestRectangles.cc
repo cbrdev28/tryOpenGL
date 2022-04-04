@@ -77,13 +77,8 @@ void TestRectangles::onUpdate(float deltaTime) {
   if (useThreads_) {
     onThreadedUpdate(deltaTime);
   } else {
-    for (auto& smallRectAngle : smallRectAngles_) {
-      smallRectAngle += TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
-    }
-    for (auto& mediumRectAngle : mediumRectAngles_) {
-      mediumRectAngle -= TestRectangles::kRotationAngle * TestRectangles::kRotationSpeed * deltaTime;
-    }
-    this->setVBAngles();
+    // Main thread updates
+    this->moveRectsToMainSquare();
   }
 }
 
@@ -134,25 +129,25 @@ void TestRectangles::onImGuiRender() {
 }
 
 void TestRectangles::onKeyADown() {
-  mainSquaresPositions_.at(0).x -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  mainSquaresPositions_.at(0).x -= 1.0F * TestRectangles::kMainSquareMoveSpeed * deltaTime_;
   this->setVBPositions();
   this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeyWDown() {
-  mainSquaresPositions_.at(0).y += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  mainSquaresPositions_.at(0).y += 1.0F * TestRectangles::kMainSquareMoveSpeed * deltaTime_;
   this->setVBPositions();
   this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeySDown() {
-  mainSquaresPositions_.at(0).y -= 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  mainSquaresPositions_.at(0).y -= 1.0F * TestRectangles::kMainSquareMoveSpeed * deltaTime_;
   this->setVBPositions();
   this->mainSquareCollisionRect();
 }
 
 void TestRectangles::onKeyDDown() {
-  mainSquaresPositions_.at(0).x += 1.0F * TestRectangles::kMoveSpeed * deltaTime_;
+  mainSquaresPositions_.at(0).x += 1.0F * TestRectangles::kMainSquareMoveSpeed * deltaTime_;
   this->setVBPositions();
   this->mainSquareCollisionRect();
 }
@@ -191,7 +186,7 @@ void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
     ASSERT(mediumRectPositions_.size() < TestRectangles::kMaxMediumRect);
     mediumRectPositions_.emplace_back(randomPosX, randomPosY);
     mediumRectAngles_.emplace_back(0.0F);
-    mediumRectScales_.emplace_back(1.5F, 3.0F);
+    mediumRectScales_.emplace_back(3.0F, 1.5F);
   }
 
   this->setVBPositions();
@@ -287,6 +282,28 @@ void TestRectangles::mainSquareCollisionRect() {
   this->setVBPositions();
   this->setVBAngles();
   this->setVBScales();
+}
+
+void TestRectangles::moveRectsToMainSquare() {
+  for (auto& smallRectPos : smallRectPositions_) {
+    glm::vec2 direction =
+        glm::vec2(smallRectPos.x - mainSquaresPositions_.at(0).x, smallRectPos.y - mainSquaresPositions_.at(0).y);
+
+    if (glm::abs(direction.x) > 0 || glm::abs(direction.y) > 0) {
+      smallRectPos -= glm::normalize(direction) * TestRectangles::kRectMoveSpeed * deltaTime_;
+    }
+  }
+
+  for (auto& mediumRectPos : mediumRectPositions_) {
+    glm::vec2 direction =
+        glm::vec2(mediumRectPos.x - mainSquaresPositions_.at(0).x, mediumRectPos.y - mainSquaresPositions_.at(0).y);
+
+    if (glm::abs(direction.x) > 0 || glm::abs(direction.y) > 0) {
+      mediumRectPos -= glm::normalize(direction) * TestRectangles::kRectMoveSpeed * deltaTime_;
+    }
+  }
+  // Check for collisions?
+  setVBPositions();
 }
 
 }  // namespace test

@@ -59,7 +59,8 @@ class TestRectangles : public Test, public WindowListener {
   static constexpr GLsizei kMaxRect = kMaxSmallRect + kMaxMediumRect + kMaxMainSquares;
   static constexpr GLfloat kRotationSpeed = 100.0F;
   static constexpr GLfloat kRotationAngle = glm::radians(1.0F);
-  static constexpr GLfloat kMoveSpeed = 1.0F;
+  static constexpr GLfloat kMainSquareMoveSpeed = 1.0F;
+  static constexpr GLfloat kRectMoveSpeed = 0.3F;
 
   static constexpr GLfloat kRectangleSize = 0.05F;
   std::array<glm::vec2, 6> rectVertices = {
@@ -136,6 +137,8 @@ class TestRectangles : public Test, public WindowListener {
     }
     return true;
   }
+
+  void moveRectsToMainSquare();
 };
 
 }  // namespace test

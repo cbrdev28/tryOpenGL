@@ -162,47 +162,6 @@ void TestRectangles::onThreadedUpdate(float dt) {
   // Do something with threads
 }
 
-void TestRectangles::mainSquareCollisionRect() {
-  const auto squareTopLeft = glm::vec2(mainSquaresPositions_.at(0).x - TestRectangles::kRectangleSize,
-                                       mainSquaresPositions_.at(0).y + TestRectangles::kRectangleSize);
-  const auto squareBottomRight = glm::vec2(mainSquaresPositions_.at(0).x + TestRectangles::kRectangleSize,
-                                           mainSquaresPositions_.at(0).y - TestRectangles::kRectangleSize);
-
-  for (unsigned int i = 0; i < smallRectPositions_.size(); ++i) {
-    const auto& smallRectPos = smallRectPositions_.at(i);
-    if (smallRectPos.x >= squareTopLeft.x && smallRectPos.x <= squareBottomRight.x &&
-        smallRectPos.y <= squareTopLeft.y && smallRectPos.y >= squareBottomRight.y) {
-      // Collision with small rectangle!
-      // TODO(cbr): store indexes & erase them AFTER the loop?
-      smallRectPositions_.erase(smallRectPositions_.begin() + i);
-      smallRectAngles_.erase(smallRectAngles_.begin() + i);
-      smallRectScales_.erase(smallRectScales_.begin() + i);
-      // For now we stop when found the first collision
-      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
-      break;
-    }
-  }
-
-  for (unsigned int i = 0; i < mediumRectPositions_.size(); ++i) {
-    const auto& mediumRectPos = mediumRectPositions_.at(i);
-    if (mediumRectPos.x >= squareTopLeft.x && mediumRectPos.x <= squareBottomRight.x &&
-        mediumRectPos.y <= squareTopLeft.y && mediumRectPos.y >= squareBottomRight.y) {
-      // Collision with medium rectangle!
-      // TODO(cbr): store indexes & erase them AFTER the loop?
-      mediumRectPositions_.erase(mediumRectPositions_.begin() + i);
-      mediumRectAngles_.erase(mediumRectAngles_.begin() + i);
-      mediumRectScales_.erase(mediumRectScales_.begin() + i);
-      // For now we stop when found the first collision
-      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
-      break;
-    }
-  }
-
-  this->setVBPositions();
-  this->setVBAngles();
-  this->setVBScales();
-}
-
 void TestRectangles::spawnReact(const bool& small, const glm::vec2& target) {
   ASSERT(this->currentRectCount() < TestRectangles::kMaxRect);
   // Random positions between: -0.9 & 0.9
@@ -280,6 +239,54 @@ void TestRectangles::setVBScales() {
                                        static_cast<GLintptr>(sizeof(glm::vec2) * smallRectScales_.size()) +
                                            static_cast<GLintptr>(sizeof(glm::vec2) * mediumRectScales_.size()));
   vbRectScales_->unBind();
+}
+
+void TestRectangles::mainSquareCollisionRect() {
+  const auto mainSquareTopLeft = glm::vec2(mainSquaresPositions_.at(0).x - TestRectangles::kRectangleSize,
+                                           mainSquaresPositions_.at(0).y + TestRectangles::kRectangleSize);
+  const auto mainSquareBottomRight = glm::vec2(mainSquaresPositions_.at(0).x + TestRectangles::kRectangleSize,
+                                               mainSquaresPositions_.at(0).y - TestRectangles::kRectangleSize);
+
+  for (unsigned int i = 0; i < smallRectPositions_.size(); ++i) {
+    const auto& smallRectPos = smallRectPositions_.at(i);
+    const auto smallRectTopLeft =
+        glm::vec2(smallRectPos.x - TestRectangles::kRectangleSize, smallRectPos.y + TestRectangles::kRectangleSize);
+    const auto smallRectBottomRight =
+        glm::vec2(smallRectPos.x + TestRectangles::kRectangleSize, smallRectPos.y - TestRectangles::kRectangleSize);
+
+    const bool collision =
+        rectCollision(mainSquareTopLeft, mainSquareBottomRight, smallRectTopLeft, smallRectBottomRight);
+
+    if (collision) {
+      // Erase small rect
+      this->eraseReact(true, i);
+      // Grow main square
+      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
+      return;
+    }
+  }
+  for (unsigned int i = 0; i < mediumRectPositions_.size(); ++i) {
+    const auto& mediumRectPos = mediumRectPositions_.at(i);
+    // Make a top left & bottom right to use `rectCollision`
+    const auto mediumRectTopLeft =
+        glm::vec2(mediumRectPos.x - TestRectangles::kRectangleSize, mediumRectPos.y + TestRectangles::kRectangleSize);
+    const auto mediumRectBottomRight =
+        glm::vec2(mediumRectPos.x + TestRectangles::kRectangleSize, mediumRectPos.y - TestRectangles::kRectangleSize);
+
+    const bool collision =
+        rectCollision(mainSquareTopLeft, mainSquareBottomRight, mediumRectTopLeft, mediumRectBottomRight);
+
+    if (collision) {
+      // Erase medium rect
+      this->eraseReact(false, i);
+      // Grow main square
+      mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
+      return;
+    }
+  }
+  this->setVBPositions();
+  this->setVBAngles();
+  this->setVBScales();
 }
 
 }  // namespace test

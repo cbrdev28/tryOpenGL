@@ -83,7 +83,6 @@ class TestRectangles : public Test, public WindowListener {
   std::vector<glm::vec2> mainSquaresPositions_;
   std::vector<GLfloat> mainSquaresAngles_;
   std::vector<glm::vec2> mainSquaresScales_;
-  void mainSquareCollisionRect();
 
   // Helper
   inline auto currentRectCount() -> GLsizei {
@@ -100,10 +99,43 @@ class TestRectangles : public Test, public WindowListener {
   // Spawn rectangle with random positions & away from given target
   // For now, we only specify whether the rectangle is small or not
   void spawnReact(const bool& small, const glm::vec2& target = {0.0F, 0.0F});
+  inline void eraseReact(const bool& small, const unsigned int& index) {
+    if (small) {
+      smallRectPositions_.erase(smallRectPositions_.begin() + index);
+      smallRectAngles_.erase(smallRectAngles_.begin() + index);
+      smallRectScales_.erase(smallRectScales_.begin() + index);
+    } else {
+      mediumRectPositions_.erase(mediumRectPositions_.begin() + index);
+      mediumRectAngles_.erase(mediumRectAngles_.begin() + index);
+      mediumRectScales_.erase(mediumRectScales_.begin() + index);
+    }
+  }
 
   void setVBPositions();
   void setVBAngles();
   void setVBScales();
+
+  void mainSquareCollisionRect();
+
+  static auto rectCollision(const glm::vec2& rect1TopLeft, const glm::vec2& rect1BottomRight,
+                            const glm::vec2& rect2TopLeft, const glm::vec2& rect2BottomRight) -> bool {
+    // From:
+    // https://www.geeksforgeeks.org/find-two-rectangles-overlap/
+    // Apparently we need to return false if the given rectangles are lines
+    if (rect1TopLeft.x == rect1BottomRight.x || rect1TopLeft.y == rect1BottomRight.y ||
+        rect2TopLeft.x == rect2BottomRight.x || rect2TopLeft.y == rect2BottomRight.y) {
+      return false;
+    }
+    // If one rectangle is on left side of other
+    if (rect1TopLeft.x >= rect2BottomRight.x || rect2TopLeft.x >= rect1BottomRight.x) {
+      return false;
+    }
+    // If one rectangle is above other
+    if (rect1BottomRight.y >= rect2TopLeft.y || rect2BottomRight.y >= rect1TopLeft.y) {
+      return false;
+    }
+    return true;
+  }
 };
 
 }  // namespace test

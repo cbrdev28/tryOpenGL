@@ -262,7 +262,7 @@ void TestRectangles::mainSquareCollisionRect() {
       this->eraseReact(true, i);
       // Grow main square
       mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
-      return;
+      break;
     }
   }
   for (unsigned int i = 0; i < mediumRectPositions_.size(); ++i) {
@@ -281,7 +281,7 @@ void TestRectangles::mainSquareCollisionRect() {
       this->eraseReact(false, i);
       // Grow main square
       mainSquaresScales_.at(0) += glm::vec2(0.2F, 0.2F);
-      return;
+      break;
     }
   }
   this->setVBPositions();

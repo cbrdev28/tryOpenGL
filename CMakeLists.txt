@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(tryOpenGL)
+project(tryOpenGL VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,6 +39,7 @@ target_link_libraries(
     MainAppController
 )
 
+# Copy resources
 # configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 
 # configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -47,6 +48,7 @@ target_link_libraries(
 # Install steps
 install(TARGETS tryOpenGL DESTINATION bin)
 
+# Install resources
 # install(FILES "res/shaders/test_rectangles.shader" DESTINATION bin)
 
 # install(FILES "res/textures/grass.png" DESTINATION bin)
@@ -57,3 +59,12 @@ enable_testing()
 
 # Enable/Disable this test to run the program
 add_test(NAME Runs COMMAND tryOpenGL)
+
+# Enable packaging with CPack
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${tryOpenGL_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${tryOpenGL_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${tryOpenGL_VERSION_PATCH}")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+include(CPack)

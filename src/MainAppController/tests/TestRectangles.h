@@ -56,21 +56,21 @@ class TestRectangles : public Test, public WindowListener {
   static constexpr GLsizei kMaxSmallRect = 1000;
   static constexpr GLsizei kMaxMediumRect = 100;
   static constexpr GLsizei kMaxMainSquares = 1;
-  static constexpr GLsizei kMaxRect = kMaxSmallRect + kMaxMediumRect + kMaxMainSquares;
-  static constexpr GLfloat kRotationSpeed = 100.0F;
+  static constexpr GLsizei kMaxTinySquares = 8;
+  static constexpr GLsizei kMaxRect = kMaxSmallRect + kMaxMediumRect + kMaxMainSquares + kMaxTinySquares;
   static constexpr GLfloat kRotationAngle = glm::radians(1.0F);
   static constexpr GLfloat kMainSquareMoveSpeed = 1.0F;
   static constexpr GLfloat kRectMoveSpeed = 0.3F;
+  static constexpr GLfloat kTinySquaresMoveSpeed = 0.3F;
 
   static constexpr GLfloat kRectangleSize = 0.05F;
+  static constexpr GLfloat kHalfRectangleSize = kRectangleSize / 2.0F;
   std::array<glm::vec2, 6> rectVertices = {
-      glm::vec2(-kRectangleSize / 2.0F, -kRectangleSize / 2.0F),
-      glm::vec2(kRectangleSize / 2.0F, -kRectangleSize / 2.0F),
-      glm::vec2(kRectangleSize / 2.0F, kRectangleSize / 2.0F),
+      glm::vec2(-kHalfRectangleSize, -kHalfRectangleSize), glm::vec2(kHalfRectangleSize, -kHalfRectangleSize),
+      glm::vec2(kHalfRectangleSize, kHalfRectangleSize),
 
-      glm::vec2(kRectangleSize / 2.0F, kRectangleSize / 2.0F),
-      glm::vec2(-kRectangleSize / 2.0F, kRectangleSize / 2.0F),
-      glm::vec2(-kRectangleSize / 2.0F, -kRectangleSize / 2.0F),
+      glm::vec2(kHalfRectangleSize, kHalfRectangleSize),   glm::vec2(-kHalfRectangleSize, kHalfRectangleSize),
+      glm::vec2(-kHalfRectangleSize, -kHalfRectangleSize),
   };
 
   std::vector<glm::vec2> smallRectPositions_;
@@ -85,10 +85,14 @@ class TestRectangles : public Test, public WindowListener {
   std::vector<GLfloat> mainSquaresAngles_;
   std::vector<glm::vec2> mainSquaresScales_;
 
+  std::vector<glm::vec2> tinySquaresPositions_;
+  std::vector<GLfloat> tinySquaresAngles_;
+  std::vector<glm::vec2> tinySquaresScales_;
+
   // Helper
   inline auto currentRectCount() -> GLsizei {
     return static_cast<GLsizei>(smallRectPositions_.size() + mediumRectPositions_.size() +
-                                mainSquaresPositions_.size());
+                                mainSquaresPositions_.size() + tinySquaresPositions_.size());
   }
 
   // Helper to return random number within range of: 0.0 - 1.0

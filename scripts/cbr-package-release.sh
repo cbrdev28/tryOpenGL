@@ -14,6 +14,8 @@ pushd ${SCRIPT_DIR}
 popd
 
 pushd ${BUILD_DIR}
-cpack -C Release
 cpack -G ZIP -C Release
+
+# Only on Mac
+# cpack -C Release
 popd

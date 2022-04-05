@@ -13,9 +13,6 @@ add_library(
     "managers/ImGuiManager.cc"
     "managers/ThreadPoolManager.cc"
     "managers/WindowManager.cc"
-    "tests/TestInstanceTriangle.cc"
-    "tests/TestRectangles.cc"
-    "tests/TestSquareWithTriangles.cc"
     "tests/TestMenu.cc"
 )
 

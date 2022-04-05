@@ -26,6 +26,10 @@ TestRectangles::TestRectangles(const TestContext& ctx) : Test(ctx) {
   mainSquaresAngles_.emplace_back(glm::radians(0.0F));
   mainSquaresScales_.emplace_back(1.0F, 1.0F);
 
+  tinySquaresPositions_.reserve(TestRectangles::kMaxTinySquares);
+  tinySquaresAngles_.reserve(TestRectangles::kMaxTinySquares);
+  tinySquaresScales_.reserve(TestRectangles::kMaxTinySquares);
+
   vbRectVertices_ = std::make_unique<VertexBuffer>(rectVertices.data(), sizeof(rectVertices));
   vbRectPositions_ = std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * kMaxRect, GL_STREAM_DRAW);
   vbRectAngles_ = std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * kMaxRect, GL_STREAM_DRAW);
@@ -79,6 +83,7 @@ void TestRectangles::onUpdate(float deltaTime) {
   } else {
     // Main thread updates
     this->moveRectsToMainSquare();
+    this->moveTinySquares();
   }
 }
 
@@ -125,6 +130,12 @@ void TestRectangles::onImGuiRender() {
   }
   if (ImGui::Button("Spawn medium")) {
     this->spawnReact(false, mainSquaresPositions_.at(0));
+  }
+
+  ImGui::NewLine();
+  ImGui::Text("Tiny count: %zu", tinySquaresPositions_.size());
+  if (ImGui::Button("Spawn tiny")) {
+    this->spawnTinySquares();
   }
 }
 
@@ -206,6 +217,10 @@ void TestRectangles::setVBPositions() {
   offset += sizeToSend;
   sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * mainSquaresPositions_.size());
   vbRectPositions_->setInstanceDataOffset(mainSquaresPositions_.data(), sizeToSend, offset);
+
+  offset += sizeToSend;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * tinySquaresPositions_.size());
+  vbRectPositions_->setInstanceDataOffset(tinySquaresPositions_.data(), sizeToSend, offset);
   vbRectPositions_->unBind();
 }
 
@@ -221,6 +236,10 @@ void TestRectangles::setVBAngles() {
   offset += sizeToSend;
   sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * mainSquaresAngles_.size());
   vbRectAngles_->setInstanceDataOffset(mainSquaresAngles_.data(), sizeToSend, offset);
+
+  offset += sizeToSend;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * tinySquaresAngles_.size());
+  vbRectAngles_->setInstanceDataOffset(tinySquaresAngles_.data(), sizeToSend, offset);
   vbRectAngles_->unBind();
 }
 
@@ -236,6 +255,10 @@ void TestRectangles::setVBScales() {
   offset += sizeToSend;
   sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * mainSquaresScales_.size());
   vbRectScales_->setInstanceDataOffset(mainSquaresScales_.data(), sizeToSend, offset);
+
+  offset += sizeToSend;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * tinySquaresScales_.size());
+  vbRectScales_->setInstanceDataOffset(tinySquaresScales_.data(), sizeToSend, offset);
   vbRectScales_->unBind();
 }
 
@@ -307,6 +330,51 @@ void TestRectangles::moveRectsToMainSquare() {
   }
   // Check for collisions?
   setVBPositions();
+  // Risky not to update ALL buffers!
+}
+
+void TestRectangles::spawnTinySquares() {
+  // Experimental
+  tinySquaresPositions_.emplace_back(mainSquaresPositions_.at(0) + glm::vec2(-1.0F * 0.1F, 0.0F));
+  tinySquaresPositions_.emplace_back(mainSquaresPositions_.at(0) + glm::vec2(-1.0F, 1.0F) * 0.1F);
+  tinySquaresPositions_.emplace_back(mainSquaresPositions_.at(0) + glm::vec2(0.0F, 1.0F * 0.1F));
+  tinySquaresPositions_.emplace_back(mainSquaresPositions_.at(0) + glm::vec2(1.0F, 1.0F) * 0.1F);
+
+  for (unsigned int i = 0; i < 4; ++i) {
+    tinySquaresAngles_.emplace_back(glm::radians(45.0F));
+    tinySquaresScales_.emplace_back(0.5F, 0.5F);
+  }
+
+  this->setVBPositions();
+  this->setVBAngles();
+  this->setVBScales();
+}
+
+void TestRectangles::moveTinySquares() {
+  if (tinySquaresPositions_.empty()) {
+    return;
+  }
+  // Experimental
+  std::array<glm::vec2, 4> directions = {glm::vec2(-1.0F, 1.0F), glm::vec2(1.0F, 1.0F), glm::vec2(-1.0F, -1.0F),
+                                         glm::vec2(1.0F, -1.0F)};
+
+  for (unsigned int i = 0; i < tinySquaresPositions_.size(); ++i) {
+    const auto direction = directions.at(i % 4);
+    auto& tinySquarePos = tinySquaresPositions_.at(i);
+    tinySquarePos += direction * TestRectangles::kTinySquaresMoveSpeed * deltaTime_;
+
+    if (glm::abs(tinySquarePos.x) > 0.5F || glm::abs(tinySquarePos.y) > 0.5F) {
+      // TODO(cbr): make a function
+      // TODO(cbr): figure out how to delete stuff without break (same for collisions)
+      tinySquaresPositions_.erase(tinySquaresPositions_.begin() + i);
+      tinySquaresAngles_.erase(tinySquaresAngles_.begin() + i);
+      tinySquaresScales_.erase(tinySquaresScales_.begin() + i);
+      break;
+    }
+  }
+  this->setVBPositions();
+  this->setVBAngles();
+  this->setVBScales();
 }
 
 }  // namespace test

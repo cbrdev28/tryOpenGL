@@ -143,6 +143,8 @@ class TestRectangles : public Test, public WindowListener {
   }
 
   void moveRectsToMainSquare();
+  void spawnTinySquares();
+  void moveTinySquares();
 };
 
 }  // namespace test

@@ -111,7 +111,8 @@ void TestInstanceTriangle::onImGuiRender() {
 
 void TestInstanceTriangle::addTriangleInstance(int count) {
   for (int i = 0; i < count; ++i) {
-    instancedTriangle_->addTriangle();
+    // instancedTriangle_->addTriangle();
+    instancedTriangle_->spawnTriangle({0.0F, 0.0F});
   }
 
   vbModelPositions2_->setInstanceData(instancedTriangle_->positions.data(), instancedTriangle_->positionsGLSize(),

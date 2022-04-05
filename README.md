@@ -9,6 +9,7 @@ I will use this README as a runbook for now, to describe pretty much all the ste
 ### Dependencies
 
 - Install [msys2](https://www.msys2.org/)
+
   - Download their installer and follow their instructions
   - This is the terminal we will use: **MSYS2 MinGW x64**
   - Complete the setup with the commands they mention:
@@ -29,6 +30,7 @@ I will use this README as a runbook for now, to describe pretty much all the ste
     - `gdb --version`
 
 - Install [VS Code](https://code.visualstudio.com/)
+
   - Install the [C++ VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
   - Enable the **MSYS2 MinGW x64** terminal in VS Code:
     - Open your user config file for VS Code: `settings.json`
@@ -47,6 +49,7 @@ I will use this README as a runbook for now, to describe pretty much all the ste
     - Now by default, the terminal in VS Code should be our favorite **MSYS2 MinGW x64**, where we can run commands
 
 - Git setup
+
   - Install [git](https://packages.msys2.org/package/git)
     - `pacman -S git`
     - Verify with: `git --version`
@@ -58,12 +61,14 @@ I will use this README as a runbook for now, to describe pretty much all the ste
       - Run the command: `ssh-keygen -t ed25519 -C "your-email@mail.com"`
       - And follow the instructions from the github tutorial linked above to add your ssh key
   - Make sure VS Code can find git, open your `settings.json` and add:
+
   ```json
   "git.enabled": true,
   "git.path": "C:\\msys64\\usr\\bin\\git.exe"
   ```
 
 - Install [cmake](https://www.msys2.org/docs/cmake/)
+
   - `pacman -S mingw-w64-x86_64-cmake`
   - `pacman -S mingw-w64-x86_64-ninja`
   - Verify with: `cmake --version`
@@ -148,9 +153,11 @@ NOTE: I updated our `CMakeLists.txt` and added some scripts under `./scripts/`. 
 
 MSYS2 installs some binaries in a different folder than the one set in our environment variables (see beginning of this document).
 For example, VS Code (or Visual Studio) are not able to find `git`. I fixed this by:
+
 - Adding the following path `C:\msys64\usr\bin` to my users environment variables
 
 VS Code extensions I ended up using:
+
 - [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
 - [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd)
 - [CMake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake)
@@ -158,37 +165,62 @@ VS Code extensions I ended up using:
 - [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
 
 Dump of my `settings.json`:
+
 ```json
 {
-    "terminal.integrated.profiles.windows": {
-        "MSYS2 MinGW x64": {
-            "path": "C:/msys64/usr/bin/bash.exe",
-            "args": ["--login"],
-            "env": {"MSYSTEM": "MINGW64"}
-        },
-    },
-    "terminal.integrated.defaultProfile.windows": "MSYS2 MinGW x64",
-    "git.path": "C:\\msys64\\usr\\bin\\git.exe",
-    "git.enabled": true,
-    "[cpp]": {
-        "editor.formatOnSave": true
-    },
-    "cSpell.userWords": [
-        "Cherno",
-        "Glfw",
-        "IMGUI",
-        "Lclampf",
-        "Lsizei",
-        "NOLINTNEXTLINE",
-        "OPENGL",
-        "Programiv",
-        "stbi"
-    ],
-    "cmake.configureOnOpen": false,
-    "cmake.configureOnEdit": false,
-    "editor.renderWhitespace": "all",
-    "editor.fontFamily": "Cascadia mono, Consolas, 'Courier New', monospace",
-    "C_Cpp.intelliSenseEngine": "Disabled"
+  "terminal.integrated.profiles.windows": {
+    "MSYS2 MinGW x64": {
+      "path": "C:/msys64/usr/bin/bash.exe",
+      "args": ["--login"],
+      "env": { "MSYSTEM": "MINGW64" }
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "MSYS2 MinGW x64",
+  "git.path": "C:\\msys64\\usr\\bin\\git.exe",
+  "git.enabled": true,
+  "[cpp]": {
+    "editor.formatOnSave": true
+  },
+  "cSpell.userWords": [
+    "Cherno",
+    "Glfw",
+    "IMGUI",
+    "Lclampf",
+    "Lsizei",
+    "NOLINTNEXTLINE",
+    "OPENGL",
+    "Programiv",
+    "stbi"
+  ],
+  "cmake.configureOnOpen": false,
+  "cmake.configureOnEdit": false,
+  "editor.renderWhitespace": "all",
+  "editor.fontFamily": "Cascadia mono, Consolas, 'Courier New', monospace",
+  "C_Cpp.intelliSenseEngine": "Disabled"
 }
+```
 
+### Installing ctidy on Mac
+
+References/Links:
+
+- https://gist.github.com/sleepdefic1t/e9bdb1a66b05aa043ab9a2ab6c929509
+- https://stackoverflow.com/questions/53111082/how-to-install-clang-tidy-on-macos
+
+Instead we need to use `llvm` which is available from `brew`:
+
+```bash
+brew install llvm
+ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format"
+ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
+ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
+```
+
+### Trying Xcode
+
+To generate the Xcode project:
+
+```bash
+cd build/
+cmake -G Xcode ../
 ```

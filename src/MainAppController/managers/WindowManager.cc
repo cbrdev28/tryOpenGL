@@ -30,9 +30,9 @@ void WindowManager::init() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  #ifdef CBR_APPLE
+#ifdef CBR_APPLE
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  #endif
+#endif
 
   glfwSetErrorCallback(WindowManager::errorCallback);
 
@@ -64,6 +64,29 @@ void WindowManager::updateWindowStats() {
       std::chrono::duration_cast<std::chrono::duration<float>>(nowTime - windowStats_.endTime);
   windowStats_.endTime = nowTime;
   ++windowStats_.frameCount;
+}
+
+void WindowManager::processKeyInput() {
+  if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyADown();
+    }
+  }
+  if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyWDown();
+    }
+  }
+  if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeySDown();
+    }
+  }
+  if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
+    for (auto& listener : listeners_) {
+      listener->onKeyDDown();
+    }
+  }
 }
 
 void WindowManager::framebufferSizeCallback(int width, int height) {

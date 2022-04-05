@@ -6,6 +6,8 @@
 #include <fmt/core.h>
 
 #include "TestInstanceTriangle.h"
+#include "TestRectangles.h"
+#include "TestSquareWithTriangles.h"
 
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");
@@ -27,6 +29,8 @@ auto MainAppController::init() -> int {
     imGuiManager_->init();
 
     testMenu_->registerTest<test::TestInstanceTriangle>("Test Instance Triangle");
+    testMenu_->registerTest<test::TestSquareWithTriangles>("Test Square & Triangles");
+    testMenu_->registerTest<test::TestRectangles>("Test Rectangles");
   } catch (int error) {
     return -1;
   }
@@ -39,6 +43,7 @@ auto MainAppController::renderLoop() -> void {
   GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {
     windowManager_->updateWindowStats();
+    windowManager_->processKeyInput();
     renderer_.clear();
 
     imGuiManager_->renderFrame();

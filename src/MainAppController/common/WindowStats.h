@@ -1,8 +1,6 @@
 #ifndef WINDOW_STATS_H_
 #define WINDOW_STATS_H_
 
-#include <chrono>
-
 struct WindowStats {
   unsigned int frameCount = 0;
   std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();

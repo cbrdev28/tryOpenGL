@@ -1,10 +1,6 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include <string>
-
-#include "openGLHeaders.h"
-
 class Texture {
  private:
   GLuint identifier_{0};

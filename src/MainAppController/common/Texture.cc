@@ -1,7 +1,5 @@
 #include "Texture.h"
 
-#include <stb_image.h>
-
 #include "openGLErrorHelpers.h"
 
 Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {

@@ -1,7 +1,5 @@
 #include "openGLErrorHelpers.h"
 
-#include "openGLHeaders.h"
-
 /**
  * GL Error helpers
  */

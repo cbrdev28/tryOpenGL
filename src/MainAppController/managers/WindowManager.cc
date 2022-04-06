@@ -3,8 +3,6 @@
  */
 #include "WindowManager.h"
 
-#include <chrono>
-
 #include "openGLErrorHelpers.h"
 
 WindowManager::~WindowManager() {

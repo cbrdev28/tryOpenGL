@@ -8,7 +8,6 @@ add_library(
     cbrpch.h
     cbrpch.cc
     "common/AspectRatio.h"
-    "common/glmHeaders.h"
     "common/IndexBuffer.cc"
     "common/IndexBuffer.h"
     "common/Renderer.cc"

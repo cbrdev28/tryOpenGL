@@ -1,8 +1,6 @@
 #ifndef MAIN_APP_CONTROLLER_H_
 #define MAIN_APP_CONTROLLER_H_
 
-#include <memory>
-
 #include "ImGuiManager.h"
 #include "Renderer.h"
 #include "TestContext.h"

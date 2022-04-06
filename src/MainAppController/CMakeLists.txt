@@ -20,7 +20,7 @@ target_include_directories(
     MainAppController
     SYSTEM
     PRIVATE
-    "lib/include"
+    "lib"
 )
 
 target_include_directories(
@@ -39,3 +39,6 @@ target_link_libraries(
     PUBLIC
     ExternalLibraries
 )
+
+install(TARGETS MainAppController DESTINATION lib)
+install(FILES MainAppController.h DESTINATION include)

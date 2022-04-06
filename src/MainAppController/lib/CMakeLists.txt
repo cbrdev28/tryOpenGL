@@ -90,3 +90,7 @@ target_link_libraries(
     glm
     imgui
 )
+
+install(TARGETS ExternalLibraries DESTINATION lib)
+install(DIRECTORY "glad/include/" DESTINATION include)
+install(DIRECTORY "stb_image/" DESTINATION include)

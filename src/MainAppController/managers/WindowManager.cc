@@ -3,8 +3,6 @@
  */
 #include "WindowManager.h"
 
-#include <fmt/core.h>
-
 #include <chrono>
 
 #include "openGLErrorHelpers.h"

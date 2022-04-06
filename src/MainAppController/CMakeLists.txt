@@ -5,6 +5,8 @@ add_library(
     STATIC
     MainAppController.cc
     MainAppController.h
+    cbrpch.h
+    cbrpch.cc
     "common/AspectRatio.h"
     "common/glmHeaders.h"
     "common/IndexBuffer.cc"
@@ -62,6 +64,8 @@ target_link_libraries(
     # PUBLIC
     ExternalLibraries
 )
+
+target_precompile_headers(MainAppController PUBLIC cbrpch.h)
 
 # Apple doesn't have some static lib, like: ctr0.o
 # So we only add static linking on Windows, for now...

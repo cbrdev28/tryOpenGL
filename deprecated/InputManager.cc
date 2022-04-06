@@ -3,7 +3,6 @@
  */
 #include "InputManager.h"
 
-#include <fmt/core.h>
 #include <fmt/format.h>
 
 InputManager::InputManager(WindowManager& windowManager) : windowManager_(windowManager) {

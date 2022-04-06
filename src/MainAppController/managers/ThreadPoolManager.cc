@@ -1,7 +1,5 @@
 #include "ThreadPoolManager.h"
 
-#include <fmt/core.h>
-
 ThreadPoolManager::ThreadPoolManager() {
   auto maxThreads = std::thread::hardware_concurrency();
   fmt::print("Reserving {} threads\n", maxThreads);

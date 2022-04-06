@@ -3,40 +3,41 @@ add_subdirectory("lib")
 add_library(
     MainAppController
     STATIC
-    MainAppController.cc
-    MainAppController.h
-    cbrpch.h
     cbrpch.cc
-    "common/AspectRatio.h"
+    # cbrpch.h
+    MainAppController.cc
+    # MainAppController.h
+
+    # "common/AspectRatio.h"
     "common/IndexBuffer.cc"
-    "common/IndexBuffer.h"
+    # "common/IndexBuffer.h"
     "common/Renderer.cc"
-    "common/Renderer.h"
+    # "common/Renderer.h"
     "common/Shader.cc"
-    "common/Shader.h"
+    # "common/Shader.h"
     "common/Texture.cc"
-    "common/Texture.h"
+    # "common/Texture.h"
     "common/VertexArray.cc"
-    "common/VertexArray.h"
+    # "common/VertexArray.h"
     "common/VertexBuffer.cc"
-    "common/VertexBuffer.h"
-    "common/VertexBufferElement.h"
-    "common/VertexBufferLayout.h"
-    "common/WindowStats.h"
+    # "common/VertexBuffer.h"
+    # "common/VertexBufferElement.h"
+    # "common/VertexBufferLayout.h"
+    # "common/WindowStats.h"
     "helpers/openGLErrorHelpers.cc"
-    "helpers/openGLErrorHelpers.h"
-    "listeners/WindowListener.h"
+    # "helpers/openGLErrorHelpers.h"
+    # "listeners/WindowListener.h"
     "managers/ImGuiManager.cc"
-    "managers/ImGuiManager.h"
+    # "managers/ImGuiManager.h"
     "managers/ThreadPoolManager.cc"
-    "managers/ThreadPoolManager.h"
+    # "managers/ThreadPoolManager.h"
     "managers/WindowManager.cc"
-    "managers/WindowManager.h"
-    "models/TestModel.h"
-    "tests/Test.h"
-    "tests/TestContext.h"
+    # "managers/WindowManager.h"
+    # "models/TestModel.h"
+    # "tests/Test.h"
+    # "tests/TestContext.h"
     "tests/TestMenu.cc"
-    "tests/TestMenu.h"
+    # "tests/TestMenu.h"
 )
 
 target_include_directories(
@@ -59,12 +60,16 @@ target_include_directories(
 
 target_link_libraries(
     MainAppController
-    # Removed PUBLIC while trying to use `static` below
+    # Removed PUBLIC because of using `target_link_libraries(MainAppController -static)`
     # PUBLIC
     ExternalLibraries
 )
 
-target_precompile_headers(MainAppController PUBLIC cbrpch.h)
+target_precompile_headers(
+    MainAppController
+    PUBLIC
+    cbrpch.h
+)
 
 # Apple doesn't have some static lib, like: ctr0.o
 # So we only add static linking on Windows, for now...
@@ -75,3 +80,4 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 install(TARGETS MainAppController DESTINATION lib)
 install(FILES MainAppController.h DESTINATION include)
+install(FILES cbrpch.h DESTINATION include)

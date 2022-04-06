@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Needed for clang-tidy
 
-# Check platform
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     message(STATUS "CBR: Platform is Mac OS X")
     add_definitions(-DCBR_APPLE)
@@ -19,7 +18,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 add_subdirectory("src/MainAppController")
-
 add_executable(tryOpenGL "src/main.cc")
 
 target_compile_options(tryOpenGL PRIVATE -Wall)
@@ -35,7 +33,7 @@ target_include_directories(
 
 target_link_libraries(
     tryOpenGL
-    # Removed PRIVATE while trying to use `static` below
+    # Removed PRIVATE because of using `target_link_libraries(tryOpenGL -static)`
     # PRIVATE
     MainAppController
 )
@@ -48,8 +46,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 # Copy resources
-# configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
-
+# configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)s
 # configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
 # configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
 
@@ -58,14 +55,12 @@ install(TARGETS tryOpenGL DESTINATION bin)
 
 # Install resources
 # install(FILES "res/shaders/test_rectangles.shader" DESTINATION bin)
-
 # install(FILES "res/textures/grass.png" DESTINATION bin)
 # install(FILES "res/textures/wall.png" DESTINATION bin)
 
 # Testing steps
 enable_testing()
-
-# Enable/Disable this test to run the program
+# Running ctest basically runs the program
 add_test(NAME Runs COMMAND tryOpenGL)
 
 # Enable packaging with CPack

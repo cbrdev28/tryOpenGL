@@ -72,10 +72,10 @@ add_library(
     ExternalLibraries
     STATIC
     "glad/glad.c"
-    "glad/include/glad/glad.h"
-    "glad/include/KHR/khrplatform.h"
+    # "glad/include/glad/glad.h"
+    # "glad/include/KHR/khrplatform.h"
     "stb_image/stb_image.cc"
-    "stb_image/stb_image.h"
+    # "stb_image/stb_image.h"
 )
 
 target_include_directories(
@@ -87,7 +87,7 @@ target_include_directories(
 
 target_link_libraries(
     ExternalLibraries
-    # Removed PUBLIC while trying to use `static` below
+    # Removed PUBLIC because of using `target_link_libraries(ExternalLibraries -static)`
     # PUBLIC
     GSL
     fmt::fmt

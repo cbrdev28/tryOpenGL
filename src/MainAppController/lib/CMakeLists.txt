@@ -70,6 +70,7 @@ FetchContent_MakeAvailable(GSL)
 
 add_library(
     ExternalLibraries
+    STATIC
     "glad/glad.c"
     "stb_image/stb_image.cc"
 )
@@ -83,13 +84,21 @@ target_include_directories(
 
 target_link_libraries(
     ExternalLibraries
-    PUBLIC
+    # Removed PUBLIC while trying to use `static` below
+    # PUBLIC
     GSL
     fmt::fmt
     glfw
     glm
     imgui
 )
+
+# Apple doesn't have some static lib, like: ctr0.o
+# So we only add static linking on Windows, for now...
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    message(STATUS "CBR: Static linking Windows")
+    target_link_libraries(ExternalLibraries -static)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 install(TARGETS ExternalLibraries DESTINATION lib)
 install(DIRECTORY "glad/include/" DESTINATION include)

@@ -35,9 +35,17 @@ target_include_directories(
 
 target_link_libraries(
     tryOpenGL
-    PRIVATE
+    # Removed PRIVATE while trying to use `static` below
+    # PRIVATE
     MainAppController
 )
+
+# Apple doesn't have some static lib, like: ctr0.o
+# So we only add static linking on Windows, for now...
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    message(STATUS "CBR: Static linking Windows")
+    target_link_libraries(tryOpenGL -static)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 # Copy resources
 # configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)

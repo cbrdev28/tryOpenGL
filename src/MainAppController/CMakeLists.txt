@@ -4,17 +4,38 @@ add_library(
     MainAppController
     STATIC
     MainAppController.cc
+    MainAppController.h
+    "common/AspectRatio.h"
+    "common/glmHeaders.h"
     "common/IndexBuffer.cc"
+    "common/IndexBuffer.h"
     "common/Renderer.cc"
+    "common/Renderer.h"
     "common/Shader.cc"
+    "common/Shader.h"
     "common/Texture.cc"
+    "common/Texture.h"
     "common/VertexArray.cc"
+    "common/VertexArray.h"
     "common/VertexBuffer.cc"
+    "common/VertexBuffer.h"
+    "common/VertexBufferElement.h"
+    "common/VertexBufferLayout.h"
+    "common/WindowStats.h"
     "helpers/openGLErrorHelpers.cc"
+    "helpers/openGLErrorHelpers.h"
+    "listeners/WindowListener.h"
     "managers/ImGuiManager.cc"
+    "managers/ImGuiManager.h"
     "managers/ThreadPoolManager.cc"
+    "managers/ThreadPoolManager.h"
     "managers/WindowManager.cc"
+    "managers/WindowManager.h"
+    "models/TestModel.h"
+    "tests/Test.h"
+    "tests/TestContext.h"
     "tests/TestMenu.cc"
+    "tests/TestMenu.h"
 )
 
 target_include_directories(

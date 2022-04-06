@@ -72,7 +72,10 @@ add_library(
     ExternalLibraries
     STATIC
     "glad/glad.c"
+    "glad/include/glad/glad.h"
+    "glad/include/KHR/khrplatform.h"
     "stb_image/stb_image.cc"
+    "stb_image/stb_image.h"
 )
 
 target_include_directories(

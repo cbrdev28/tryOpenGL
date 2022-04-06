@@ -34,6 +34,7 @@ void TestMenu::onImGuiRender() {
     }
     currentTest_->onImGuiRender();
   } else {
+    ImGui::Text("Good evening friend!");
     if (ImGui::Button("Quit")) {
       this->getTestContext().windowManager->setWindowShouldClose();
     }

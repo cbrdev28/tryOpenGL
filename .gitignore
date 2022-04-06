@@ -10,3 +10,6 @@ imgui.ini
 
 # Visual Studio Community 2022
 .vs/
+
+# Mac OS
+.DS_Store

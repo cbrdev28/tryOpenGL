@@ -33,6 +33,7 @@ class WindowManager {
   void init();
   void updateWindowStats();
   void processKeyInput();
+  void setWindowShouldClose();
 
   [[nodiscard]] inline auto getWindow() const -> GLFWwindow* { return window_; };
   [[nodiscard]] inline auto getWidth() const -> int { return width_; };

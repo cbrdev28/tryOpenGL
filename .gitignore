@@ -1,4 +1,6 @@
 build/
+build-release/
+
 .vscode/
 
 # Used by cland (deamon to run clang-format & clang-tidy)

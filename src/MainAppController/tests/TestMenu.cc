@@ -36,6 +36,9 @@ void TestMenu::onImGuiRender() {
     }
     currentTest_->onImGuiRender();
   } else {
+    if (ImGui::Button("Quit")) {
+      this->getTestContext().windowManager->setWindowShouldClose();
+    }
     for (auto& test : tests_) {
       if (ImGui::Button(test.first.c_str())) {
         currentTest_ = test.second(this->getTestContext());

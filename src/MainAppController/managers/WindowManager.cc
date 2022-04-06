@@ -89,6 +89,8 @@ void WindowManager::processKeyInput() {
   }
 }
 
+void WindowManager::setWindowShouldClose() { glfwSetWindowShouldClose(window_, 1 /* true */); }
+
 void WindowManager::framebufferSizeCallback(int width, int height) {
   width_ = width;
   height_ = height;
@@ -112,8 +114,10 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
 }
 
 void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
+  // TODO(cbr): make a member function for this callback (like `framebufferSizeCallback`)
+  auto* windowManager = static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
   if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
-    glfwSetWindowShouldClose(window, 1 /* true */);
+    windowManager->setWindowShouldClose();
   }
   // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
   // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {

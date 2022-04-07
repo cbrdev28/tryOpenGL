@@ -1,8 +1,10 @@
+#include "cbrpch.h"
+
 #include "VertexArray.h"
 
 #include "VertexBuffer.h"
+#include "VertexBufferElement.h"
 #include "openGLErrorHelpers.h"
-#include "openGLHeaders.h"
 
 VertexArray::VertexArray() { GLCall(glGenVertexArrays(1, &identifier_)); }
 

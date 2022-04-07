@@ -1,10 +1,6 @@
 #ifndef ASPECT_RATIO_H_
 #define ASPECT_RATIO_H_
 
-#include <fmt/core.h>
-
-#include <string>
-
 struct AspectRatio {
   int numerator{1};
   int denominator{1};

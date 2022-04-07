@@ -1,13 +1,9 @@
 #ifndef WINDOW_MANAGER_H_
 #define WINDOW_MANAGER_H_
 
-#include <algorithm>
-#include <vector>
-
 #include "AspectRatio.h"
 #include "WindowListener.h"
 #include "WindowStats.h"
-#include "openGLHeaders.h"
 
 /**
  * Window manager for glfw

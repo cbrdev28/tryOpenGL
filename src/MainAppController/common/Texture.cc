@@ -1,7 +1,6 @@
-#include "Texture.h"
+#include "cbrpch.h"
 
-#include <fmt/core.h>
-#include <stb_image.h>
+#include "Texture.h"
 
 #include "openGLErrorHelpers.h"
 

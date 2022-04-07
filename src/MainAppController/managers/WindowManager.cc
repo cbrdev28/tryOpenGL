@@ -1,11 +1,9 @@
 /**
  * Window manager for glfw
  */
+#include "cbrpch.h"
+
 #include "WindowManager.h"
-
-#include <fmt/core.h>
-
-#include <chrono>
 
 #include "openGLErrorHelpers.h"
 

@@ -1,14 +1,9 @@
 /**
  * Shader manager helper
  */
+#include "cbrpch.h"
+
 #include "Shader.h"
-
-#include <fmt/core.h>
-
-#include <array>
-#include <fstream>
-#include <sstream>
-#include <utility>
 
 #include "openGLErrorHelpers.h"
 

@@ -1,8 +1,6 @@
 #ifndef INDEX_BUFFER_H_
 #define INDEX_BUFFER_H_
 
-#include "openGLHeaders.h"
-
 class IndexBuffer {
  private:
   GLuint identifier_{0};

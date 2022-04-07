@@ -1,9 +1,9 @@
 /**
  * This file is the main app controller: the first entry in our app.
  */
-#include "MainAppController.h"
+#include "cbrpch.h"
 
-#include <fmt/core.h>
+#include "MainAppController.h"
 
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");

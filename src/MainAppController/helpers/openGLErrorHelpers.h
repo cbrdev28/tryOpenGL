@@ -4,7 +4,6 @@
 /**
  * GL Error helpers
  */
-#include <cassert>
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage, cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 #define ASSERT(x) assert(x)

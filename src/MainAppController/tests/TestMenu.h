@@ -1,8 +1,6 @@
 #ifndef TEST_MENU_H_
 #define TEST_MENU_H_
 
-#include <gsl/gsl>
-
 #include "Renderer.h"
 #include "Test.h"
 

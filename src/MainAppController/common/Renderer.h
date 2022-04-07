@@ -4,7 +4,6 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "VertexArray.h"
-#include "openGLHeaders.h"
 
 /**
  * Renderer class to issue OpenGL draw calls

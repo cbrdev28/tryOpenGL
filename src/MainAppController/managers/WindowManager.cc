@@ -5,8 +5,6 @@
 
 #include "WindowManager.h"
 
-#include <fmt/core.h>
-
 #include "openGLErrorHelpers.h"
 
 WindowManager::~WindowManager() {

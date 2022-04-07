@@ -1,8 +1,6 @@
 #ifndef VERTEX_BUFFER_H_
 #define VERTEX_BUFFER_H_
 
-#include "openGLHeaders.h"
-
 enum VertexBufferDivisor {
   ALWAYS = GLuint(0),
   FOR_EACH = GLuint(1),

@@ -1,9 +1,6 @@
 #ifndef SHADER_H_
 #define SHADER_H_
 
-#include "glmHeaders.h"
-#include "openGLHeaders.h"
-
 struct ShaderProgramSource {
   std::string vertexSource;
   std::string fragmentSource;

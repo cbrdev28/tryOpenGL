@@ -5,8 +5,6 @@
 
 #include "MainAppController.h"
 
-#include <fmt/core.h>
-
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");
   if (this->init() != 0) {

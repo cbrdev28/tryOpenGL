@@ -2,7 +2,6 @@
 #define VERTEX_BUFFER_LAYOUT_H_
 
 #include "VertexBufferElement.h"
-#include "openGLHeaders.h"
 
 class VertexBufferLayout {
  private:

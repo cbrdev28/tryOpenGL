@@ -28,6 +28,10 @@ void TestMenu::onRender() {
 }
 
 void TestMenu::onImGuiRender() {
+  const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+  ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 10, main_viewport->WorkPos.y + 10), ImGuiCond_FirstUseEver);
+  ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+
   ImGui::Begin("Test Menu");
   if (currentTest_ != nullptr) {
     if (ImGui::Button("Back")) {

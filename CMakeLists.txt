@@ -133,5 +133,6 @@ set(CPACK_PACKAGE_VERSION_MINOR "${tryOpenGL_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${tryOpenGL_VERSION_PATCH}")
 set(CPACK_SOURCE_GENERATOR "ZIP")
 # Investigate this:
+# - did not seem to change anything on Mac
 # set(CPACK_MONOLITHIC_INSTALL 1)
 include(CPack)

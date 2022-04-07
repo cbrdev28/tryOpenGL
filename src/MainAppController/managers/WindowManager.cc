@@ -5,8 +5,6 @@
 
 #include <fmt/core.h>
 
-#include <chrono>
-
 #include "openGLErrorHelpers.h"
 
 WindowManager::~WindowManager() {

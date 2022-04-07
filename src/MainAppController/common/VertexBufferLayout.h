@@ -1,8 +1,6 @@
 #ifndef VERTEX_BUFFER_LAYOUT_H_
 #define VERTEX_BUFFER_LAYOUT_H_
 
-#include <vector>
-
 #include "VertexBufferElement.h"
 #include "openGLHeaders.h"
 

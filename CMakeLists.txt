@@ -64,6 +64,12 @@ target_link_libraries(
     VendorLibs # from `add_subdirectory("lib")`
 )
 
+target_precompile_headers(
+    tryOpenGL
+    PUBLIC
+    "${srcDir}/cbrpch.h"
+)
+
 # Apple doesn't have some static lib, like: ctr0.o
 # So we only add static linking on Windows, for now...
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")

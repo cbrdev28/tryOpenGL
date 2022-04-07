@@ -1,8 +1,6 @@
 #ifndef TEST_CONTEXT_H_
 #define TEST_CONTEXT_H_
 
-#include <memory>
-
 #include "ThreadPoolManager.h"
 #include "WindowManager.h"
 

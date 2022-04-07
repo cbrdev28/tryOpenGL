@@ -5,11 +5,6 @@
 
 #include <fmt/core.h>
 
-#include <array>
-#include <fstream>
-#include <sstream>
-#include <utility>
-
 #include "openGLErrorHelpers.h"
 
 constexpr int SHADER_INFO_LOG = 512;

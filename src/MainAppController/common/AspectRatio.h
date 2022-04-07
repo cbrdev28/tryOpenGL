@@ -3,8 +3,6 @@
 
 #include <fmt/core.h>
 
-#include <string>
-
 struct AspectRatio {
   int numerator{1};
   int denominator{1};

@@ -25,13 +25,12 @@ set(helpersDir "src/MainAppController/helpers")
 set(managersDir "src/MainAppController/managers")
 set(testsDir "src/MainAppController/tests")
 
-# Still wondering if we should also add .h files
-file (GLOB srcFiles "${srcDir}/*.cc")
-file (GLOB mainAppSrcFiles "${mainAppDir}/*.cc")
-file (GLOB commonSrcFiles "${commonDir}/*.cc")
-file (GLOB helpersSrcFiles "${helpersDir}/*.cc")
-file (GLOB managersSrcFiles "${managersDir}/*.cc")
-file (GLOB testsSrcFiles "${testsDir}/*.cc")
+file (GLOB srcFiles "${srcDir}/*.cc" "${srcDir}/*.h")
+file (GLOB mainAppSrcFiles "${mainAppDir}/*.cc" "${mainAppDir}/*.h")
+file (GLOB commonSrcFiles "${commonDir}/*.cc" "${commonDir}/*.h")
+file (GLOB helpersSrcFiles "${helpersDir}/*.cc" "${helpersDir}/*.h")
+file (GLOB managersSrcFiles "${managersDir}/*.cc" "${managersDir}/*.h")
+file (GLOB testsSrcFiles "${testsDir}/*.cc" "${testsDir}/*.h")
 
 add_executable(
     tryOpenGL

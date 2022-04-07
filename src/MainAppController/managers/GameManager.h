@@ -1,5 +1,5 @@
-#ifndef IM_GUI_MANAGER_H_
-#define IM_GUI_MANAGER_H_
+#ifndef GAME_MANAGER_H_
+#define GAME_MANAGER_H_
 
 class GameManager {
  public:

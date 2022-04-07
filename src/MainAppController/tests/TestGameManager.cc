@@ -13,13 +13,23 @@ void TestGameManager::onRender() {}
 void TestGameManager::onImGuiRender() {
   ImGui::NewLine();
   ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
-  // TODO(cbr): refactor and have a ref to WinStats
-  auto frameCount = this->getTestContext().windowManager->getWindowStats().frameCount;
-  auto startTime = this->getTestContext().windowManager->getWindowStats().startTime;
-  auto endTime = this->getTestContext().windowManager->getWindowStats().endTime;
+
+  auto ws = this->getTestContext().windowManager->getWindowStats();
   ImGui::Text("Avg FPS: %.2f",
-              static_cast<float>(frameCount) /
-                  std::chrono::duration_cast<std::chrono::duration<float>>(endTime - startTime).count());
+              static_cast<float>(ws.frameCount) /
+                  std::chrono::duration_cast<std::chrono::duration<float>>(ws.endTime - ws.startTime).count());
+
+  ImGui::NewLine();
+  auto gm = this->getTestContext().gameManager;
+  if (gm->isGameRunning()) {
+    if (ImGui::Button("Stop game")) {
+      gm->stopGame();
+    }
+  } else {
+    if (ImGui::Button("Start game")) {
+      gm->startGame();
+    }
+  }
 }
 
 }  // namespace test

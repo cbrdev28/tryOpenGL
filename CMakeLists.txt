@@ -17,15 +17,25 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 add_subdirectory("lib")
 
-file (GLOB commonSrcFiles "src/MainAppController/common/*.cc")
-file (GLOB helpersSrcFiles "src/MainAppController/helpers/*.cc")
-file (GLOB managersSrcFiles "src/MainAppController/managers/*.cc")
-file (GLOB testsSrcFiles "src/MainAppController/tests/*.cc")
+# Set our directories containing source & header files
+set(srcDir "src")
+set(mainAppDir "src/MainAppController")
+set(commonDir "src/MainAppController/common")
+set(helpersDir "src/MainAppController/helpers")
+set(managersDir "src/MainAppController/managers")
+set(testsDir "src/MainAppController/tests")
+
+file (GLOB srcFiles "${srcDir}/*.cc")
+file (GLOB mainAppSrcFiles "${mainAppDir}/*.cc")
+file (GLOB commonSrcFiles "${commonDir}/*.cc")
+file (GLOB helpersSrcFiles "${helpersDir}/*.cc")
+file (GLOB managersSrcFiles "${managersDir}/*.cc")
+file (GLOB testsSrcFiles "${testsDir}/*.cc")
 
 add_executable(
     tryOpenGL
-    "src/main.cc"
-    "src/MainAppController/MainAppController.cc"
+    ${srcFiles}
+    ${mainAppSrcFiles}
     ${commonSrcFiles}
     ${helpersSrcFiles}
     ${managersSrcFiles}
@@ -40,11 +50,12 @@ endif()
 target_include_directories(
     tryOpenGL
     PUBLIC
-    "src/MainAppController"
-    "src/MainAppController/common"
-    "src/MainAppController/helpers"
-    "src/MainAppController/managers"
-    "src/MainAppController/tests"
+    ${srcDir}
+    ${mainAppDir}
+    ${commonDir}
+    ${helpersDir}
+    ${managersDir}
+    ${testsDir}
 )
 
 target_link_libraries(

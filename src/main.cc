@@ -1,9 +1,9 @@
+#include <memory>
+
 #include "MainAppController.h"
 
 auto main(/* int argc, char** argv */) -> int {
-  MainAppController *mainApp = new MainAppController();
+  std::unique_ptr<MainAppController> mainApp = std::make_unique<MainAppController>();
   int mainAppRes = mainApp->run();
-
-  delete mainApp;
   return mainAppRes;
 }

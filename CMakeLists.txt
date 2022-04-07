@@ -75,26 +75,27 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 ######## Pre-compiled header: fix for clang-tidy ########
 # From: https://gitlab.kitware.com/cmake/cmake/-/issues/22081
 set(PREFIX_HEADER "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
-set(CLANG_PCH_OUTPUT "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}.dir/cmake_pch.hxx.pch")
-get_property(CLANG_PCH_COMPILE_OPTIONS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
-get_property(CLANG_PCH_INCLUDE_DIRECTORIES TARGET ${PROJECT_NAME} PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
-set(CLANG_PCH_INCLUDE_STRING "")
-foreach(dir ${CLANG_PCH_INCLUDE_DIRECTORIES})
-    # Generate system includes to suppress warnings for third-party headers
-    set(CLANG_PCH_INCLUDE_STRING ${CLANG_PCH_INCLUDE_STRING} -isystem ${dir})
-endforeach()
-add_custom_command(
-    OUTPUT "${CLANG_PCH_OUTPUT}"
-    # Mac: instead of `clang++` use `cbr-llvm-clang++`. It breaks the build but will let ctidy script run properly.
-    COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++${CMAKE_CXX_STANDARD} ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
-    COMMENT "Creating Clang precompiled header for clang-tidy."
-)
-add_custom_target(clang-pch ALL
-    DEPENDS ${CLANG_PCH_OUTPUT}
-)
-# Create "fake" precompiled header for clang-tidy
-add_dependencies(${PROJECT_NAME} clang-pch)
-# Create the real GCC precompiled header used by compilation units
+# Uncomment the rest to fix clang-tidy (TODO: disable in release mode)
+# set(CLANG_PCH_OUTPUT "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}.dir/cmake_pch.hxx.pch")
+# get_property(CLANG_PCH_COMPILE_OPTIONS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
+# get_property(CLANG_PCH_INCLUDE_DIRECTORIES TARGET ${PROJECT_NAME} PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
+# set(CLANG_PCH_INCLUDE_STRING "")
+# foreach(dir ${CLANG_PCH_INCLUDE_DIRECTORIES})
+#     # Generate system includes to suppress warnings for third-party headers
+#     set(CLANG_PCH_INCLUDE_STRING ${CLANG_PCH_INCLUDE_STRING} -isystem ${dir})
+# endforeach()
+# add_custom_command(
+#     OUTPUT "${CLANG_PCH_OUTPUT}"
+#     # Mac: instead of `clang++` use `cbr-llvm-clang++`. It breaks the build but will let ctidy script run properly.
+#     COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++${CMAKE_CXX_STANDARD} ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
+#     COMMENT "Creating Clang precompiled header for clang-tidy."
+# )
+# add_custom_target(clang-pch ALL
+#     DEPENDS ${CLANG_PCH_OUTPUT}
+# )
+# # Create "fake" precompiled header for clang-tidy
+# add_dependencies(${PROJECT_NAME} clang-pch)
+# # Create the real GCC precompiled header used by compilation units
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
 ######## Pre-compiled header: fix for clang-tidy ########
 #########################################################

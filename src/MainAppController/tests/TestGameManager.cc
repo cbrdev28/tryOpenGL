@@ -21,6 +21,8 @@ void TestGameManager::onImGuiRender() {
 
   ImGui::NewLine();
   auto gm = this->getTestContext().gameManager;
+  ImGui::Text("Game clock: %.2f", gm->getGameTime());
+  ImGui::Text("Time played: %.2f", gm->getTimePlayed());
   if (gm->isGameRunning()) {
     if (ImGui::Button("Stop game")) {
       gm->stopGame();

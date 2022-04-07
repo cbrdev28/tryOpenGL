@@ -52,8 +52,8 @@ Texture::~Texture() {
 }
 
 void Texture::bind(unsigned int slot /* = 0 */) const {
-  const auto maxSlotSupported = 8;
-  ASSERT(slot < maxSlotSupported);
+  // Hardcoded max slot supported
+  ASSERT(slot < 8);
 
   switch (slot) {
     case 0:

@@ -1,0 +1,6 @@
+// clang-format off
+// Config file for cmake
+#define tryOpenGL_VERSION_MAJOR @tryOpenGL_VERSION_MAJOR@
+#define tryOpenGL_VERSION_MINOR @tryOpenGL_VERSION_MINOR@
+#define tryOpenGL_VERSION_PATCH @tryOpenGL_VERSION_PATCH@
+// clang-format on

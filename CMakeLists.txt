@@ -57,6 +57,8 @@ target_include_directories(
     ${helpersDir}
     ${managersDir}
     ${testsDir}
+    # For the config file `tryOpenGLConfig.h`
+    ${PROJECT_BINARY_DIR}
 )
 
 target_link_libraries(
@@ -99,6 +101,9 @@ set(PREFIX_HEADER "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
 ######## Pre-compiled header: fix for clang-tidy ########
 #########################################################
+
+set(resDir "res")
+configure_file("${resDir}/config/tryOpenGLConfig.h.in" tryOpenGLConfig.h)
 
 # Copy resources - to be tested with CPack
 # Try to use GLOB

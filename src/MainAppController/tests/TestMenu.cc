@@ -2,6 +2,8 @@
 
 #include "TestMenu.h"
 
+#include "tryOpenGLConfig.h"
+
 namespace test {
 
 TestMenu::~TestMenu() {
@@ -36,6 +38,10 @@ void TestMenu::onImGuiRender() {
     }
     currentTest_->onImGuiRender();
   } else {
+    ImGui::Text(
+        "Good evening: %s",
+        fmt::format("v{}.{}.{}", tryOpenGL_VERSION_MAJOR, tryOpenGL_VERSION_MINOR, tryOpenGL_VERSION_PATCH).c_str());
+
     if (ImGui::Button("Quit")) {
       this->getTestContext().windowManager->setWindowShouldClose();
     }

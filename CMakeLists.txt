@@ -65,7 +65,13 @@ target_link_libraries(
     VendorLibs # from `add_subdirectory("lib")`
 )
 
+# Apple doesn't have some static lib, like: ctr0.o
+# So we only add static linking on Windows, for now...
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    target_link_libraries(tryOpenGL -static)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
+#########################################################
 ######## Pre-compiled header: fix for clang-tidy ########
 # From: https://gitlab.kitware.com/cmake/cmake/-/issues/22081
 set(PREFIX_HEADER "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
@@ -79,8 +85,8 @@ foreach(dir ${CLANG_PCH_INCLUDE_DIRECTORIES})
 endforeach()
 add_custom_command(
     OUTPUT "${CLANG_PCH_OUTPUT}"
-    # Check if we could use `CMAKE_CXX_STANDARD` instead of `-std=c++17`
-    COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++17 ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
+    # Mac: instead of `clang++` use `cbr-llvm-clang++`. It breaks the build but will let ctidy script run properly.
+    COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++${CMAKE_CXX_STANDARD} ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
     COMMENT "Creating Clang precompiled header for clang-tidy."
 )
 add_custom_target(clang-pch ALL
@@ -91,13 +97,7 @@ add_dependencies(${PROJECT_NAME} clang-pch)
 # Create the real GCC precompiled header used by compilation units
 target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
 ######## Pre-compiled header: fix for clang-tidy ########
-
-
-# Apple doesn't have some static lib, like: ctr0.o
-# So we only add static linking on Windows, for now...
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    target_link_libraries(tryOpenGL -static)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+#########################################################
 
 # Copy resources - to be tested with CPack
 # Try to use GLOB
@@ -107,7 +107,6 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 # Install steps
 install(TARGETS tryOpenGL DESTINATION bin)
-# TODO: install more headers? check after making another package on windows
 
 # Install resources - to be tested with CPack
 # Try to use GLOB
@@ -117,7 +116,6 @@ install(TARGETS tryOpenGL DESTINATION bin)
 
 # Testing steps
 enable_testing()
-
 # Enable/Disable this test to run the program
 add_test(NAME Runs COMMAND tryOpenGL)
 

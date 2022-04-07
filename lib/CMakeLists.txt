@@ -94,6 +94,7 @@ target_link_libraries(
 
 # Apple doesn't have some static lib, like: `ctr0.o`
 # So we only add static linking on Windows, for now...
+# TODO: Re-check if we can have this one on Mac?
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     target_link_libraries(VendorLibs -static)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")

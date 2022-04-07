@@ -1,3 +1,5 @@
+#include "cbrpch.h"
+
 #include "ImGuiManager.h"
 
 ImGuiManager::ImGuiManager(const WindowManager& windowManager) : windowManager_(windowManager) {}

@@ -1,6 +1,8 @@
 /**
  * This file is the main app controller: the first entry in our app.
  */
+#include "cbrpch.h"
+
 #include "MainAppController.h"
 
 #include <fmt/core.h>

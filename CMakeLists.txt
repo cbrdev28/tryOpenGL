@@ -25,6 +25,7 @@ set(helpersDir "src/MainAppController/helpers")
 set(managersDir "src/MainAppController/managers")
 set(testsDir "src/MainAppController/tests")
 
+# Still wondering if we should also add .h files
 file (GLOB srcFiles "${srcDir}/*.cc")
 file (GLOB mainAppSrcFiles "${mainAppDir}/*.cc")
 file (GLOB commonSrcFiles "${commonDir}/*.cc")
@@ -40,6 +41,7 @@ add_executable(
     ${helpersSrcFiles}
     ${managersSrcFiles}
     ${testsSrcFiles}
+    # Seen from examples: we could also add the resources here (shaders, textures, ...)
 )
 
 target_compile_options(tryOpenGL PRIVATE -Wall)
@@ -64,11 +66,33 @@ target_link_libraries(
     VendorLibs # from `add_subdirectory("lib")`
 )
 
-target_precompile_headers(
-    tryOpenGL
-    PUBLIC
-    "${srcDir}/cbrpch.h"
+
+######## Pre-compiled header: fix for clang-tidy ########
+# From: https://gitlab.kitware.com/cmake/cmake/-/issues/22081
+set(PREFIX_HEADER "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
+set(CLANG_PCH_OUTPUT "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}.dir/cmake_pch.hxx.pch")
+get_property(CLANG_PCH_COMPILE_OPTIONS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
+get_property(CLANG_PCH_INCLUDE_DIRECTORIES TARGET ${PROJECT_NAME} PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
+set(CLANG_PCH_INCLUDE_STRING "")
+foreach(dir ${CLANG_PCH_INCLUDE_DIRECTORIES})
+    # Generate system includes to suppress warnings for third-party headers
+    set(CLANG_PCH_INCLUDE_STRING ${CLANG_PCH_INCLUDE_STRING} -isystem ${dir})
+endforeach()
+add_custom_command(
+    OUTPUT "${CLANG_PCH_OUTPUT}"
+    # Check if we could use `CMAKE_CXX_STANDARD` instead of `-std=c++17`
+    COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++17 ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
+    COMMENT "Creating Clang precompiled header for clang-tidy."
 )
+add_custom_target(clang-pch ALL
+    DEPENDS ${CLANG_PCH_OUTPUT}
+)
+# Create "fake" precompiled header for clang-tidy
+add_dependencies(${PROJECT_NAME} clang-pch)
+# Create the real GCC precompiled header used by compilation units
+target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
+######## Pre-compiled header: fix for clang-tidy ########
+
 
 # Apple doesn't have some static lib, like: ctr0.o
 # So we only add static linking on Windows, for now...
@@ -77,6 +101,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 # Copy resources - to be tested with CPack
+# Try to use GLOB
 # configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
 # configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
 # configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
@@ -86,6 +111,7 @@ install(TARGETS tryOpenGL DESTINATION bin)
 # TODO: install more headers? check after making another package on windows
 
 # Install resources - to be tested with CPack
+# Try to use GLOB
 # install(FILES "res/shaders/test_rectangles.shader" DESTINATION bin)
 # install(FILES "res/textures/grass.png" DESTINATION bin)
 # install(FILES "res/textures/wall.png" DESTINATION bin)
@@ -103,4 +129,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${tryOpenGL_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${tryOpenGL_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${tryOpenGL_VERSION_PATCH}")
 set(CPACK_SOURCE_GENERATOR "ZIP")
+# Investigate this:
+# set(CPACK_MONOLITHIC_INSTALL 1)
 include(CPack)

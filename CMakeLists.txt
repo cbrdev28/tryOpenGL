@@ -102,8 +102,8 @@ target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
 ######## Pre-compiled header: fix for clang-tidy ########
 #########################################################
 
-# To be tested with CPack
-# Copy shaders
+# Copy resources
+# Shaders
 set(resShaderDir "res/shaders")
 file(GLOB shaderFiles "${resShaderDir}/*.shader")
 
@@ -114,19 +114,26 @@ foreach(file ${shaderFiles})
     configure_file(${file} ${binResShaderDir} COPYONLY)
 endforeach(file ${shaderFiles})
 
+# Textures
+set(resTextureDir "res/textures")
+file(GLOB textureFiles "${resTextureDir}/*.png")
+
+set(binResTextureDir "${CMAKE_BINARY_DIR}/${resTextureDir}")
+file(MAKE_DIRECTORY ${binResTextureDir})
+
+foreach(file ${textureFiles})
+    configure_file(${file} ${binResTextureDir} COPYONLY)
+endforeach(file ${textureFiles})
+
 # Resource config file is a special case, so we can export version numbers
 set(resConfigDir "res/config")
 configure_file("${resConfigDir}/tryOpenGLConfig.h.in" tryOpenGLConfig.h)
 
 # Install steps
 install(TARGETS tryOpenGL DESTINATION bin)
-# Install resources - to be tested with CPack
-# Try to use GLOB
-# To create dir:
-# install(DIRECTORY DESTINATION ${directory})
-# install(FILES "res/shaders/test_rectangles.shader" DESTINATION bin)
-# install(FILES "res/textures/grass.png" DESTINATION bin)
-# install(FILES "res/textures/wall.png" DESTINATION bin)
+# Install resources (maybe revisit to exlude the `config` folder)
+set(resDir "res")
+install(DIRECTORY ${resDir} DESTINATION bin)
 
 # Testing steps
 enable_testing()
@@ -140,7 +147,4 @@ set(CPACK_PACKAGE_VERSION_MAJOR "${tryOpenGL_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${tryOpenGL_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${tryOpenGL_VERSION_PATCH}")
 set(CPACK_SOURCE_GENERATOR "ZIP")
-# Investigate this:
-# - did not seem to change anything on Mac
-# set(CPACK_MONOLITHIC_INSTALL 1)
 include(CPack)

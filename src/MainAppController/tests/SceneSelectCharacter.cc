@@ -4,6 +4,14 @@
 
 namespace test {
 
+SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {
+  shader_->bind();
+  shader_->setUniformMat4("u_view", glm::mat4(1.0F));
+  const auto& aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
+  shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
+  shader_->unBind();
+}
+
 SceneSelectCharacter::~SceneSelectCharacter() = default;
 
 void SceneSelectCharacter::onUpdate(float /*deltaTime */) {}

@@ -3,13 +3,14 @@
 
 #include "GameCharacter.h"
 #include "Renderer.h"
+#include "Shader.h"
 #include "Test.h"
 
 namespace test {
 
 class SceneSelectCharacter : public Test {
  public:
-  explicit SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {}
+  explicit SceneSelectCharacter(const TestContext& ctx);
   ~SceneSelectCharacter() override;
 
   SceneSelectCharacter(const SceneSelectCharacter& other) = delete;
@@ -25,6 +26,7 @@ class SceneSelectCharacter : public Test {
   Renderer renderer_;
   std::array<float, 4> backgroundColor_{0.0F, 0.0F, 0.0F, 1.0F};
   std::array<GameCharacter, 2> characters_{{{"Clara"}, {"Felix"}}};
+  std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("res/shaders/scene_select_character.shader");
 };
 
 }  // namespace test

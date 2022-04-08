@@ -102,20 +102,28 @@ target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
 ######## Pre-compiled header: fix for clang-tidy ########
 #########################################################
 
-set(resDir "res")
-configure_file("${resDir}/config/tryOpenGLConfig.h.in" tryOpenGLConfig.h)
+# To be tested with CPack
+# Copy shaders
+set(resShaderDir "res/shaders")
+file(GLOB shaderFiles "${resShaderDir}/*.shader")
 
-# Copy resources - to be tested with CPack
-# Try to use GLOB
-# configure_file("res/shaders/test_rectangles.shader" ${CMAKE_BINARY_DIR} COPYONLY)
-# configure_file("res/textures/grass.png" ${CMAKE_BINARY_DIR} COPYONLY)
-# configure_file("res/textures/wall.png" ${CMAKE_BINARY_DIR} COPYONLY)
+set(binResShaderDir "${CMAKE_BINARY_DIR}/${resShaderDir}")
+file(MAKE_DIRECTORY ${binResShaderDir})
+
+foreach(file ${shaderFiles})
+    configure_file(${file} ${binResShaderDir} COPYONLY)
+endforeach(file ${shaderFiles})
+
+# Resource config file is a special case, so we can export version numbers
+set(resConfigDir "res/config")
+configure_file("${resConfigDir}/tryOpenGLConfig.h.in" tryOpenGLConfig.h)
 
 # Install steps
 install(TARGETS tryOpenGL DESTINATION bin)
-
 # Install resources - to be tested with CPack
 # Try to use GLOB
+# To create dir:
+# install(DIRECTORY DESTINATION ${directory})
 # install(FILES "res/shaders/test_rectangles.shader" DESTINATION bin)
 # install(FILES "res/textures/grass.png" DESTINATION bin)
 # install(FILES "res/textures/wall.png" DESTINATION bin)

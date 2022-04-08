@@ -34,6 +34,15 @@ auto Renderer::draw(Shader& shaders, VertexArray& va, IndexBuffer& ib) -> Render
   return *this;
 }
 
+auto Renderer::draw(Shader& shaders, VertexArray& va, unsigned int count) -> Renderer& {
+  shaders.bind();
+  va.bind();
+  GLCall(glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(count)));
+  va.unBind();
+  shaders.unBind();
+  return *this;
+}
+
 auto Renderer::drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount) -> Renderer& {
   shaders.bind();
   va.bind();

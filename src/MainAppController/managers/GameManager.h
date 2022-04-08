@@ -1,6 +1,7 @@
 #ifndef GAME_MANAGER_H_
 #define GAME_MANAGER_H_
 
+#include "GameCharacter.h"
 #include "GameStatistics.h"
 
 class GameManager {
@@ -19,10 +20,14 @@ class GameManager {
   [[nodiscard]] auto getTimePlayed() const -> float;
   [[nodiscard]] auto getGameTime() const -> float;
 
+  void setCurrentCharacter(const GameCharacter& gameCharacter);
+  auto getCurrentCharacter() -> GameCharacter*;
+
  private:
   // TODO(cbr): move into a GameState struct
   bool gameRunning_{false};
   GameStatistics gameStats_;
+  std::unique_ptr<GameCharacter> currentCharacter_{nullptr};
 };
 
 #endif

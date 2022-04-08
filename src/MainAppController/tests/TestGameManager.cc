@@ -55,6 +55,16 @@ void TestGameManager::onImGuiRender() {
   }
   ImGui::Unindent();
 
+  ImGui::Text("Character");
+  ImGui::Indent();
+  auto* gc = gm->getCurrentCharacter();
+  if (gc != nullptr) {
+    ImGui::Text("%s", fmt::format("Name: {}", gc->name).c_str());
+  } else {
+    ImGui::Text("NONE");
+  }
+  ImGui::Unindent();
+
   ImGui::Text("Scenes");
   ImGui::Indent();
   for (const auto& scene : scenes_) {

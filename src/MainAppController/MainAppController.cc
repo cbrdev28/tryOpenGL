@@ -5,6 +5,8 @@
 
 #include "MainAppController.h"
 
+#include "TestGameManager.h"
+
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");
   if (this->init() != 0) {
@@ -24,7 +26,7 @@ auto MainAppController::init() -> int {
     windowManager_->init();
     imGuiManager_->init();
 
-    // testMenu_->registerTest<test::TEST_NAME>("TEST NAME");
+    testMenu_->registerTest<test::TestGameManager>("Test Game Manager");
   } catch (int error) {
     return -1;
   }

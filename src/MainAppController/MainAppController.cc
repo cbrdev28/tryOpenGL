@@ -1,9 +1,11 @@
 /**
  * This file is the main app controller: the first entry in our app.
  */
+#include "cbrpch.h"
+
 #include "MainAppController.h"
 
-#include <fmt/core.h>
+#include "TestGameManager.h"
 
 auto MainAppController::run() -> int {
   fmt::print("Run main application\n");
@@ -24,7 +26,7 @@ auto MainAppController::init() -> int {
     windowManager_->init();
     imGuiManager_->init();
 
-    // testMenu_->registerTest<test::TEST_NAME>("TEST NAME");
+    testMenu_->registerTest<test::TestGameManager>("Test Game Manager");
   } catch (int error) {
     return -1;
   }

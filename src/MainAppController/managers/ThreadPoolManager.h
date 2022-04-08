@@ -1,14 +1,6 @@
 #ifndef THREAD_POOL_MANAGER_H_
 #define THREAD_POOL_MANAGER_H_
 
-#include <condition_variable>
-#include <functional>
-#include <future>
-#include <mutex>
-#include <queue>
-#include <thread>
-#include <vector>
-
 struct ThreadTask {
   std::promise<void> promise;
   std::function<void(std::promise<void>)> function;

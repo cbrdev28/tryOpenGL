@@ -1,6 +1,6 @@
-#include "ThreadPoolManager.h"
+#include "cbrpch.h"
 
-#include <fmt/core.h>
+#include "ThreadPoolManager.h"
 
 ThreadPoolManager::ThreadPoolManager() {
   auto maxThreads = std::thread::hardware_concurrency();

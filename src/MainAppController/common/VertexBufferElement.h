@@ -2,7 +2,6 @@
 #define VERTEX_BUFFER_ELEMENT_H_
 
 #include "openGLErrorHelpers.h"
-#include "openGLHeaders.h"
 
 struct VertexBufferElement {
   GLenum type;

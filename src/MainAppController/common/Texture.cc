@@ -1,7 +1,6 @@
-#include "Texture.h"
+#include "cbrpch.h"
 
-#include <fmt/core.h>
-#include <stb_image.h>
+#include "Texture.h"
 
 #include "openGLErrorHelpers.h"
 
@@ -53,8 +52,8 @@ Texture::~Texture() {
 }
 
 void Texture::bind(unsigned int slot /* = 0 */) const {
-  const auto maxSlotSupported = 8;
-  ASSERT(slot < maxSlotSupported);
+  // Hardcoded max slot supported
+  ASSERT(slot < 8);
 
   switch (slot) {
     case 0:

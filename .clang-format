@@ -1,3 +1,10 @@
 BasedOnStyle: Google
 
 ColumnLimit: 120
+
+# Force clang-format to insert our pre-compiled header always as the first one
+IncludeCategories:
+  - Regex:           'cbrpch.h'
+    Priority:        -1
+    SortPriority:    -1
+    CaseSensitive:   true

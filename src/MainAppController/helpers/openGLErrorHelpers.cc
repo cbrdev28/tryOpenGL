@@ -1,8 +1,6 @@
+#include "cbrpch.h"
+
 #include "openGLErrorHelpers.h"
-
-#include <fmt/core.h>
-
-#include "openGLHeaders.h"
 
 /**
  * GL Error helpers

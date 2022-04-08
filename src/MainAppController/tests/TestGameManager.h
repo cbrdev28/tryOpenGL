@@ -1,6 +1,7 @@
 #ifndef TEST_GAME_MANAGER_H_
 #define TEST_GAME_MANAGER_H_
 
+#include "SceneSelectCharacter.h"
 #include "Test.h"
 
 namespace test {
@@ -30,7 +31,7 @@ class TestGameManager : public Test {
   std::unique_ptr<Test> currentScene_{nullptr};
   static constexpr unsigned int kMaxScene = 1;
   std::array<Scene, kMaxScene> scenes_{
-      {{"Test Scene 1", [&]() { return std::make_unique<TestGameManager>(this->getTestContext()); }}}};
+      {{"Scene Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }}}};
 };
 
 }  // namespace test

@@ -12,6 +12,12 @@ auto Renderer::clear() -> Renderer& {
   return *this;
 }
 
+auto Renderer::clearColorBackground(std::array<float, 4>& backgroundColor) -> Renderer& {
+  this->clearColorBackground(backgroundColor.at(0), backgroundColor.at(1), backgroundColor.at(2),
+                             backgroundColor.at(3));
+  return *this;
+}
+
 auto Renderer::clearColorBackground(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) -> Renderer& {
   GLCall(glClearColor(red, green, blue, alpha));
   return *this;

@@ -30,7 +30,7 @@ void TestGameManager::onImGuiRender() {
     return;
   }
 
-  ImGui::Text("Window Stats");
+  ImGui::Text("Window stats");
   ImGui::Indent();
   auto ws = this->getTestContext().windowManager->getWindowStats();
   ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
@@ -39,7 +39,7 @@ void TestGameManager::onImGuiRender() {
                   std::chrono::duration_cast<std::chrono::duration<float>>(ws.endTime - ws.startTime).count());
   ImGui::Unindent();
 
-  ImGui::Text("Game Stats");
+  ImGui::Text("Game stats");
   ImGui::Indent();
   auto gm = this->getTestContext().gameManager;
   ImGui::Text("Game clock: %.2f", gm->getGameTime());

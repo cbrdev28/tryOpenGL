@@ -5,6 +5,11 @@
 
 namespace test {
 
+struct Scene {
+  std::string name;
+  std::function<std::unique_ptr<Test>()> create;
+};
+
 class TestGameManager : public Test {
  public:
   explicit TestGameManager(const TestContext& ctx) : Test(ctx) {}
@@ -21,6 +26,11 @@ class TestGameManager : public Test {
 
  private:
   float deltaTime_{0.0F};
+
+  std::unique_ptr<Test> currentScene_{nullptr};
+  static constexpr unsigned int kMaxScene = 1;
+  std::array<Scene, kMaxScene> scenes_{
+      {{"Test Scene 1", [&]() { return std::make_unique<TestGameManager>(this->getTestContext()); }}}};
 };
 
 }  // namespace test

@@ -34,12 +34,13 @@ void TestMenu::onImGuiRender() {
 
   ImGui::Begin("Test Menu");
   if (currentTest_ != nullptr) {
-    if (ImGui::Button("Back")) {
+    if (ImGui::Button("Back to Test Menu")) {
       delete currentTest_;
       currentTest_ = nullptr;
       ImGui::End();
       return;
     }
+    ImGui::Separator();
     currentTest_->onImGuiRender();
   } else {
     ImGui::Text(

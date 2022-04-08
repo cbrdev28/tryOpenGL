@@ -1,6 +1,7 @@
 #ifndef SCENE_SELECT_CHARACTER_H_
 #define SCENE_SELECT_CHARACTER_H_
 
+#include "GameCharacter.h"
 #include "Renderer.h"
 #include "Test.h"
 
@@ -22,7 +23,8 @@ class SceneSelectCharacter : public Test {
 
  private:
   Renderer renderer_;
-  std::array<float, 4> backgroundColor_ = {0.0F, 0.0F, 0.0F, 1.0F};
+  std::array<float, 4> backgroundColor_{0.0F, 0.0F, 0.0F, 1.0F};
+  std::array<GameCharacter, 2> characters_{{{"Clara"}, {"Felix"}}};
 };
 
 }  // namespace test

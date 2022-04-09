@@ -17,6 +17,7 @@ class VertexArray {
   auto operator=(const VertexArray& other) -> VertexArray& = delete;
   auto operator=(VertexArray&& other) -> VertexArray& = delete;
 
+  // TODO(cbr): rework to use more than one vertex buffer (but no divisor, like I did for `setInstanceBufferLayout`)
   void setBufferLayout(const VertexBuffer& vb, const VertexBufferLayout& layout) const;
 
   void setInstanceBufferLayout(

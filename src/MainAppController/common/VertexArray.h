@@ -17,8 +17,8 @@ class VertexArray {
   auto operator=(const VertexArray& other) -> VertexArray& = delete;
   auto operator=(VertexArray&& other) -> VertexArray& = delete;
 
-  // TODO(cbr): rework to use more than one vertex buffer (but no divisor, like I did for `setInstanceBufferLayout`)
-  void setBufferLayout(const VertexBuffer& vb, const VertexBufferLayout& layout) const;
+  [[deprecated("Replaced by the version which takes a vector of pairs")]] void setBufferLayout(
+      const VertexBuffer& vb, const VertexBufferLayout& layout) const;
 
   void setInstanceBufferLayout(
       const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;

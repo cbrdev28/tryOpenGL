@@ -6,7 +6,13 @@
 
 namespace test {
 
-SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {
+SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx), gameManager_(*ctx.gameManager) {
+  // Build map of textures for each pre-made character
+  characterTextures_.reserve(SceneSelectCharacter::kCharacterCount);
+  for (const auto& character : characters_) {
+    characterTextures_[character.texturePath] = std::make_unique<Texture>(character.texturePath);
+  }
+
   vbVertices_ = std::make_unique<VertexBuffer>(vertices_.data(), sizeof(vertices_));
   vbTextures_ = std::make_unique<VertexBuffer>(textures_.data(), sizeof(textures_));
 
@@ -21,10 +27,9 @@ SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {
   const auto& aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
-  texture_->bind(0);
+  defaultTexture_->bind(0);
   shader_->setUniform1i("u_textureSampler", 0);
 
-  // texture_->unBind();
   shader_->unBind();
   va_->unBind();
   vbVertices_->unBind();
@@ -35,16 +40,20 @@ SceneSelectCharacter::~SceneSelectCharacter() = default;
 void SceneSelectCharacter::onUpdate(float /*deltaTime */) {}
 
 void SceneSelectCharacter::onRender() {
+  auto* gc = gameManager_.getCurrentCharacter();
+  auto& gcTexture = gc == nullptr ? defaultTexture_ : characterTextures_[gc->texturePath];
+  shader_->bind();
+  gcTexture->bind(0);
+  shader_->setUniform1i("u_textureSampler", 0);
+
   renderer_.clearColorBackground(backgroundColor_);
   renderer_.draw(*shader_, *va_, vertices_.size());
 }
 
 void SceneSelectCharacter::onImGuiRender() {
-  auto gm = this->getTestContext().gameManager;
-
   ImGui::Text("Your character");
   ImGui::Indent();
-  auto* gc = gm->getCurrentCharacter();
+  auto* gc = gameManager_.getCurrentCharacter();
   if (gc != nullptr) {
     ImGui::Text("%s", fmt::format("Name: {}", gc->name).c_str());
   } else {
@@ -56,7 +65,7 @@ void SceneSelectCharacter::onImGuiRender() {
   ImGui::Indent();
   for (const auto& character : characters_) {
     if (ImGui::Button(character.name.c_str())) {
-      gm->setCurrentCharacter(character);
+      gameManager_.setCurrentCharacter(character);
     }
   }
   ImGui::Unindent();

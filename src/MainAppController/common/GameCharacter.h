@@ -3,6 +3,7 @@
 
 struct GameCharacter {
   std::string name;
+  std::string texturePath;
 };
 
 #endif  // GAME_CHARACTER_H_

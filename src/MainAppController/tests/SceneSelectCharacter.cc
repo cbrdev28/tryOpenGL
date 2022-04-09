@@ -8,11 +8,9 @@ namespace test {
 
 SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {
   vbVertices_ = std::make_unique<VertexBuffer>(vertices.data(), sizeof(vertices));
-
   VertexBufferLayout verticesLayout;
   verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
-
-  va_->setBufferLayout(*vbVertices_, verticesLayout);
+  va_->setBufferLayout({{*vbVertices_, verticesLayout}});
 
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));

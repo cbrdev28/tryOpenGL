@@ -22,6 +22,8 @@ class VertexArray {
 
   void setInstanceBufferLayout(
       const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
+  void setBufferLayout(
+      const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
 
   void bind() const;
   void unBind() const;

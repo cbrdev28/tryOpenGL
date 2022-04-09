@@ -50,6 +50,27 @@ void VertexArray::setInstanceBufferLayout(
   }
 }
 
+void VertexArray::setBufferLayout(
+    const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const {
+  bind();
+  for (GLuint i = 0; i < vectorOfPairs.size(); i++) {
+    const auto& aPair = vectorOfPairs.at(i);
+    const auto& aBuffer = aPair.first;
+    aBuffer.bind();
+    const auto& aLayout = aPair.second;
+    uint64_t offset = 0;
+    for (GLuint j = 0; j < aLayout.getElements().size(); j++) {
+      // NOLINTNEXTLINE(google-readability-casting, performance-no-int-to-ptr, cppcoreguidelines-pro-type-cstyle-cast)
+      auto* glOffset = (GLvoid*)offset;
+      const auto& element = aLayout.getElements().at(j);
+      GLCall(glEnableVertexAttribArray(i + j));
+      GLCall(
+          glVertexAttribPointer(i + j, element.count, element.type, element.normalized, aLayout.getStride(), glOffset));
+      offset = offset + static_cast<uint64_t>(element.count * VertexBufferElement::getSizeOfType(element.type));
+    }
+  }
+}
+
 void VertexArray::bind() const { GLCall(glBindVertexArray(identifier_)); }
 
 void VertexArray::unBind() const { GLCall(glBindVertexArray(0)); }

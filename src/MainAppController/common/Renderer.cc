@@ -51,3 +51,8 @@ auto Renderer::drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLs
   shaders.unBind();
   return *this;
 }
+
+void Renderer::enableBlend() {
+  GLCall(glEnable(GL_BLEND));
+  GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+}

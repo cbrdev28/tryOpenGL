@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Shader.h"
 #include "Test.h"
+#include "Texture.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 
@@ -32,12 +33,17 @@ class SceneSelectCharacter : public Test {
   std::unique_ptr<VertexArray> va_ = std::make_unique<VertexArray>();
   std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("res/shaders/scene_select_character.shader");
   std::unique_ptr<VertexBuffer> vbVertices_;
+  std::unique_ptr<VertexBuffer> vbTextures_;
+  std::unique_ptr<Texture> texture_ = std::make_unique<Texture>("res/textures/grass.png");
 
-  static constexpr GLfloat kBaseSize = 0.25F;
-  std::array<glm::vec2, 6> vertices = {
+  static constexpr GLfloat kBaseSize = 0.5F;
+  std::array<glm::vec2, 6> vertices_ = {
       glm::vec2(-kBaseSize, -kBaseSize), glm::vec2(kBaseSize, -kBaseSize), glm::vec2(kBaseSize, kBaseSize),
       glm::vec2(kBaseSize, kBaseSize),   glm::vec2(-kBaseSize, kBaseSize), glm::vec2(-kBaseSize, -kBaseSize),
   };
+
+  std::array<glm::vec2, 6> textures_ = {glm::vec2(0.0F, 0.0F), glm::vec2(1.0F, 0.0F), glm::vec2(1.0F, 1.0F),
+                                        glm::vec2(1.0F, 1.0F), glm::vec2(0.0F, 1.0F), glm::vec2(0.0F, 0.0F)};
 };
 
 }  // namespace test

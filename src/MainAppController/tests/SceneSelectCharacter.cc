@@ -7,18 +7,26 @@
 namespace test {
 
 SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx) {
-  vbVertices_ = std::make_unique<VertexBuffer>(vertices.data(), sizeof(vertices));
+  vbVertices_ = std::make_unique<VertexBuffer>(vertices_.data(), sizeof(vertices_));
+  vbTextures_ = std::make_unique<VertexBuffer>(textures_.data(), sizeof(textures_));
+
   VertexBufferLayout verticesLayout;
   verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
-  va_->setBufferLayout({{*vbVertices_, verticesLayout}});
+  VertexBufferLayout texturesLayout;
+  texturesLayout.pushFloat(2);  // Each texture coordinates is made of 2 floats
+  va_->setBufferLayout({{*vbVertices_, verticesLayout}, {*vbTextures_, texturesLayout}});
 
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));
   const auto& aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
-  va_->unBind();
+  texture_->bind(0);
+  shader_->setUniform1i("u_textureSampler", 0);
+
+  // texture_->unBind();
   shader_->unBind();
+  va_->unBind();
   vbVertices_->unBind();
 }
 
@@ -28,7 +36,7 @@ void SceneSelectCharacter::onUpdate(float /*deltaTime */) {}
 
 void SceneSelectCharacter::onRender() {
   renderer_.clearColorBackground(backgroundColor_);
-  renderer_.draw(*shader_, *va_, vertices.size());
+  renderer_.draw(*shader_, *va_, vertices_.size());
 }
 
 void SceneSelectCharacter::onImGuiRender() {

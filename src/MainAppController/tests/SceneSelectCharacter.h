@@ -30,7 +30,7 @@ class SceneSelectCharacter : public Test {
   std::array<GameCharacter, 2> characters_{{{"Clara"}, {"Felix"}}};
 
   std::unique_ptr<VertexArray> va_ = std::make_unique<VertexArray>();
-  std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("res/shaders/scene_select_character.shader");
+  std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("scene_select_character.shader");
   std::unique_ptr<VertexBuffer> vbVertices_;
 
   static constexpr GLfloat kBaseSize = 0.25F;

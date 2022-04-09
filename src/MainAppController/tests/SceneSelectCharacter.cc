@@ -27,6 +27,7 @@ SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx), 
   const auto& aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
+  renderer_.enableBlend();
   defaultTexture_->bind(0);
   shader_->setUniform1i("u_textureSampler", 0);
 

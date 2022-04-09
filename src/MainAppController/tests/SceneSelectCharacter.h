@@ -30,10 +30,10 @@ class SceneSelectCharacter : public Test {
   static constexpr GLfloat kBaseSize = 0.5F;
   static constexpr unsigned int kVertexCount = 6;
 
-  std::array<float, 4> backgroundColor_{0.0F, 0.0F, 0.0F, 1.0F};
+  std::array<float, 4> backgroundColor_{0.1F, 0.4F, 0.2F, 1.0F};
   GameManager& gameManager_;
   std::array<GameCharacter, kCharacterCount> characters_{
-      {{"Clara", "res/textures/wall.png"}, {"Felix", "res/textures/grass.png"}}};
+      {{"Clara", "res/textures/car.png"}, {"Felix", "res/textures/dino.png"}}};
 
   Renderer renderer_;
   std::unique_ptr<VertexArray> va_ = std::make_unique<VertexArray>();

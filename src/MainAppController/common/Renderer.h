@@ -17,6 +17,8 @@ class Renderer {
   auto draw(Shader& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer&;
   auto draw(Shader& shaders, VertexArray& va, unsigned int count) -> Renderer&;
   auto drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount) -> Renderer&;
+
+  void enableBlend();
 };
 
 #endif

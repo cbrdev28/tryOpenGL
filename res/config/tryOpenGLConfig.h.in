@@ -1,3 +1,5 @@
+// Check if we need a #ifndef guard
+
 // clang-format off
 // Config file for cmake
 #define tryOpenGL_VERSION_MAJOR @tryOpenGL_VERSION_MAJOR@

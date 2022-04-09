@@ -25,12 +25,18 @@ set(helpersDir "src/MainAppController/helpers")
 set(managersDir "src/MainAppController/managers")
 set(testsDir "src/MainAppController/tests")
 
-file (GLOB srcFiles "${srcDir}/*.cc" "${srcDir}/*.h")
-file (GLOB mainAppSrcFiles "${mainAppDir}/*.cc" "${mainAppDir}/*.h")
-file (GLOB commonSrcFiles "${commonDir}/*.cc" "${commonDir}/*.h")
-file (GLOB helpersSrcFiles "${helpersDir}/*.cc" "${helpersDir}/*.h")
-file (GLOB managersSrcFiles "${managersDir}/*.cc" "${managersDir}/*.h")
-file (GLOB testsSrcFiles "${testsDir}/*.cc" "${testsDir}/*.h")
+file(GLOB srcFiles "${srcDir}/*.cc" "${srcDir}/*.h")
+file(GLOB mainAppSrcFiles "${mainAppDir}/*.cc" "${mainAppDir}/*.h")
+file(GLOB commonSrcFiles "${commonDir}/*.cc" "${commonDir}/*.h")
+file(GLOB helpersSrcFiles "${helpersDir}/*.cc" "${helpersDir}/*.h")
+file(GLOB managersSrcFiles "${managersDir}/*.cc" "${managersDir}/*.h")
+file(GLOB testsSrcFiles "${testsDir}/*.cc" "${testsDir}/*.h")
+
+# Resources
+set(resShaderDir "res/shaders")
+file(GLOB shaderFiles "${resShaderDir}/*.shader")
+set(resTextureDir "res/textures")
+file(GLOB textureFiles "${resTextureDir}/*.png")
 
 add_executable(
     tryOpenGL
@@ -41,6 +47,8 @@ add_executable(
     ${managersSrcFiles}
     ${testsSrcFiles}
     # Seen from examples: we could also add the resources here (shaders, textures, ...)
+    # ${shaderFiles}
+    # ${textureFiles}
 )
 
 target_compile_options(tryOpenGL PRIVATE -Wall)
@@ -57,7 +65,7 @@ target_include_directories(
     ${helpersDir}
     ${managersDir}
     ${testsDir}
-    # For the config file `tryOpenGLConfig.h`
+    # For the config file `tryOpenGLConfig.h` (generated at compile times & copied in bin dir)
     ${PROJECT_BINARY_DIR}
 )
 
@@ -73,40 +81,13 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     target_link_libraries(tryOpenGL -static)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
-#########################################################
-######## Pre-compiled header: fix for clang-tidy ########
-# From: https://gitlab.kitware.com/cmake/cmake/-/issues/22081
-set(PREFIX_HEADER "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
-# Uncomment the rest to fix clang-tidy (TODO: disable in release mode)
-# set(CLANG_PCH_OUTPUT "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}.dir/cmake_pch.hxx.pch")
-# get_property(CLANG_PCH_COMPILE_OPTIONS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
-# get_property(CLANG_PCH_INCLUDE_DIRECTORIES TARGET ${PROJECT_NAME} PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
-# set(CLANG_PCH_INCLUDE_STRING "")
-# foreach(dir ${CLANG_PCH_INCLUDE_DIRECTORIES})
-#     # Generate system includes to suppress warnings for third-party headers
-#     set(CLANG_PCH_INCLUDE_STRING ${CLANG_PCH_INCLUDE_STRING} -isystem ${dir})
-# endforeach()
-# add_custom_command(
-#     OUTPUT "${CLANG_PCH_OUTPUT}"
-#     # Mac: instead of `clang++` use `cbr-llvm-clang++`. It breaks the build but will let ctidy script run properly.
-#     COMMAND clang++ ${CLANG_PCH_COMPILE_OPTIONS} -std=c++${CMAKE_CXX_STANDARD} ${CLANG_PCH_INCLUDE_STRING} -x c++-header ${PREFIX_HEADER} -Xclang -emit-pch -o ${CLANG_PCH_OUTPUT}
-#     COMMENT "Creating Clang precompiled header for clang-tidy."
-# )
-# add_custom_target(clang-pch ALL
-#     DEPENDS ${CLANG_PCH_OUTPUT}
-# )
-# # Create "fake" precompiled header for clang-tidy
-# add_dependencies(${PROJECT_NAME} clang-pch)
-# # Create the real GCC precompiled header used by compilation units
-target_precompile_headers(${PROJECT_NAME} PUBLIC ${PREFIX_HEADER})
-######## Pre-compiled header: fix for clang-tidy ########
-#########################################################
+# Precompiled headers break my script for clang-tidy
+# This "almost" fixed it: https://gitlab.kitware.com/cmake/cmake/-/issues/22081
+set(CBR_PCH "${CMAKE_CURRENT_LIST_DIR}/${srcDir}/cbrpch.h")
+target_precompile_headers(${PROJECT_NAME} PUBLIC ${CBR_PCH})
 
 # Copy resources
 # Shaders
-set(resShaderDir "res/shaders")
-file(GLOB shaderFiles "${resShaderDir}/*.shader")
-
 set(binResShaderDir "${CMAKE_BINARY_DIR}/${resShaderDir}")
 file(MAKE_DIRECTORY ${binResShaderDir})
 
@@ -115,9 +96,6 @@ foreach(file ${shaderFiles})
 endforeach(file ${shaderFiles})
 
 # Textures
-set(resTextureDir "res/textures")
-file(GLOB textureFiles "${resTextureDir}/*.png")
-
 set(binResTextureDir "${CMAKE_BINARY_DIR}/${resTextureDir}")
 file(MAKE_DIRECTORY ${binResTextureDir})
 
@@ -125,7 +103,7 @@ foreach(file ${textureFiles})
     configure_file(${file} ${binResTextureDir} COPYONLY)
 endforeach(file ${textureFiles})
 
-# Resource config file is a special case, so we can export version numbers
+# Resource config file is a special case, generated at compile time to export version numbers
 set(resConfigDir "res/config")
 configure_file("${resConfigDir}/tryOpenGLConfig.h.in" tryOpenGLConfig.h)
 

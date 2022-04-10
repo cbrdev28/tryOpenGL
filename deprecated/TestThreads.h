@@ -13,7 +13,6 @@
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "glmHeaders.h"
-#include "openGLErrorHelpers.h"
 
 namespace test {
 

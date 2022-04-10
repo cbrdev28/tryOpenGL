@@ -2,8 +2,6 @@
 
 #include "SceneTraining.h"
 
-#include "openGLErrorHelpers.h"
-
 namespace test {
 
 SceneTraining::SceneTraining(const TestContext& ctx)

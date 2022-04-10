@@ -2,8 +2,6 @@
 
 #include "Texture.h"
 
-#include "openGLErrorHelpers.h"
-
 Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
   stbi_set_flip_vertically_on_load(1);
   localBuffer_ = stbi_load(filePath_.c_str(), &width_, &height_, &channelsInFile_, STBI_rgb_alpha);

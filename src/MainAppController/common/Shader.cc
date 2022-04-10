@@ -5,8 +5,6 @@
 
 #include "Shader.h"
 
-#include "openGLErrorHelpers.h"
-
 constexpr int SHADER_INFO_LOG = 512;
 
 Shader::Shader(std::string filepath) : shaderFilePath_(std::move(filepath)) { init(); };

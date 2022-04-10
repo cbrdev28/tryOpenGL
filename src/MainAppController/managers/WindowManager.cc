@@ -5,8 +5,6 @@
 
 #include "WindowManager.h"
 
-#include "openGLErrorHelpers.h"
-
 WindowManager::~WindowManager() {
   if (!listeners_.empty()) {
     fmt::print("WARN: ~WindowManager(): listeners are not empty!\n");

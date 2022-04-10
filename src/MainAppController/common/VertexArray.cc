@@ -4,7 +4,6 @@
 
 #include "VertexBuffer.h"
 #include "VertexBufferElement.h"
-#include "openGLErrorHelpers.h"
 
 VertexArray::VertexArray() { GLCall(glGenVertexArrays(1, &identifier_)); }
 

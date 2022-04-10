@@ -1,8 +1,6 @@
 #ifndef VERTEX_BUFFER_ELEMENT_H_
 #define VERTEX_BUFFER_ELEMENT_H_
 
-#include "openGLErrorHelpers.h"
-
 struct VertexBufferElement {
   GLenum type;
   GLint count;

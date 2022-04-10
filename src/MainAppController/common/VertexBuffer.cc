@@ -2,8 +2,6 @@
 
 #include "VertexBuffer.h"
 
-#include "openGLErrorHelpers.h"
-
 VertexBuffer::VertexBuffer(const GLvoid* data, GLsizeiptr size, GLenum glDrawMode) {
   GLCall(glGenBuffers(1, &identifier_));
   GLCall(glBindBuffer(GL_ARRAY_BUFFER, identifier_));

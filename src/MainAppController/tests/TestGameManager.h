@@ -2,6 +2,7 @@
 #define TEST_GAME_MANAGER_H_
 
 #include "SceneSelectCharacter.h"
+#include "SceneTraining.h"
 #include "Test.h"
 
 namespace test {
@@ -29,9 +30,10 @@ class TestGameManager : public Test {
   float deltaTime_{0.0F};
 
   std::unique_ptr<Test> currentScene_{nullptr};
-  static constexpr unsigned int kMaxScene = 1;
+  static constexpr unsigned int kMaxScene = 2;
   std::array<Scene, kMaxScene> scenes_{
-      {{"Scene Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }}}};
+      {{"Scene Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }},
+       {"Scene Training", [&]() { return std::make_unique<SceneTraining>(this->getTestContext()); }}}};
 };
 
 }  // namespace test

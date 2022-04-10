@@ -21,7 +21,8 @@ void TestGameManager::onRender() {
 
 void TestGameManager::onImGuiRender() {
   if (currentScene_) {
-    if (ImGui::Button(fmt::format("Back to Game Manager [{}]", fmt::ptr(currentScene_)).c_str())) {
+    // if (ImGui::Button(fmt::format("Back to Game Manager [{}]", fmt::ptr(currentScene_)).c_str())) {
+    if (ImGui::Button("Back to Game Manager")) {
       currentScene_.reset(nullptr);
       return;
     }
@@ -68,9 +69,11 @@ void TestGameManager::onImGuiRender() {
   ImGui::Text("Scenes");
   ImGui::Indent();
   for (const auto& scene : scenes_) {
+    ImGui::BeginDisabled(scene.dependsOnCurrentCharacter && gc == nullptr);
     if (ImGui::Button(scene.name.c_str())) {
       currentScene_ = scene.create();
     }
+    ImGui::EndDisabled();
   }
   ImGui::Unindent();
 }

@@ -1,6 +1,8 @@
 #ifndef SCENE_TRAINING_H_
 #define SCENE_TRAINING_H_
 
+#include "GameCharacter.h"
+#include "GameManager.h"
 #include "Test.h"
 
 namespace test {
@@ -19,6 +21,8 @@ class SceneTraining : public Test {
   void onImGuiRender() override;
 
  private:
+  GameManager& gameManager_;
+  GameCharacter* currentCharacter_;
 };
 
 }  // namespace test

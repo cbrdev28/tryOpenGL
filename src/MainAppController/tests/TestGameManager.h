@@ -1,6 +1,7 @@
 #ifndef TEST_GAME_MANAGER_H_
 #define TEST_GAME_MANAGER_H_
 
+#include "Renderer.h"
 #include "SceneSelectCharacter.h"
 #include "SceneTraining.h"
 #include "Test.h"
@@ -30,6 +31,7 @@ class TestGameManager : public Test {
   void onImGuiRender() override;
 
  private:
+  Renderer renderer_;
   float deltaTime_{0.0F};
 
   std::unique_ptr<Test> currentScene_{nullptr};

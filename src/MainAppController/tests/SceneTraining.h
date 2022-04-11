@@ -31,6 +31,14 @@ class SceneTraining : public Test {
   GameManager& gameManager_;
   GameCharacter* currentCharacter_;
 
+  enum TextureIdx {
+    MAIN_CHARACTER = 0,
+  };
+  static constexpr unsigned int kTexturesCount = 1;
+  std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
+  BaseSquareModel baseSquareModel_;
+  CharacterModel characterModel_;
+
   Renderer renderer_;
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_training.shader")};
   std::unique_ptr<VertexArray> va_{new VertexArray};
@@ -38,20 +46,17 @@ class SceneTraining : public Test {
   std::unique_ptr<VertexBuffer> vbBaseTextures_;
 
   // For now we only render 1 main character
-  static constexpr unsigned int kInstancesCount = 1;
+  static constexpr unsigned int kMaxInstancesCount = 1;
   std::unique_ptr<VertexBuffer> vbiPositions_;
   std::unique_ptr<VertexBuffer> vbiScales_;
   std::unique_ptr<VertexBuffer> vbiAngles_;
   std::unique_ptr<VertexBuffer> vbiTextureIds_;
 
-  enum TextureIdx {
-    MAIN_CHARACTER = 0,
-  };
-  static constexpr unsigned int kTexturesCount = 1;
-  std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
-
-  BaseSquareModel baseSquareModel_;
-  CharacterModel characterModel_;
+  auto currentInstanceCount() -> GLsizei {
+    // For now we only render 1 main character
+    return 1;
+  }
+  void setVBInstances();
 };
 
 }  // namespace test

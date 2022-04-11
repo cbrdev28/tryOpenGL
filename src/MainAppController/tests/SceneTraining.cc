@@ -19,13 +19,13 @@ SceneTraining::SceneTraining(const TestContext& ctx)
       std::make_unique<VertexBuffer>(baseSquareModel_.textures_.data(), sizeof(baseSquareModel_.textures_));
 
   vbiPositions_ =
-      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW);
   vbiScales_ =
-      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW);
   vbiAngles_ =
-      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW);
   vbiTextureIds_ =
-      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW);
 
   vbBaseVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbBaseTextures_->setDivisor(VertexBufferDivisor::ALWAYS);
@@ -75,14 +75,44 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   vbiPositions_->unBind();
   vbBaseTextures_->unBind();
   vbBaseVertices_->unBind();
+
+  this->setVBInstances();
 }
 
 SceneTraining::~SceneTraining() = default;
 
 void SceneTraining::onUpdate(float /*deltaTime */) {}
 
-void SceneTraining::onRender() {}
+void SceneTraining::onRender() {
+  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(baseSquareModel_.vertices_.size()),
+                         this->currentInstanceCount());
+}
 
 void SceneTraining::onImGuiRender() {}
+
+void SceneTraining::setVBInstances() {
+  GLintptr offset = 0;
+  auto sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * 1);  // Only 1 main character
+  vbiPositions_->setInstanceData(&characterModel_.position, sizeToSend,
+                                 sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount);
+  vbiPositions_->unBind();
+
+  offset = 0;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * 1);  // Only 1 main character
+  vbiScales_->setInstanceData(&characterModel_.scale, sizeToSend,
+                              sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount);
+  vbiScales_->unBind();
+
+  offset = 0;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * 1);  // Only 1 main character
+  vbiAngles_->setInstanceData(&characterModel_.angle, sizeToSend, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount);
+  vbiAngles_->unBind();
+
+  offset = 0;
+  sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * 1);  // Only 1 main character
+  vbiTextureIds_->setInstanceData(&characterModel_.textureID, sizeToSend,
+                                  sizeof(GLfloat) * SceneTraining::kMaxInstancesCount);
+  vbiTextureIds_->unBind();
+}
 
 }  // namespace test

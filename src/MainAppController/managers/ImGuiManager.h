@@ -5,7 +5,7 @@
 
 class ImGuiManager {
  public:
-  explicit ImGuiManager(const WindowManager& windowManager);
+  explicit ImGuiManager(WindowManager& windowManager);
   ~ImGuiManager();
 
   ImGuiManager(const ImGuiManager& other) = delete;
@@ -20,7 +20,7 @@ class ImGuiManager {
   void renderExample();
 
  private:
-  const WindowManager& windowManager_;
+  WindowManager& windowManager_;
   ImGuiContext* imGuiContext_{nullptr};
 };
 

@@ -38,6 +38,7 @@ auto MainAppController::renderLoop() -> void {
 
   GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {
+    glfwPollEvents();
     windowManager_->updateWindowStats();
     windowManager_->processKeyInput();
     renderer_.clear();
@@ -52,6 +53,5 @@ auto MainAppController::renderLoop() -> void {
     imGuiManager_->render();
 
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 }

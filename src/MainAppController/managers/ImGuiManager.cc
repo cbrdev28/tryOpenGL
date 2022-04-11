@@ -2,7 +2,7 @@
 
 #include "ImGuiManager.h"
 
-ImGuiManager::ImGuiManager(const WindowManager& windowManager) : windowManager_(windowManager) {}
+ImGuiManager::ImGuiManager(WindowManager& windowManager) : windowManager_(windowManager) {}
 
 ImGuiManager::~ImGuiManager() {
   ImGui_ImplOpenGL3_Shutdown();
@@ -15,14 +15,25 @@ void ImGuiManager::init() {
   imGuiContext_ = ImGui::CreateContext();
 
   ImGuiIO& io = ImGui::GetIO();
+  // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+  // Setup Dear ImGui style
+  // ImGui::StyleColorsDark();
+  // ImGui::StyleColorsClassic();
+
+  ImGuiStyle& style = ImGui::GetStyle();
+  if ((io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0) {
+    style.WindowRounding = 0.0F;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0F;
+  }
+
   ImGui_ImplGlfw_InitForOpenGL(windowManager_.getWindow(), true);
 #ifdef CBR_APPLE
-  ImGui_ImplOpenGL3_Init("#version 150");
+  ImGui_ImplOpenGL3_Init("#version 410");
 #else
-  ImGui_ImplOpenGL3_Init("#version 130");
+  ImGui_ImplOpenGL3_Init("#version 410");
 #endif
 }
 
@@ -32,7 +43,6 @@ void ImGuiManager::renderFrame() {
   ImGui::NewFrame();
 
   const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-
   ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
   dockspace_flags |= ImGuiDockNodeFlags_PassthruCentralNode;
   dockspace_flags |= ImGuiDockNodeFlags_NoDockingInCentralNode;
@@ -44,10 +54,10 @@ void ImGuiManager::render() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
   if ((ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) != 0) {
-    GLFWwindow* main_context = glfwGetCurrentContext();
+    GLFWwindow* mainContext = windowManager_.getWindow();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
-    glfwMakeContextCurrent(main_context);
+    windowManager_.setCurrentContext(mainContext);
   }
 }
 

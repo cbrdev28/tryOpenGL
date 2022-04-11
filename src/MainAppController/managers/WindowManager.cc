@@ -51,7 +51,7 @@ void WindowManager::init() {
   glfwSetWindowUserPointer(window_, this);
   glfwSetFramebufferSizeCallback(window_, WindowManager::framebufferSizeCallback);
   glfwSetKeyCallback(window_, WindowManager::keyCallback);
-  glfwSwapInterval(0);
+  glfwSwapInterval(0);  // Set to 1 to enabled VSync
 }
 
 void WindowManager::updateWindowStats() {
@@ -86,6 +86,11 @@ void WindowManager::processKeyInput() {
 }
 
 void WindowManager::setWindowShouldClose() { glfwSetWindowShouldClose(window_, 1 /* true */); }
+
+void WindowManager::setCurrentContext(GLFWwindow* window) {
+  ASSERT(window == window_);
+  glfwMakeContextCurrent(window_);
+}
 
 void WindowManager::framebufferSizeCallback(int width, int height) {
   width_ = width;

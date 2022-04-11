@@ -41,7 +41,7 @@ class SceneSelectCharacter : public Test {
   std::unique_ptr<VertexBuffer> vbVertices_;
   std::unique_ptr<VertexBuffer> vbTextures_;
   std::unique_ptr<Texture> defaultTexture_ = std::make_unique<Texture>("res/textures/grass.png");
-  std::unordered_map<std::string, std::unique_ptr<Texture>> characterTextures_{};
+  std::unique_ptr<Texture> currentTexture_ = nullptr;
 
   std::array<glm::vec2, kVertexCount> vertices_ = {
       glm::vec2(-kBaseSize, -kBaseSize), glm::vec2(kBaseSize, -kBaseSize), glm::vec2(kBaseSize, kBaseSize),

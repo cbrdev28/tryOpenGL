@@ -7,10 +7,9 @@
 namespace test {
 
 SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx), gameManager_(*ctx.gameManager) {
-  // Build map of textures for each pre-made character
-  characterTextures_.reserve(SceneSelectCharacter::kCharacterCount);
-  for (const auto& character : characters_) {
-    characterTextures_[character.texturePath] = std::make_unique<Texture>(character.texturePath);
+  auto* gc = gameManager_.getCurrentCharacter();
+  if (gc != nullptr) {
+    currentTexture_ = std::make_unique<Texture>(gc->texturePath);
   }
 
   vbVertices_ = std::make_unique<VertexBuffer>(vertices_.data(), sizeof(vertices_));
@@ -42,7 +41,7 @@ void SceneSelectCharacter::onUpdate(float /*deltaTime */) {}
 
 void SceneSelectCharacter::onRender() {
   auto* gc = gameManager_.getCurrentCharacter();
-  auto& gcTexture = gc == nullptr ? defaultTexture_ : characterTextures_[gc->texturePath];
+  auto& gcTexture = gc == nullptr ? defaultTexture_ : currentTexture_;
   shader_->bind();
   gcTexture->bind(0);
   shader_->setUniform1i("u_textureSampler", 0);
@@ -67,6 +66,7 @@ void SceneSelectCharacter::onImGuiRender() {
   for (const auto& character : characters_) {
     if (ImGui::Button(character.name.c_str())) {
       gameManager_.setCurrentCharacter(character);
+      currentTexture_ = std::make_unique<Texture>(character.texturePath);
     }
   }
   ImGui::Unindent();

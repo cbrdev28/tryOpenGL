@@ -3,7 +3,7 @@
 
 struct CharacterModel {
   glm::vec2 position = {0.0F, 0.0F};
-  glm::vec2 scale = {1.0F, 1.0F};
+  glm::vec2 scale = {3.0F, 3.0F};
   GLfloat angle = glm::radians(0.0F);  // To rotate around Z axis (most likely for weapons/bullets)
   GLfloat textureID = 0.0F;
 

@@ -18,6 +18,11 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   vbBaseTextures_ =
       std::make_unique<VertexBuffer>(baseSquareModel_.textures_.data(), sizeof(baseSquareModel_.textures_));
 
+  vbiPositions_ =
+      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+  vbiScales_ =
+      std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+
   vbBaseVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbBaseTextures_->setDivisor(VertexBufferDivisor::ALWAYS);
 
@@ -25,10 +30,17 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
   VertexBufferLayout texturesLayout;
   texturesLayout.pushFloat(2);  // Each texture coordinate is made of 2 floats
+  VertexBufferLayout positionsLayout;
+  positionsLayout.pushFloat(2);  // Each position is made of 2 floats
+  VertexBufferLayout scalesLayout;
+  scalesLayout.pushFloat(2);  // Each scale is made of 2 floats
 
   va_->setInstanceBufferLayout({
+      // The order needs to match with our shader!
       {*vbBaseVertices_, verticesLayout},
       {*vbBaseTextures_, texturesLayout},
+      {*vbiPositions_, positionsLayout},
+      {*vbiScales_, scalesLayout},
   });
 
   shader_->bind();
@@ -43,6 +55,8 @@ SceneTraining::SceneTraining(const TestContext& ctx)
 
   shader_->unBind();
   va_->unBind();
+  vbiScales_->unBind();
+  vbiPositions_->unBind();
   vbBaseTextures_->unBind();
   vbBaseVertices_->unBind();
 }

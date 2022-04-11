@@ -1,8 +1,8 @@
 #ifndef SCENE_TRAINING_H_
 #define SCENE_TRAINING_H_
 
-// #include "CharacterModel.h"
 #include "BaseSquareModel.h"
+#include "CharacterModel.h"
 #include "GameCharacter.h"
 #include "GameManager.h"
 #include "Renderer.h"
@@ -37,6 +37,11 @@ class SceneTraining : public Test {
   std::unique_ptr<VertexBuffer> vbBaseVertices_;
   std::unique_ptr<VertexBuffer> vbBaseTextures_;
 
+  // For now we only render 1 main character
+  static constexpr unsigned int kInstancesCount = 1;
+  std::unique_ptr<VertexBuffer> vbiPositions_;
+  std::unique_ptr<VertexBuffer> vbiScales_;
+
   enum TextureIdx {
     MAIN_CHARACTER = 0,
   };
@@ -44,7 +49,7 @@ class SceneTraining : public Test {
   std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
 
   BaseSquareModel baseSquareModel_;
-  // CharacterModel characterModel_;
+  CharacterModel characterModel_;
 };
 
 }  // namespace test

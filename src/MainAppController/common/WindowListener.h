@@ -12,12 +12,7 @@ class WindowListener {
 
   virtual void onResize(int /* width */, int /* height */) {}
 
-  virtual void onKeyADown() {}
-  virtual void onKeyWDown() {}
-  virtual void onKeySDown() {}
-  virtual void onKeyDDown() {}
-
-  // TODO(cbr): check if this set as `default` on purpose?
+  // TODO(cbr): check if this set as `default` on purpose (if we use this ever again)?
   WindowListener(const WindowListener& other) = default;
 
   WindowListener(WindowListener&& other) = delete;

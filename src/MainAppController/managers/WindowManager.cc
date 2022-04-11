@@ -64,24 +64,16 @@ void WindowManager::updateWindowStats() {
 
 void WindowManager::processKeyInput() {
   if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-    for (auto& listener : listeners_) {
-      listener->onKeyADown();
-    }
+    // Update key map
   }
   if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
-    for (auto& listener : listeners_) {
-      listener->onKeyWDown();
-    }
+    // Update key map
   }
   if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
-    for (auto& listener : listeners_) {
-      listener->onKeySDown();
-    }
+    // Update key map
   }
   if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-    for (auto& listener : listeners_) {
-      listener->onKeyDDown();
-    }
+    // Update key map
   }
 }
 

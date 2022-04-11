@@ -5,6 +5,8 @@
 
 #include "WindowManager.h"
 
+WindowManager::WindowManager() { pressedDownKeysMap_.reserve(WindowManager::kKeyMapCount); }
+
 WindowManager::~WindowManager() {
   if (!listeners_.empty()) {
     fmt::print("WARN: ~WindowManager(): listeners are not empty!\n");
@@ -63,18 +65,11 @@ void WindowManager::updateWindowStats() {
 }
 
 void WindowManager::processKeyInput() {
-  if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-    // Update key map
-  }
-  if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
-    // Update key map
-  }
-  if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
-    // Update key map
-  }
-  if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-    // Update key map
-  }
+  // As long as a key is not "released", we mark it as "pressed down"
+  pressedDownKeysMap_[GLFW_KEY_A] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_W] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_S] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_D] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
 }
 
 void WindowManager::setWindowShouldClose() { glfwSetWindowShouldClose(window_, 1 /* true */); }

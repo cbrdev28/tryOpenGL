@@ -10,7 +10,7 @@
  */
 class WindowManager {
  public:
-  WindowManager() = default;
+  WindowManager();
   ~WindowManager();
 
   WindowManager(const WindowManager& other) = delete;
@@ -55,6 +55,11 @@ class WindowManager {
   GLFWwindow* window_{nullptr};
   AspectRatio aspectRatio_{16, 9, 16.0F / 9.0F};
   WindowStats windowStats_;
+
+  // Update this count when supporting new keys (used to reserve memory)
+  static constexpr unsigned int kKeyMapCount = 4;
+  // We depend directly on GLFW key code (to keep track of keys pressed down)
+  std::unordered_map<int /* keyCode */, bool /* pressedDown */> pressedDownKeysMap_;
 
   int width_{WindowManager::defaultWidth};
   int height_{static_cast<int>(static_cast<float>(width_) / aspectRatio_.ratio)};

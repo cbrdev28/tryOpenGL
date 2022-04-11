@@ -22,9 +22,17 @@ SceneTraining::SceneTraining(const TestContext& ctx)
       std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
   vbiScales_ =
       std::make_unique<VertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+  vbiAngles_ =
+      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
+  vbiTextureIds_ =
+      std::make_unique<VertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kInstancesCount, GL_STREAM_DRAW);
 
   vbBaseVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
   vbBaseTextures_->setDivisor(VertexBufferDivisor::ALWAYS);
+  vbiPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbiScales_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbiAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
+  vbiTextureIds_->setDivisor(VertexBufferDivisor::FOR_EACH);
 
   VertexBufferLayout verticesLayout;
   verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
@@ -34,6 +42,10 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   positionsLayout.pushFloat(2);  // Each position is made of 2 floats
   VertexBufferLayout scalesLayout;
   scalesLayout.pushFloat(2);  // Each scale is made of 2 floats
+  VertexBufferLayout anglesLayout;
+  anglesLayout.pushFloat(1);  // Each angle is made of 1 float
+  VertexBufferLayout textureIdsLayout;
+  textureIdsLayout.pushFloat(1);  // Each texture ID is made of 1 float
 
   va_->setInstanceBufferLayout({
       // The order needs to match with our shader!
@@ -41,6 +53,8 @@ SceneTraining::SceneTraining(const TestContext& ctx)
       {*vbBaseTextures_, texturesLayout},
       {*vbiPositions_, positionsLayout},
       {*vbiScales_, scalesLayout},
+      {*vbiAngles_, anglesLayout},
+      {*vbiTextureIds_, textureIdsLayout},
   });
 
   shader_->bind();
@@ -55,6 +69,8 @@ SceneTraining::SceneTraining(const TestContext& ctx)
 
   shader_->unBind();
   va_->unBind();
+  vbiTextureIds_->unBind();
+  vbiAngles_->unBind();
   vbiScales_->unBind();
   vbiPositions_->unBind();
   vbBaseTextures_->unBind();

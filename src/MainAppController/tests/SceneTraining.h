@@ -41,6 +41,8 @@ class SceneTraining : public Test {
   static constexpr unsigned int kInstancesCount = 1;
   std::unique_ptr<VertexBuffer> vbiPositions_;
   std::unique_ptr<VertexBuffer> vbiScales_;
+  std::unique_ptr<VertexBuffer> vbiAngles_;
+  std::unique_ptr<VertexBuffer> vbiTextureIds_;
 
   enum TextureIdx {
     MAIN_CHARACTER = 0,

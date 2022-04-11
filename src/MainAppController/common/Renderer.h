@@ -10,13 +10,13 @@
  */
 class Renderer {
  public:
-  auto clear() -> Renderer&;
-  auto clearColorBackground(std::array<float, 4>& backgroundColor) -> Renderer&;
-  auto clearColorBackground(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) -> Renderer&;
+  void clear();
+  void clearColorBackground(std::array<float, 4>& backgroundColor);
+  void clearColorBackground(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 
-  auto draw(Shader& shaders, VertexArray& va, IndexBuffer& ib) -> Renderer&;
-  auto draw(Shader& shaders, VertexArray& va, unsigned int count) -> Renderer&;
-  auto drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount) -> Renderer&;
+  void draw(Shader& shaders, VertexArray& va, IndexBuffer& ib);
+  void draw(Shader& shaders, VertexArray& va, unsigned int count);
+  void drawInstance(Shader& shaders, VertexArray& va, GLsizei count, GLsizei instancesCount);
 
   void enableBlend();
 };

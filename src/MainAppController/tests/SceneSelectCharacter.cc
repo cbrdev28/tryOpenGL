@@ -12,9 +12,6 @@ SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx), 
     currentTexture_ = std::make_unique<Texture>(gc->texturePath, false);
   }
 
-  vbVertices_ = std::make_unique<VertexBuffer>(vertices_.data(), sizeof(vertices_));
-  vbTextures_ = std::make_unique<VertexBuffer>(textures_.data(), sizeof(textures_));
-
   VertexBufferLayout verticesLayout;
   verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
   VertexBufferLayout texturesLayout;

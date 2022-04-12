@@ -37,6 +37,9 @@ class WindowManager {
   [[nodiscard]] inline auto getHeight() const -> int { return height_; };
   [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
   [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
+  [[nodiscard]] inline auto getPressedDownKeysMap() const -> const std::unordered_map<int, bool>& {
+    return pressedDownKeysMap_;
+  };
 
   inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
@@ -64,7 +67,9 @@ class WindowManager {
   int width_{WindowManager::defaultWidth};
   int height_{static_cast<int>(static_cast<float>(width_) / aspectRatio_.ratio)};
   std::vector<WindowListener*> listeners_{};
+
   void framebufferSizeCallback(int width, int height);
+  void keyCallback(int key, int scancode, int action, int mods);
 
   /**
    * Callback

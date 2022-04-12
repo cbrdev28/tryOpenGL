@@ -66,10 +66,10 @@ void WindowManager::updateWindowStats() {
 
 void WindowManager::processKeyInput() {
   // As long as a key is not "released", we mark it as "pressed down"
-  pressedDownKeysMap_[GLFW_KEY_A] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
-  pressedDownKeysMap_[GLFW_KEY_W] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
-  pressedDownKeysMap_[GLFW_KEY_S] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
-  pressedDownKeysMap_[GLFW_KEY_D] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
+  // pressedDownKeysMap_[GLFW_KEY_W] = glfwGetKey(window_, GLFW_KEY_W) != GLFW_RELEASE;
+  // pressedDownKeysMap_[GLFW_KEY_A] = glfwGetKey(window_, GLFW_KEY_A) != GLFW_RELEASE;
+  // pressedDownKeysMap_[GLFW_KEY_S] = glfwGetKey(window_, GLFW_KEY_S) != GLFW_RELEASE;
+  // pressedDownKeysMap_[GLFW_KEY_D] = glfwGetKey(window_, GLFW_KEY_D) != GLFW_RELEASE;
 }
 
 void WindowManager::setWindowShouldClose() { glfwSetWindowShouldClose(window_, 1 /* true */); }
@@ -89,6 +89,23 @@ void WindowManager::framebufferSizeCallback(int width, int height) {
   }
 }
 
+void WindowManager::keyCallback(int key, int scancode, int action, int mods) {
+  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
+    this->setWindowShouldClose();
+  }
+
+  pressedDownKeysMap_[GLFW_KEY_W] = key == GLFW_KEY_W && action != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_A] = key == GLFW_KEY_A && action != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_S] = key == GLFW_KEY_S && action != GLFW_RELEASE;
+  pressedDownKeysMap_[GLFW_KEY_D] = key == GLFW_KEY_D && action != GLFW_RELEASE;
+
+  for (auto* listener : listeners_) {
+    listener->onKeyCallback(key, scancode, action, mods);
+  }
+  // Debug:
+  // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
+}
+
 /**
  * Callback
  */
@@ -97,16 +114,12 @@ void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int h
   windowManager->framebufferSizeCallback(width, height);
   // Debug
   // fmt::print("framebufferSizeCallback w/ = {}, h = {}", width, height);
-  // const auto testSize = WindowManager::listeners_.size();
-  // fmt::print("framebufferSizeCallback testSize = {}", testSize);
 }
 
-void WindowManager::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int mods) {
-  // TODO(cbr): make a member function for this callback (like `framebufferSizeCallback`)
+void WindowManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   auto* windowManager = static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-  if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS) && ((mods & WindowManager::defaultKeyModMask) == 0)) {
-    windowManager->setWindowShouldClose();
-  }
+  windowManager->keyCallback(key, scancode, action, mods);
+  // Debug
   // fmt::print("Key: {}, scancode: {}, action: {}, mods: {}\n", key, scancode, action, mods);
   // if ((key == GLFW_KEY_ENTER) && ((mods & GLFW_MOD_ALT) != 0) && (action == GLFW_PRESS)) {
   //   // Pressed Alt + Enter

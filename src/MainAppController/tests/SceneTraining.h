@@ -11,10 +11,11 @@
 #include "Texture.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "WindowListener.h"
 
 namespace test {
 
-class SceneTraining : public Test {
+class SceneTraining : public Test, public WindowListener {
  public:
   explicit SceneTraining(const TestContext& ctx);
   ~SceneTraining() override;
@@ -27,18 +28,20 @@ class SceneTraining : public Test {
   void onRender() override;
   void onImGuiRender() override;
 
+  void onKeyCallback(int key, int scancode, int action, int mods) override;
+
  private:
   GameManager& gameManager_;
   GameCharacter* character_;
+  Renderer& renderer_;
   BaseSquareModel bsModel_;
   CharacterModel cModel_;
-  Renderer& renderer_;
 
+  // For now we only render 1 main character
+  static constexpr unsigned int kTexturesCount = 1;
   enum TextureIdx {
     MAIN_CHARACTER = 0,
   };
-  // For now we only render 1 main character
-  static constexpr unsigned int kTexturesCount = 1;
   std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
 
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_training.shader")};
@@ -61,7 +64,10 @@ class SceneTraining : public Test {
     // For now we only render 1 main character
     return 1;
   }
+
   void setVBInstances();
+
+  void onKeyPressed();
 };
 
 }  // namespace test

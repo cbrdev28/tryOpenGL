@@ -13,6 +13,8 @@ SceneTraining::SceneTraining(const TestContext& ctx)
       renderer_(*ctx.renderer) {
   // This scene cannot work without a current character
   ASSERT(character_ != nullptr);
+  this->getTestContext().windowManager->addWindowListener(this);
+
   renderer_.enableBlend();
   // Populate our textures array for each kind of entity to render (for now only 1 main character)
   textures_.at(TextureIdx::MAIN_CHARACTER) = std::make_unique<Texture>(character_->texturePath, true);
@@ -69,7 +71,7 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   this->setVBInstances();
 }
 
-SceneTraining::~SceneTraining() = default;
+SceneTraining::~SceneTraining() { this->getTestContext().windowManager->removeWindowListener(this); }
 
 void SceneTraining::onUpdate(float /*deltaTime */) {}
 
@@ -78,6 +80,10 @@ void SceneTraining::onRender() {
 }
 
 void SceneTraining::onImGuiRender() {}
+
+void SceneTraining::onKeyCallback(int /* key */, int /* scancode */, int /* action */, int /* mods */) {
+  this->onKeyPressed();
+}
 
 void SceneTraining::setVBInstances() {
   // GLintptr offset = 0;
@@ -99,6 +105,17 @@ void SceneTraining::setVBInstances() {
   sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * 1);  // Only 1 main character
   vbiTextureIds_->setInstanceData(&cModel_.textureID, sizeToSend, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount);
   vbiTextureIds_->unBind();
+}
+
+void SceneTraining::onKeyPressed() {
+  const auto& wm = this->getTestContext().windowManager;
+  const bool& keyWDown = wm->getPressedDownKeysMap().at(GLFW_KEY_W);
+  const bool& keyADown = wm->getPressedDownKeysMap().at(GLFW_KEY_A);
+  const bool& keySDown = wm->getPressedDownKeysMap().at(GLFW_KEY_S);
+  const bool& keyDDown = wm->getPressedDownKeysMap().at(GLFW_KEY_D);
+  if (!keyWDown || !keyADown || !keySDown || !keyDDown) {
+    return;
+  }
 }
 
 }  // namespace test

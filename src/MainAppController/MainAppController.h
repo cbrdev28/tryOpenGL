@@ -25,11 +25,10 @@ class MainAppController {
   std::unique_ptr<ImGuiManager> imGuiManager_ = std::make_unique<ImGuiManager>(*windowManager_);
   std::shared_ptr<ThreadPoolManager> threadPoolManager_ = std::make_shared<ThreadPoolManager>();
   std::shared_ptr<GameManager> gameManager_ = std::make_shared<GameManager>();
+  std::shared_ptr<Renderer> appRenderer_ = std::make_shared<Renderer>();
 
-  test::TestContext testCtx_{windowManager_, threadPoolManager_, gameManager_};
+  test::TestContext testCtx_{windowManager_, threadPoolManager_, gameManager_, appRenderer_};
   std::unique_ptr<test::TestMenu> testMenu_ = std::make_unique<test::TestMenu>(testCtx_);
-
-  Renderer renderer_;
 
   /**
    * Initialize the app & managers

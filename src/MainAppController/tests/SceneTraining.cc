@@ -7,7 +7,10 @@
 namespace test {
 
 SceneTraining::SceneTraining(const TestContext& ctx)
-    : Test(ctx), gameManager_(*ctx.gameManager), character_(gameManager_.getCurrentCharacter()) {
+    : Test(ctx),
+      gameManager_(*ctx.gameManager),
+      character_(gameManager_.getCurrentCharacter()),
+      renderer_(*ctx.renderer) {
   // This scene cannot work without a current character
   ASSERT(character_ != nullptr);
   renderer_.enableBlend();

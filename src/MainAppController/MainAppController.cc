@@ -41,7 +41,7 @@ auto MainAppController::renderLoop() -> void {
     glfwPollEvents();
     windowManager_->updateWindowStats();
     windowManager_->processKeyInput();
-    renderer_.clear();
+    appRenderer_->clear();
 
     imGuiManager_->renderFrame();
 

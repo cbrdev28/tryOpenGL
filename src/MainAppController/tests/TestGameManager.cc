@@ -17,7 +17,7 @@ void TestGameManager::onRender() {
   if (currentScene_) {
     currentScene_->onRender();
   } else {
-    renderer_.clearColorBackground(0.2F, 0.5F, 0.3F, 1.0F);
+    this->getTestContext().renderer->clearColorBackground(0.2F, 0.5F, 0.3F, 1.0F);
   }
 }
 

@@ -23,7 +23,7 @@ void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
   } else {
-    renderer_.clearColorBackground(0.1F, 0.1F, 0.1F, 1.0F);
+    this->getTestContext().renderer->clearColorBackground(0.1F, 0.1F, 0.1F, 1.0F);
   }
 }
 

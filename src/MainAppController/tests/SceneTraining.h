@@ -32,6 +32,7 @@ class SceneTraining : public Test {
   GameCharacter* character_;
   BaseSquareModel bsModel_;
   CharacterModel cModel_;
+  Renderer& renderer_;
 
   enum TextureIdx {
     MAIN_CHARACTER = 0,
@@ -40,7 +41,6 @@ class SceneTraining : public Test {
   static constexpr unsigned int kTexturesCount = 1;
   std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
 
-  Renderer renderer_;
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_training.shader")};
   std::unique_ptr<VertexArray> va_{new VertexArray};
   std::unique_ptr<VertexBuffer> vbVertices_{new VertexBuffer(bsModel_.vertices_.data(), sizeof(bsModel_.vertices_))};

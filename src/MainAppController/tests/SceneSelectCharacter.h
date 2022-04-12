@@ -31,6 +31,7 @@ class SceneSelectCharacter : public Test {
   static constexpr unsigned int kVertexCount = 6;
 
   GameManager& gameManager_;
+  Renderer& renderer_;
   std::array<float, 4> backgroundColor_{0.1F, 0.4F, 0.2F, 1.0F};
   std::array<GameCharacter, kCharacterCount> characters_{
       {{"Clara", "res/textures/car.png"}, {"Felix", "res/textures/dino.png"}}};
@@ -42,7 +43,6 @@ class SceneSelectCharacter : public Test {
   std::array<glm::vec2, kVertexCount> textures_ = {glm::vec2(0.0F, 0.0F), glm::vec2(1.0F, 0.0F), glm::vec2(1.0F, 1.0F),
                                                    glm::vec2(1.0F, 1.0F), glm::vec2(0.0F, 1.0F), glm::vec2(0.0F, 0.0F)};
 
-  Renderer renderer_;
   std::unique_ptr<VertexArray> va_{new VertexArray};
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_select_character.shader")};
   std::unique_ptr<VertexBuffer> vbVertices_{new VertexBuffer(vertices_.data(), sizeof(vertices_))};

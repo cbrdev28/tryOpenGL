@@ -40,7 +40,7 @@ class SceneSelectCharacter : public Test {
   std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("res/shaders/scene_select_character.shader");
   std::unique_ptr<VertexBuffer> vbVertices_;
   std::unique_ptr<VertexBuffer> vbTextures_;
-  std::unique_ptr<Texture> defaultTexture_ = std::make_unique<Texture>("res/textures/grass.png");
+  std::unique_ptr<Texture> defaultTexture_ = std::make_unique<Texture>("res/textures/grass.png", false);
   std::unique_ptr<Texture> currentTexture_ = nullptr;
 
   std::array<glm::vec2, kVertexCount> vertices_ = {

@@ -9,7 +9,7 @@ namespace test {
 SceneSelectCharacter::SceneSelectCharacter(const TestContext& ctx) : Test(ctx), gameManager_(*ctx.gameManager) {
   auto* gc = gameManager_.getCurrentCharacter();
   if (gc != nullptr) {
-    currentTexture_ = std::make_unique<Texture>(gc->texturePath);
+    currentTexture_ = std::make_unique<Texture>(gc->texturePath, false);
   }
 
   vbVertices_ = std::make_unique<VertexBuffer>(vertices_.data(), sizeof(vertices_));
@@ -66,7 +66,7 @@ void SceneSelectCharacter::onImGuiRender() {
   for (const auto& character : characters_) {
     if (ImGui::Button(character.name.c_str())) {
       gameManager_.setCurrentCharacter(character);
-      currentTexture_ = std::make_unique<Texture>(character.texturePath);
+      currentTexture_ = std::make_unique<Texture>(character.texturePath, false);
     }
   }
   ImGui::Unindent();

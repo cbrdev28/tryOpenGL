@@ -11,7 +11,7 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   // This scene cannot work without a current character
   ASSERT(currentCharacter_ != nullptr);
   renderer_.enableBlend();
-  textures_.at(TextureIdx::MAIN_CHARACTER) = std::make_unique<Texture>(currentCharacter_->texturePath);
+  textures_.at(TextureIdx::MAIN_CHARACTER) = std::make_unique<Texture>(currentCharacter_->texturePath, true);
 
   vbBaseVertices_ =
       std::make_unique<VertexBuffer>(baseSquareModel_.vertices_.data(), sizeof(baseSquareModel_.vertices_));

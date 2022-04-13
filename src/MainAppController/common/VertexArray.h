@@ -12,7 +12,6 @@ class VertexArray {
  public:
   VertexArray();
   ~VertexArray();
-
   VertexArray(const VertexArray& other) = delete;
   VertexArray(VertexArray&& other) = delete;
   auto operator=(const VertexArray& other) -> VertexArray& = delete;
@@ -20,9 +19,6 @@ class VertexArray {
 
   [[deprecated("Replaced by the version which takes a vector of pairs")]] void setBufferLayout(
       const VertexBuffer& vb, const VertexBufferLayout& layout) const;
-
-  [[deprecated("Try to use version with VexterBufferStream")]] void setInstanceBufferLayout(
-      const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
   void setBufferLayout(
       const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
 

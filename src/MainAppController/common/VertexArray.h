@@ -1,6 +1,7 @@
 #ifndef VERTEX_ARRAY_H_
 #define VERTEX_ARRAY_H_
 
+#include "StreamVertexBuffer.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
@@ -20,10 +21,12 @@ class VertexArray {
   [[deprecated("Replaced by the version which takes a vector of pairs")]] void setBufferLayout(
       const VertexBuffer& vb, const VertexBufferLayout& layout) const;
 
-  void setInstanceBufferLayout(
+  [[deprecated("Try to use version with VexterBufferStream")]] void setInstanceBufferLayout(
       const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
   void setBufferLayout(
       const std::vector<std::pair<const VertexBuffer&, const VertexBufferLayout&>>& vectorOfPairs) const;
+
+  void setStreamBufferLayout(const std::vector<const StreamVertexBuffer*>& streamVBs) const;
 
   void bind() const;
   void unBind() const;

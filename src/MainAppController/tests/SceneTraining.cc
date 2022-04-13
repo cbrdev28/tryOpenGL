@@ -18,35 +18,9 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   // Populate our textures array for each kind of entity to render (for now only 1 main character)
   textures_.at(TextureIdx::MAIN_CHARACTER) = std::make_unique<Texture>(character_->texturePath, true);
 
-  vbVertices_->setDivisor(VertexBufferDivisor::ALWAYS);
-  vbTextures_->setDivisor(VertexBufferDivisor::ALWAYS);
-  vbiPositions_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  vbiScales_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  vbiAngles_->setDivisor(VertexBufferDivisor::FOR_EACH);
-  vbiTextureIds_->setDivisor(VertexBufferDivisor::FOR_EACH);
-
-  VertexBufferLayout verticesLayout;
-  verticesLayout.pushFloat(2);  // Each vertex is made of 2 floats
-  VertexBufferLayout texturesLayout;
-  texturesLayout.pushFloat(2);  // Each texture coordinate is made of 2 floats
-  VertexBufferLayout positionsLayout;
-  positionsLayout.pushFloat(2);  // Each position is made of 2 floats
-  VertexBufferLayout scalesLayout;
-  scalesLayout.pushFloat(2);  // Each scale is made of 2 floats
-  VertexBufferLayout anglesLayout;
-  anglesLayout.pushFloat(1);  // Each angle is made of 1 float
-  VertexBufferLayout textureIdsLayout;
-  textureIdsLayout.pushFloat(1);  // Each texture ID is made of 1 float
-
-  va_->setInstanceBufferLayout({
-      // The order needs to match with our shader!
-      {*vbVertices_, verticesLayout},
-      {*vbTextures_, texturesLayout},
-      {*vbiPositions_, positionsLayout},
-      {*vbiScales_, scalesLayout},
-      {*vbiAngles_, anglesLayout},
-      {*vbiTextureIds_, textureIdsLayout},
-  });
+  // Match the order of shader layout!
+  va_->setStreamBufferLayout({vbVertices_.get(), vbTextures_.get(), vbiPositions_.get(), vbiScales_.get(),
+                              vbiAngles_.get(), vbiTextureIds_.get()});
 
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));

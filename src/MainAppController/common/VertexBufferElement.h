@@ -13,6 +13,7 @@ struct VertexBufferElement {
       case GL_UNSIGNED_INT:
         return sizeof(GLuint);
     }
+    // NOLINTNEXTLINE(misc-static-assert)
     ASSERT(false);
     return 0;
   }

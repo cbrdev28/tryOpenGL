@@ -7,10 +7,10 @@
 #include "GameManager.h"
 #include "Renderer.h"
 #include "Shader.h"
+#include "StreamVertexBuffer.h"
 #include "Test.h"
 #include "Texture.h"
 #include "VertexArray.h"
-#include "VertexBuffer.h"
 
 namespace test {
 
@@ -44,19 +44,21 @@ class SceneTraining : public Test {
 
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_training.shader")};
   std::unique_ptr<VertexArray> va_{new VertexArray};
-  std::unique_ptr<VertexBuffer> vbVertices_{new VertexBuffer(bsModel_.vertices_.data(), sizeof(bsModel_.vertices_))};
-  std::unique_ptr<VertexBuffer> vbTextures_{new VertexBuffer(bsModel_.textures_.data(), sizeof(bsModel_.textures_))};
+  std::unique_ptr<StreamVertexBuffer> vbVertices_{new StreamVertexBuffer(
+      bsModel_.vertices_.data(), sizeof(bsModel_.vertices_), {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
+  std::unique_ptr<StreamVertexBuffer> vbTextures_{new StreamVertexBuffer(
+      bsModel_.textures_.data(), sizeof(bsModel_.textures_), {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
 
   // For now we only render 1 main character
   static constexpr unsigned int kMaxInstancesCount = 1;
-  std::unique_ptr<VertexBuffer> vbiPositions_{
-      new VertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW)};
-  std::unique_ptr<VertexBuffer> vbiScales_{
-      new VertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW)};
-  std::unique_ptr<VertexBuffer> vbiAngles_{
-      new VertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW)};
-  std::unique_ptr<VertexBuffer> vbiTextureIds_{
-      new VertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, GL_STREAM_DRAW)};
+  std::unique_ptr<StreamVertexBuffer> vbiPositions_{
+      new StreamVertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 2, GL_FALSE})};
+  std::unique_ptr<StreamVertexBuffer> vbiScales_{
+      new StreamVertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 2, GL_FALSE})};
+  std::unique_ptr<StreamVertexBuffer> vbiAngles_{
+      new StreamVertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 1, GL_FALSE})};
+  std::unique_ptr<StreamVertexBuffer> vbiTextureIds_{
+      new StreamVertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 1, GL_FALSE})};
 
   auto currentInstanceCount() -> GLsizei {
     // For now we only render 1 main character

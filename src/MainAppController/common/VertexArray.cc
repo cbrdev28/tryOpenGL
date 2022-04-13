@@ -70,6 +70,28 @@ void VertexArray::setBufferLayout(
   }
 }
 
+void VertexArray::setStreamBufferLayout(const std::vector<const StreamVertexBuffer*>& streamVBs) const {
+  bind();
+  for (GLuint i = 0; i < streamVBs.size(); i++) {
+    const auto& svb = streamVBs.at(i);
+    svb->bind();
+
+    uint64_t offset = 0;
+    const auto& layout = svb->getLayout();
+    for (GLuint j = 0; j < layout.getElements().size(); j++) {
+      const auto& element = layout.getElements().at(j);
+
+      // NOLINTNEXTLINE(google-readability-casting, performance-no-int-to-ptr, cppcoreguidelines-pro-type-cstyle-cast)
+      auto* glOffset = (GLvoid*)offset;
+      GLCall(glEnableVertexAttribArray(i + j));
+      GLCall(
+          glVertexAttribPointer(i + j, element.count, element.type, element.normalized, layout.getStride(), glOffset));
+      GLCall(glVertexAttribDivisor(i + j, svb->getUsage()));
+      offset = offset + static_cast<uint64_t>(element.count * VertexBufferElement::getSizeOfType(element.type));
+    }
+  }
+}
+
 void VertexArray::bind() const { GLCall(glBindVertexArray(identifier_)); }
 
 void VertexArray::unBind() const { GLCall(glBindVertexArray(0)); }

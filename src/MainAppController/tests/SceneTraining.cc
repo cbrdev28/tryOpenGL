@@ -13,7 +13,6 @@ SceneTraining::SceneTraining(const TestContext& ctx)
       renderer_(*ctx.renderer) {
   // This scene cannot work without a current character
   ASSERT(character_ != nullptr);
-  this->getTestContext().windowManager->addWindowListener(this);
 
   renderer_.enableBlend();
   // Populate our textures array for each kind of entity to render (for now only 1 main character)
@@ -71,19 +70,18 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   this->setVBInstances();
 }
 
-SceneTraining::~SceneTraining() { this->getTestContext().windowManager->removeWindowListener(this); }
+SceneTraining::~SceneTraining() = default;
 
-void SceneTraining::onUpdate(float /*deltaTime */) {}
+void SceneTraining::onUpdate(float deltaTime) {
+  deltaTime_ = deltaTime;
+  this->onMoveCharacter();
+}
 
 void SceneTraining::onRender() {
   renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(bsModel_.vertices_.size()), this->currentInstanceCount());
 }
 
 void SceneTraining::onImGuiRender() {}
-
-void SceneTraining::onKeyCallback(int /* key */, int /* scancode */, int /* action */, int /* mods */) {
-  this->onKeyPressed();
-}
 
 void SceneTraining::setVBInstances() {
   // GLintptr offset = 0;
@@ -107,15 +105,35 @@ void SceneTraining::setVBInstances() {
   vbiTextureIds_->unBind();
 }
 
-void SceneTraining::onKeyPressed() {
+void SceneTraining::onMoveCharacter() {
   const auto& wm = this->getTestContext().windowManager;
   const bool& keyWDown = wm->getPressedDownKeysMap().at(GLFW_KEY_W);
   const bool& keyADown = wm->getPressedDownKeysMap().at(GLFW_KEY_A);
   const bool& keySDown = wm->getPressedDownKeysMap().at(GLFW_KEY_S);
   const bool& keyDDown = wm->getPressedDownKeysMap().at(GLFW_KEY_D);
-  if (!keyWDown || !keyADown || !keySDown || !keyDDown) {
+  if (!keyWDown && !keyADown && !keySDown && !keyDDown) {
     return;
   }
+
+  glm::vec2 direction{0.0F, 0.0F};
+  if (keyWDown) {
+    direction += glm::vec2{0.0F, 1.0F};
+  }
+  if (keySDown) {
+    direction += glm::vec2{0.0F, -1.0F};
+  }
+  if (keyADown) {
+    direction += glm::vec2{-1.0F, 0.0F};
+  }
+  if (keyDDown) {
+    direction += glm::vec2{1.0F, 0.0F};
+  }
+
+  if (direction == glm::vec2{0.0F, 0.0F}) {
+    return;
+  }
+  cModel_.position += glm::normalize(direction) * deltaTime_ * CharacterModel::kMoveSpeed;
+  this->setVBInstances();
 }
 
 }  // namespace test

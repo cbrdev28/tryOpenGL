@@ -11,11 +11,10 @@
 #include "Texture.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include "WindowListener.h"
 
 namespace test {
 
-class SceneTraining : public Test, public WindowListener {
+class SceneTraining : public Test {
  public:
   explicit SceneTraining(const TestContext& ctx);
   ~SceneTraining() override;
@@ -28,14 +27,13 @@ class SceneTraining : public Test, public WindowListener {
   void onRender() override;
   void onImGuiRender() override;
 
-  void onKeyCallback(int key, int scancode, int action, int mods) override;
-
  private:
   GameManager& gameManager_;
   GameCharacter* character_;
   Renderer& renderer_;
   BaseSquareModel bsModel_;
   CharacterModel cModel_;
+  float deltaTime_{0.0F};
 
   // For now we only render 1 main character
   static constexpr unsigned int kTexturesCount = 1;
@@ -67,7 +65,7 @@ class SceneTraining : public Test, public WindowListener {
 
   void setVBInstances();
 
-  void onKeyPressed();
+  void onMoveCharacter();
 };
 
 }  // namespace test

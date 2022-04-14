@@ -14,30 +14,38 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   // This scene cannot work without a current character
   ASSERT(character_ != nullptr);
 
-  renderer_.enableBlend();
-  // Populate our textures array for each kind of entity to render (for now only 1 main character)
-  textures_.at(TextureIdx::MAIN_CHARACTER) = std::make_unique<Texture>(character_->texturePath, true);
+  SceneTrainingModel mainCharacterModel;
+  mainCharacterModel.texturePath = character_->texturePath;
+  mainCharacterModel.positions.emplace_back(CharacterModel::position);
+  mainCharacterModel.scales.emplace_back(CharacterModel::scale);
+  mainCharacterModel.angles.emplace_back(CharacterModel::angle);
+  // Populate model in order to match with textures in shader
+  mainCharacterModel.textureIDs.emplace_back(ModelIdx::MAIN_CHARACTER);
+  models_.at(ModelIdx::MAIN_CHARACTER) = mainCharacterModel;
 
   // Match the order of shader layout!
-  va_->setStreamBufferLayout({vbVertices_.get(), vbTextures_.get(), vbiPositions_.get(), vbiScales_.get(),
-                              vbiAngles_.get(), vbiTextureIds_.get()});
+  va_->setStreamBufferLayout({vbVertices_.get(), vbTextures_.get(), streamVbs_.at(SVBIdx::POSITIONS).get(),
+                              streamVbs_.at(SVBIdx::SCALES).get(), streamVbs_.at(SVBIdx::ANGLES).get(),
+                              streamVbs_.at(SVBIdx::TEXTURE_IDS).get()});
 
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));
   const auto& aspectRatio = this->getTestContext().windowManager->getAspectRatio().ratio;
   shader_->setUniformMat4("u_projection", glm::ortho(-aspectRatio, aspectRatio, -1.0F, 1.0F, -1.0F, 1.0F));
 
-  for (unsigned int i = 0; i < textures_.size(); ++i) {
+  renderer_.enableBlend();
+  // Populate our textures array for each kind of entity to render
+  for (unsigned int i = 0; i < models_.size(); ++i) {
+    textures_.at(i) = std::make_unique<Texture>(models_.at(i).texturePath, true);
     textures_.at(i)->bind(i);
     shader_->setUniform1i(fmt::format("u_textureSampler_{}", i), static_cast<GLint>(i));
   }
 
   shader_->unBind();
   va_->unBind();
-  vbiTextureIds_->unBind();
-  vbiAngles_->unBind();
-  vbiScales_->unBind();
-  vbiPositions_->unBind();
+  for (const auto& svb : streamVbs_) {
+    svb->unBind();
+  }
   vbTextures_->unBind();
   vbVertices_->unBind();
 
@@ -52,31 +60,24 @@ void SceneTraining::onUpdate(float deltaTime) {
 }
 
 void SceneTraining::onRender() {
-  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(bsModel_.vertices_.size()), this->currentInstanceCount());
+  renderer_.drawInstance(*shader_, *va_, static_cast<GLsizei>(BaseSquareModel::vertices_.size()),
+                         this->currentInstanceCount());
 }
 
 void SceneTraining::onImGuiRender() {}
 
 void SceneTraining::setVBInstances() {
-  // GLintptr offset = 0;
-  auto sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * 1);  // Only 1 main character
-  vbiPositions_->setInstanceData(&cModel_.position, sizeToSend, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount);
-  vbiPositions_->unBind();
-
-  // offset = 0;
-  sizeToSend = static_cast<GLsizeiptr>(sizeof(glm::vec2) * 1);  // Only 1 main character
-  vbiScales_->setInstanceData(&cModel_.scale, sizeToSend, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount);
-  vbiScales_->unBind();
-
-  // offset = 0;
-  sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * 1);  // Only 1 main character
-  vbiAngles_->setInstanceData(&cModel_.angle, sizeToSend, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount);
-  vbiAngles_->unBind();
-
-  // offset = 0;
-  sizeToSend = static_cast<GLsizeiptr>(sizeof(GLfloat) * 1);  // Only 1 main character
-  vbiTextureIds_->setInstanceData(&cModel_.textureID, sizeToSend, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount);
-  vbiTextureIds_->unBind();
+  GLintptr offset = 0;
+  for (const auto& model : models_) {
+    this->setModelStreamData(model.positions, *streamVbs_.at(0), offset);
+    this->setModelStreamData(model.scales, *streamVbs_.at(1), offset);
+    this->setModelStreamData(model.angles, *streamVbs_.at(2), offset);
+    this->setModelStreamData(model.textureIDs, *streamVbs_.at(3), offset);
+    offset += model.instancesCount();
+  }
+  for (const auto& svb : streamVbs_) {
+    svb->unBind();
+  }
 }
 
 void SceneTraining::onMoveCharacter() {
@@ -106,7 +107,9 @@ void SceneTraining::onMoveCharacter() {
   if (direction == glm::vec2{0.0F, 0.0F}) {
     return;
   }
-  cModel_.position += glm::normalize(direction) * deltaTime_ * CharacterModel::kMoveSpeed;
+
+  models_.at(ModelIdx::MAIN_CHARACTER).positions.at(0) +=
+      glm::normalize(direction) * deltaTime_ * CharacterModel::kMoveSpeed;
   this->setVBInstances();
 }
 

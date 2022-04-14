@@ -39,7 +39,12 @@ void StreamVertexBuffer::setInstanceData(const GLvoid* data, GLsizeiptr size, GL
   GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
 }
 
-void StreamVertexBuffer::setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLintptr offset) const {
+void StreamVertexBuffer::setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize,
+                                               GLintptr offset) const {
   bind();
+  // Experiment more and see if this is needed when adding more instances
+  // if (offset == 0) {
+  //   GLCall(glBufferData(GL_ARRAY_BUFFER, maxSize, nullptr, GL_STREAM_DRAW));
+  // }
   GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, data));
 }

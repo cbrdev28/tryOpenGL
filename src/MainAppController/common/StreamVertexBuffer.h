@@ -27,8 +27,9 @@ class StreamVertexBuffer {
   void bind() const;
   void unBind() const;
 
-  void setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize) const;
-  void setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLintptr offset) const;
+  [[deprecated("Prefer to use version which always take the offset as parameter")]] void setInstanceData(
+      const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize) const;
+  void setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize, GLintptr offset) const;
 
   [[nodiscard]] inline auto getUsage() const -> GLuint { return usageDivisor_; }
   [[nodiscard]] inline auto getLayout() const -> const VertexBufferLayout& { return layout_; }

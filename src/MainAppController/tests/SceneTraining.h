@@ -14,6 +14,35 @@
 
 namespace test {
 
+struct SceneTrainingModel {
+  unsigned int maxCount{1};
+  // Static render data
+  std::string texturePath;
+  // Stream render data
+  std::vector<glm::vec2> positions;
+  std::vector<glm::vec2> scales;
+  std::vector<GLfloat> angles;  // To rotate around Z axis
+  std::vector<GLfloat> textureIDs;
+  // Other data
+  float moveSpeed{1.0F};
+
+  SceneTrainingModel() {
+    positions.reserve(maxCount);
+    scales.reserve(maxCount);
+    angles.reserve(maxCount);
+    textureIDs.reserve(maxCount);
+  }
+
+  SceneTrainingModel(unsigned int count, std::string path) : maxCount(count), texturePath(std::move(path)) {
+    positions.reserve(maxCount);
+    scales.reserve(maxCount);
+    angles.reserve(maxCount);
+    textureIDs.reserve(maxCount);
+  }
+
+  [[nodiscard]] auto instancesCount() const -> GLintptr { return static_cast<GLintptr>(positions.size()); }
+};
+
 class SceneTraining : public Test {
  public:
   explicit SceneTraining(const TestContext& ctx);
@@ -28,37 +57,49 @@ class SceneTraining : public Test {
   void onImGuiRender() override;
 
  private:
+  float deltaTime_{0.0F};
   GameManager& gameManager_;
   GameCharacter* character_;
   Renderer& renderer_;
-  BaseSquareModel bsModel_;
-  CharacterModel cModel_;
-  float deltaTime_{0.0F};
 
-  // For now we only render 1 main character
-  static constexpr unsigned int kTexturesCount = 1;
-  enum TextureIdx {
+  // Keep track of model order to match with shader textures
+  enum ModelIdx {
     MAIN_CHARACTER = 0,
   };
-  std::array<std::unique_ptr<Texture>, kTexturesCount> textures_;
+  static constexpr unsigned int kModelsCount = 1;
+  std::array<SceneTrainingModel, kModelsCount> models_;
+  std::array<std::unique_ptr<Texture>, kModelsCount> textures_;
 
   std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_training.shader")};
   std::unique_ptr<VertexArray> va_{new VertexArray};
-  std::unique_ptr<StreamVertexBuffer> vbVertices_{new StreamVertexBuffer(
-      bsModel_.vertices_.data(), sizeof(bsModel_.vertices_), {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
-  std::unique_ptr<StreamVertexBuffer> vbTextures_{new StreamVertexBuffer(
-      bsModel_.textures_.data(), sizeof(bsModel_.textures_), {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
+  std::unique_ptr<StreamVertexBuffer> vbVertices_{
+      new StreamVertexBuffer(BaseSquareModel::vertices_.data(), sizeof(BaseSquareModel::vertices_),
+                             {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
+  std::unique_ptr<StreamVertexBuffer> vbTextures_{
+      new StreamVertexBuffer(BaseSquareModel::textures_.data(), sizeof(BaseSquareModel::textures_),
+                             {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
 
   // For now we only render 1 main character
   static constexpr unsigned int kMaxInstancesCount = 1;
-  std::unique_ptr<StreamVertexBuffer> vbiPositions_{
-      new StreamVertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 2, GL_FALSE})};
-  std::unique_ptr<StreamVertexBuffer> vbiScales_{
-      new StreamVertexBuffer(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 2, GL_FALSE})};
-  std::unique_ptr<StreamVertexBuffer> vbiAngles_{
-      new StreamVertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 1, GL_FALSE})};
-  std::unique_ptr<StreamVertexBuffer> vbiTextureIds_{
-      new StreamVertexBuffer(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount, {GL_FLOAT, 1, GL_FALSE})};
+  // Keep track of model order to match with shader layouts
+  enum SVBIdx {
+    POSITIONS = 0,
+    SCALES = 1,
+    ANGLES = 2,
+    TEXTURE_IDS = 3,
+  };
+  static constexpr unsigned int kVBSCount = 4;
+  std::array<std::unique_ptr<StreamVertexBuffer>, kVBSCount> streamVbs_{
+      std::make_unique<StreamVertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount,
+                                           VertexBufferElement{GL_FLOAT, 2, GL_FALSE}),
+      std::make_unique<StreamVertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount,
+                                           VertexBufferElement{GL_FLOAT, 2, GL_FALSE}),
+      std::make_unique<StreamVertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount,
+                                           VertexBufferElement{GL_FLOAT, 1, GL_FALSE}),
+      std::make_unique<StreamVertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount,
+                                           VertexBufferElement{GL_FLOAT, 1, GL_FALSE}),
+
+  };
 
   auto currentInstanceCount() -> GLsizei {
     // For now we only render 1 main character
@@ -66,8 +107,15 @@ class SceneTraining : public Test {
   }
 
   void setVBInstances();
-
   void onMoveCharacter();
+
+  template <typename Src>
+  auto setModelStreamData(const std::vector<Src>& src, const StreamVertexBuffer& svb, GLintptr elementOffset) -> void {
+    constexpr auto modelSizeof = sizeof(Src);
+    auto byteOffset = elementOffset * modelSizeof;
+    auto sizeToSend = static_cast<GLsizeiptr>(modelSizeof * src.size());
+    svb.setInstanceDataOffset(src.data(), sizeToSend, 0, byteOffset);
+  }
 };
 
 }  // namespace test

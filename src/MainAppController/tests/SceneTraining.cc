@@ -19,6 +19,7 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   mainCharacterModel.positions.emplace_back(CharacterModel::position);
   mainCharacterModel.scales.emplace_back(CharacterModel::scale);
   mainCharacterModel.angles.emplace_back(CharacterModel::angle);
+  mainCharacterModel.directions.emplace_back(CharacterModel::direction);
   // Populate model in order to match with textures in shader
   mainCharacterModel.textureIDs.emplace_back(ModelIdx::MAIN_CHARACTER);
   models_.at(ModelIdx::MAIN_CHARACTER) = mainCharacterModel;
@@ -26,7 +27,7 @@ SceneTraining::SceneTraining(const TestContext& ctx)
   // Match the order of shader layout!
   va_->setStreamBufferLayout({vbVertices_.get(), vbTextures_.get(), streamVbs_.at(SVBIdx::POSITIONS).get(),
                               streamVbs_.at(SVBIdx::SCALES).get(), streamVbs_.at(SVBIdx::ANGLES).get(),
-                              streamVbs_.at(SVBIdx::TEXTURE_IDS).get()});
+                              streamVbs_.at(SVBIdx::TEXTURE_IDS).get(), streamVbs_.at(SVBIdx::DIRECTIONS).get()});
 
   shader_->bind();
   shader_->setUniformMat4("u_view", glm::mat4(1.0F));
@@ -69,10 +70,11 @@ void SceneTraining::onImGuiRender() {}
 void SceneTraining::setVBInstances() {
   GLintptr offset = 0;
   for (const auto& model : models_) {
-    this->setModelStreamData(model.positions, *streamVbs_.at(0), offset);
-    this->setModelStreamData(model.scales, *streamVbs_.at(1), offset);
-    this->setModelStreamData(model.angles, *streamVbs_.at(2), offset);
-    this->setModelStreamData(model.textureIDs, *streamVbs_.at(3), offset);
+    this->setModelStreamData(model.positions, *streamVbs_.at(SVBIdx::POSITIONS), offset);
+    this->setModelStreamData(model.scales, *streamVbs_.at(SVBIdx::SCALES), offset);
+    this->setModelStreamData(model.angles, *streamVbs_.at(SVBIdx::ANGLES), offset);
+    this->setModelStreamData(model.textureIDs, *streamVbs_.at(SVBIdx::TEXTURE_IDS), offset);
+    this->setModelStreamData(model.directions, *streamVbs_.at(SVBIdx::DIRECTIONS), offset);
     offset += model.instancesCount();
   }
   for (const auto& svb : streamVbs_) {
@@ -99,9 +101,11 @@ void SceneTraining::onMoveCharacter() {
   }
   if (keyADown) {
     direction += glm::vec2{-1.0F, 0.0F};
+    models_.at(ModelIdx::MAIN_CHARACTER).directions.at(0) = direction;
   }
   if (keyDDown) {
     direction += glm::vec2{1.0F, 0.0F};
+    models_.at(ModelIdx::MAIN_CHARACTER).directions.at(0) = direction;
   }
 
   if (direction == glm::vec2{0.0F, 0.0F}) {

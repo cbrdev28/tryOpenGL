@@ -23,6 +23,7 @@ struct SceneTrainingModel {
   std::vector<glm::vec2> scales;
   std::vector<GLfloat> angles;  // To rotate around Z axis
   std::vector<GLfloat> textureIDs;
+  std::vector<glm::vec2> directions;
   // Other data
   float moveSpeed{1.0F};
 
@@ -79,16 +80,16 @@ class SceneTraining : public Test {
       new StreamVertexBuffer(BaseSquareModel::textures_.data(), sizeof(BaseSquareModel::textures_),
                              {GL_FLOAT, 2, GL_FALSE}, VBSUsage::ONCE, GL_STATIC_DRAW)};
 
-  // For now we only render 1 main character
-  static constexpr unsigned int kMaxInstancesCount = 1;
   // Keep track of model order to match with shader layouts
   enum SVBIdx {
     POSITIONS = 0,
     SCALES = 1,
     ANGLES = 2,
     TEXTURE_IDS = 3,
+    DIRECTIONS = 4,
   };
-  static constexpr unsigned int kVBSCount = 4;
+  static constexpr unsigned int kMaxInstancesCount = 1;
+  static constexpr unsigned int kVBSCount = 5;
   std::array<std::unique_ptr<StreamVertexBuffer>, kVBSCount> streamVbs_{
       std::make_unique<StreamVertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount,
                                            VertexBufferElement{GL_FLOAT, 2, GL_FALSE}),
@@ -98,6 +99,8 @@ class SceneTraining : public Test {
                                            VertexBufferElement{GL_FLOAT, 1, GL_FALSE}),
       std::make_unique<StreamVertexBuffer>(nullptr, sizeof(GLfloat) * SceneTraining::kMaxInstancesCount,
                                            VertexBufferElement{GL_FLOAT, 1, GL_FALSE}),
+      std::make_unique<StreamVertexBuffer>(nullptr, sizeof(glm::vec2) * SceneTraining::kMaxInstancesCount,
+                                           VertexBufferElement{GL_FLOAT, 2, GL_FALSE}),
 
   };
 

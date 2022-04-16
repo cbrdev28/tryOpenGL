@@ -2,12 +2,10 @@
 
 #include "VertexBuffer.h"
 
-#include "openGLErrorHelpers.h"
-
-VertexBuffer::VertexBuffer(const GLvoid* data, GLsizeiptr size, GLenum glDrawMode) {
+VertexBuffer::VertexBuffer(const GLvoid* data, GLsizeiptr size) {
   GLCall(glGenBuffers(1, &identifier_));
   GLCall(glBindBuffer(GL_ARRAY_BUFFER, identifier_));
-  GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, glDrawMode));
+  GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
 }
 
 VertexBuffer::~VertexBuffer() {
@@ -18,20 +16,3 @@ VertexBuffer::~VertexBuffer() {
 void VertexBuffer::bind() const { GLCall(glBindBuffer(GL_ARRAY_BUFFER, identifier_)); }
 
 void VertexBuffer::unBind() const { GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0)); }
-
-void VertexBuffer::setData(const GLvoid* data, GLsizeiptr size) {
-  // Note: 0 is the start offset (we always set the full set of data)
-  GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
-}
-
-void VertexBuffer::setInstanceData(const GLvoid* data, GLsizeiptr size, GLsizeiptr maxSize) const {
-  bind();
-  GLCall(glBufferData(GL_ARRAY_BUFFER, maxSize, nullptr, GL_STREAM_DRAW));
-  // Note: 0 is the start offset (we always set the full set of data)
-  GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
-}
-
-void VertexBuffer::setInstanceDataOffset(const GLvoid* data, GLsizeiptr size, GLintptr offset) const {
-  bind();
-  GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, data));
-}

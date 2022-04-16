@@ -30,18 +30,11 @@ class SceneSelectCharacter : public Test {
   static constexpr GLfloat kBaseSize = 0.5F;
   static constexpr unsigned int kVertexCount = 6;
 
-  std::array<float, 4> backgroundColor_{0.1F, 0.4F, 0.2F, 1.0F};
   GameManager& gameManager_;
+  Renderer& renderer_;
+  std::array<float, 4> backgroundColor_{0.1F, 0.4F, 0.2F, 1.0F};
   std::array<GameCharacter, kCharacterCount> characters_{
       {{"Clara", "res/textures/car.png"}, {"Felix", "res/textures/dino.png"}}};
-
-  Renderer renderer_;
-  std::unique_ptr<VertexArray> va_ = std::make_unique<VertexArray>();
-  std::unique_ptr<Shader> shader_ = std::make_unique<Shader>("res/shaders/scene_select_character.shader");
-  std::unique_ptr<VertexBuffer> vbVertices_;
-  std::unique_ptr<VertexBuffer> vbTextures_;
-  std::unique_ptr<Texture> defaultTexture_ = std::make_unique<Texture>("res/textures/grass.png");
-  std::unordered_map<std::string, std::unique_ptr<Texture>> characterTextures_{};
 
   std::array<glm::vec2, kVertexCount> vertices_ = {
       glm::vec2(-kBaseSize, -kBaseSize), glm::vec2(kBaseSize, -kBaseSize), glm::vec2(kBaseSize, kBaseSize),
@@ -49,6 +42,13 @@ class SceneSelectCharacter : public Test {
   };
   std::array<glm::vec2, kVertexCount> textures_ = {glm::vec2(0.0F, 0.0F), glm::vec2(1.0F, 0.0F), glm::vec2(1.0F, 1.0F),
                                                    glm::vec2(1.0F, 1.0F), glm::vec2(0.0F, 1.0F), glm::vec2(0.0F, 0.0F)};
+
+  std::unique_ptr<VertexArray> va_{new VertexArray};
+  std::unique_ptr<Shader> shader_{new Shader("res/shaders/scene_select_character.shader")};
+  std::unique_ptr<VertexBuffer> vbVertices_{new VertexBuffer(vertices_.data(), sizeof(vertices_))};
+  std::unique_ptr<VertexBuffer> vbTextures_{new VertexBuffer(textures_.data(), sizeof(textures_))};
+  std::unique_ptr<Texture> defaultTexture_{new Texture("res/textures/grass.png", false)};
+  std::unique_ptr<Texture> currentTexture_ = nullptr;
 };
 
 }  // namespace test

@@ -2,6 +2,7 @@
 #define TEST_GAME_MANAGER_H_
 
 #include "SceneSelectCharacter.h"
+#include "SceneTraining.h"
 #include "Test.h"
 
 namespace test {
@@ -9,6 +10,9 @@ namespace test {
 struct Scene {
   std::string name;
   std::function<std::unique_ptr<Test>()> create;
+
+  // If true: the scene will only be enabled if a current character is set
+  bool dependsOnCurrentCharacter;
 };
 
 class TestGameManager : public Test {
@@ -29,9 +33,10 @@ class TestGameManager : public Test {
   float deltaTime_{0.0F};
 
   std::unique_ptr<Test> currentScene_{nullptr};
-  static constexpr unsigned int kMaxScene = 1;
+  static constexpr unsigned int kMaxScene = 2;
   std::array<Scene, kMaxScene> scenes_{
-      {{"Scene Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }}}};
+      {{"Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }, false},
+       {"Training", [&]() { return std::make_unique<SceneTraining>(this->getTestContext()); }, true}}};
 };
 
 }  // namespace test

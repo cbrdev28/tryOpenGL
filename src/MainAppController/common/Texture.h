@@ -10,7 +10,7 @@ class Texture {
   int channelsInFile_{0};
 
  public:
-  explicit Texture(std::string filePath);
+  explicit Texture(std::string filePath, bool mipmapEnabled);
   ~Texture();
 
   Texture(const Texture& other) = delete;

@@ -2,38 +2,32 @@
 
 #include "Texture.h"
 
-#include "openGLErrorHelpers.h"
+// LearnOpenGL:
+// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+// Cherno:
+// GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+// GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
-Texture::Texture(std::string filePath) : filePath_(std::move(filePath)) {
+Texture::Texture(std::string filePath, bool mipmapEnabled) : filePath_(std::move(filePath)) {
   stbi_set_flip_vertically_on_load(1);
   localBuffer_ = stbi_load(filePath_.c_str(), &width_, &height_, &channelsInFile_, STBI_rgb_alpha);
   if (localBuffer_ == nullptr) {
     fmt::print("Failed to open texture file: {}\n", filePath_);
     throw -1;
   }
-
   GLCall(glGenTextures(1, &identifier_));
   GLCall(glBindTexture(GL_TEXTURE_2D, identifier_));
 
-  // LearnOpenGL:
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  // Cherno:
-  // GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-  // GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-  // GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-  // GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
-  GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+  GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmapEnabled ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR));
   GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
   GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
   GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
   GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width_, height_, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer_));
-  // LearnOpenGL:
-  // glGenerateMipmap(GL_TEXTURE_2D);
+  if (mipmapEnabled) {
+    GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+  }
   unBind();
 
   if (localBuffer_ != nullptr) {

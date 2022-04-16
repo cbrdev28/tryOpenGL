@@ -10,7 +10,7 @@
  */
 class WindowManager {
  public:
-  WindowManager() = default;
+  WindowManager();
   ~WindowManager();
 
   WindowManager(const WindowManager& other) = delete;
@@ -30,12 +30,16 @@ class WindowManager {
   void updateWindowStats();
   void processKeyInput();
   void setWindowShouldClose();
+  void setCurrentContext(GLFWwindow* window);
 
   [[nodiscard]] inline auto getWindow() const -> GLFWwindow* { return window_; };
   [[nodiscard]] inline auto getWidth() const -> int { return width_; };
   [[nodiscard]] inline auto getHeight() const -> int { return height_; };
   [[nodiscard]] inline auto getAspectRatio() -> AspectRatio& { return aspectRatio_; };
   [[nodiscard]] inline auto getWindowStats() -> WindowStats& { return windowStats_; };
+  [[nodiscard]] inline auto getPressedDownKeysMap() const -> const std::unordered_map<int, bool>& {
+    return pressedDownKeysMap_;
+  };
 
   inline auto addWindowListener(WindowListener* listener) -> WindowManager& {
     WindowManager::listeners_.emplace_back(listener);
@@ -55,10 +59,17 @@ class WindowManager {
   AspectRatio aspectRatio_{16, 9, 16.0F / 9.0F};
   WindowStats windowStats_;
 
+  // Update this count when supporting new keys (used to reserve memory)
+  static constexpr unsigned int kKeyMapCount = 4;
+  // We depend directly on GLFW key code (to keep track of keys pressed down)
+  std::unordered_map<int /* keyCode */, bool /* pressedDown */> pressedDownKeysMap_;
+
   int width_{WindowManager::defaultWidth};
   int height_{static_cast<int>(static_cast<float>(width_) / aspectRatio_.ratio)};
   std::vector<WindowListener*> listeners_{};
+
   void framebufferSizeCallback(int width, int height);
+  void keyCallback(int key, int scancode, int action, int mods);
 
   /**
    * Callback

@@ -23,6 +23,7 @@ set(mainAppDir "src/MainAppController")
 set(commonDir "src/MainAppController/common")
 set(helpersDir "src/MainAppController/helpers")
 set(managersDir "src/MainAppController/managers")
+set(modelsDir "src/MainAppController/models")
 set(testsDir "src/MainAppController/tests")
 
 file(GLOB srcFiles "${srcDir}/*.cc" "${srcDir}/*.h")
@@ -30,6 +31,7 @@ file(GLOB mainAppSrcFiles "${mainAppDir}/*.cc" "${mainAppDir}/*.h")
 file(GLOB commonSrcFiles "${commonDir}/*.cc" "${commonDir}/*.h")
 file(GLOB helpersSrcFiles "${helpersDir}/*.cc" "${helpersDir}/*.h")
 file(GLOB managersSrcFiles "${managersDir}/*.cc" "${managersDir}/*.h")
+file(GLOB modelsSrcFiles "${modelsDir}/*.cc" "${modelsDir}/*.h")
 file(GLOB testsSrcFiles "${testsDir}/*.cc" "${testsDir}/*.h")
 
 # Resources
@@ -45,6 +47,7 @@ add_executable(
     ${commonSrcFiles}
     ${helpersSrcFiles}
     ${managersSrcFiles}
+    ${modelsSrcFiles}
     ${testsSrcFiles}
     # Seen from examples: we could also add the resources here (shaders, textures, ...)
     # ${shaderFiles}
@@ -64,6 +67,7 @@ target_include_directories(
     ${commonDir}
     ${helpersDir}
     ${managersDir}
+    ${modelsDir}
     ${testsDir}
     # For the config file `tryOpenGLConfig.h` (generated at compile times & copied in bin dir)
     ${PROJECT_BINARY_DIR}

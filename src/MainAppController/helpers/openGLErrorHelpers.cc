@@ -1,7 +1,5 @@
 #include "cbrpch.h"
 
-#include "openGLErrorHelpers.h"
-
 /**
  * GL Error helpers
  */

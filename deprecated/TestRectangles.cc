@@ -5,7 +5,6 @@
 #include <chrono>
 
 #include "VertexBufferLayout.h"
-#include "openGLErrorHelpers.h"
 
 namespace test {
 

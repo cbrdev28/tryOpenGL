@@ -16,12 +16,15 @@ void TestGameManager::onUpdate(float deltaTime) {
 void TestGameManager::onRender() {
   if (currentScene_) {
     currentScene_->onRender();
+  } else {
+    this->getTestContext().renderer->clearColorBackground(0.2F, 0.5F, 0.3F, 1.0F);
   }
 }
 
 void TestGameManager::onImGuiRender() {
   if (currentScene_) {
-    if (ImGui::Button(fmt::format("Back to Game Manager [{}]", fmt::ptr(currentScene_)).c_str())) {
+    // if (ImGui::Button(fmt::format("Back to Game Manager [{}]", fmt::ptr(currentScene_)).c_str())) {
+    if (ImGui::Button("Back to Game Menu")) {
       currentScene_.reset(nullptr);
       return;
     }
@@ -30,34 +33,23 @@ void TestGameManager::onImGuiRender() {
     return;
   }
 
-  ImGui::Text("Window stats");
-  ImGui::Indent();
-  auto ws = this->getTestContext().windowManager->getWindowStats();
-  ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
-  ImGui::Text("Avg FPS: %.2f",
-              static_cast<float>(ws.frameCount) /
-                  std::chrono::duration_cast<std::chrono::duration<float>>(ws.endTime - ws.startTime).count());
-  ImGui::Unindent();
-
-  ImGui::Text("Game stats");
-  ImGui::Indent();
   auto gm = this->getTestContext().gameManager;
-  ImGui::Text("Game clock: %.2f", gm->getGameTime());
-  ImGui::Text("Time played: %.2f", gm->getTimePlayed());
-  if (gm->isGameRunning()) {
-    if (ImGui::Button("Stop game")) {
-      gm->stopGame();
+  auto* gc = gm->getCurrentCharacter();
+
+  ImGui::Text("Scenes");
+  ImGui::Indent();
+  for (const auto& scene : scenes_) {
+    // Disable button for scenes which require a valid current character
+    ImGui::BeginDisabled(scene.dependsOnCurrentCharacter && gc == nullptr);
+    if (ImGui::Button(scene.name.c_str())) {
+      currentScene_ = scene.create();
     }
-  } else {
-    if (ImGui::Button("Start game")) {
-      gm->startGame();
-    }
+    ImGui::EndDisabled();
   }
   ImGui::Unindent();
 
   ImGui::Text("Character");
   ImGui::Indent();
-  auto* gc = gm->getCurrentCharacter();
   if (gc != nullptr) {
     ImGui::Text("%s", fmt::format("Name: {}", gc->name).c_str());
   } else {
@@ -65,13 +57,29 @@ void TestGameManager::onImGuiRender() {
   }
   ImGui::Unindent();
 
-  ImGui::Text("Scenes");
+  ImGui::NewLine();
+  ImGui::Text("Game stats");
   ImGui::Indent();
-  for (const auto& scene : scenes_) {
-    if (ImGui::Button(scene.name.c_str())) {
-      currentScene_ = scene.create();
+  ImGui::Text("Game clock: %.2f", gm->getGameTime());
+  ImGui::Text("Time played: %.2f", gm->getTimePlayed());
+  if (gm->isGameRunning()) {
+    if (ImGui::Button("Stop clock")) {
+      gm->stopGame();
+    }
+  } else {
+    if (ImGui::Button("Start clock")) {
+      gm->startGame();
     }
   }
+  ImGui::Unindent();
+
+  ImGui::Text("Window stats");
+  ImGui::Indent();
+  auto ws = this->getTestContext().windowManager->getWindowStats();
+  ImGui::Text("FPS: %.2f", 1.0F / deltaTime_);
+  ImGui::Text("Avg FPS: %.2f",
+              static_cast<float>(ws.frameCount) /
+                  std::chrono::duration_cast<std::chrono::duration<float>>(ws.endTime - ws.startTime).count());
   ImGui::Unindent();
 }
 

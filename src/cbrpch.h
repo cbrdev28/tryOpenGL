@@ -38,4 +38,6 @@
 
 #include <gsl/gsl>
 
+#include "openGLErrorHelpers.h"
+
 #endif  // CBR_PCH_H_

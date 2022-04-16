@@ -26,7 +26,7 @@ auto MainAppController::init() -> int {
     windowManager_->init();
     imGuiManager_->init();
 
-    testMenu_->registerTest<test::TestGameManager>("Test Game Manager");
+    testMenu_->registerTest<test::TestGameManager>("Test Game");
   } catch (int error) {
     return -1;
   }
@@ -38,9 +38,10 @@ auto MainAppController::renderLoop() -> void {
 
   GLFWwindow* window = windowManager_->getWindow();
   while (glfwWindowShouldClose(window) == 0) {
+    glfwPollEvents();
     windowManager_->updateWindowStats();
     windowManager_->processKeyInput();
-    renderer_.clear();
+    appRenderer_->clear();
 
     imGuiManager_->renderFrame();
 
@@ -52,6 +53,5 @@ auto MainAppController::renderLoop() -> void {
     imGuiManager_->render();
 
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 }

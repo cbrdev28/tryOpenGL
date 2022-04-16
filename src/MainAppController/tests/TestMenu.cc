@@ -23,7 +23,7 @@ void TestMenu::onRender() {
   if (currentTest_ != nullptr) {
     currentTest_->onRender();
   } else {
-    renderer_.clearColorBackground(0.1F, 0.1F, 0.1F, 1.0F);
+    this->getTestContext().renderer->clearColorBackground(0.1F, 0.1F, 0.1F, 1.0F);
   }
 }
 
@@ -34,7 +34,7 @@ void TestMenu::onImGuiRender() {
 
   ImGui::Begin("Test Menu");
   if (currentTest_ != nullptr) {
-    if (ImGui::Button("Back to Test Menu")) {
+    if (ImGui::Button("Back to Main Menu")) {
       delete currentTest_;
       currentTest_ = nullptr;
       ImGui::End();

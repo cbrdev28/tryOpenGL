@@ -35,9 +35,8 @@ class TestGameManager : public Test {
   std::unique_ptr<Test> currentScene_{nullptr};
   static constexpr unsigned int kMaxScene = 2;
   std::array<Scene, kMaxScene> scenes_{
-      {{"Scene Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); },
-        false},
-       {"Scene Training", [&]() { return std::make_unique<SceneTraining>(this->getTestContext()); }, true}}};
+      {{"Select Character", [&]() { return std::make_unique<SceneSelectCharacter>(this->getTestContext()); }, false},
+       {"Training", [&]() { return std::make_unique<SceneTraining>(this->getTestContext()); }, true}}};
 };
 
 }  // namespace test

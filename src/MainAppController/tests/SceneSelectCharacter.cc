@@ -49,17 +49,7 @@ void SceneSelectCharacter::onRender() {
 }
 
 void SceneSelectCharacter::onImGuiRender() {
-  ImGui::Text("Your character");
-  ImGui::Indent();
-  auto* gc = gameManager_.getCurrentCharacter();
-  if (gc != nullptr) {
-    ImGui::Text("%s", fmt::format("Name: {}", gc->name).c_str());
-  } else {
-    ImGui::Text("NONE");
-  }
-  ImGui::Unindent();
-
-  ImGui::Text("Choose character");
+  ImGui::Text("Select character");
   ImGui::Indent();
   for (const auto& character : characters_) {
     if (ImGui::Button(character.name.c_str())) {
@@ -69,6 +59,17 @@ void SceneSelectCharacter::onImGuiRender() {
   }
   ImGui::Unindent();
 
+  ImGui::Text("Character");
+  ImGui::Indent();
+  auto* gc = gameManager_.getCurrentCharacter();
+  if (gc != nullptr) {
+    ImGui::Text("%s", fmt::format("Name: {}", gc->name).c_str());
+  } else {
+    ImGui::Text("NONE");
+  }
+  ImGui::Unindent();
+
+  ImGui::NewLine();
   ImGui::Text("Background color");
   ImGui::Indent();
   ImGui::ColorEdit4("", backgroundColor_.data());

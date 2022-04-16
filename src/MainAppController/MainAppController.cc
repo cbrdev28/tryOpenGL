@@ -26,7 +26,7 @@ auto MainAppController::init() -> int {
     windowManager_->init();
     imGuiManager_->init();
 
-    testMenu_->registerTest<test::TestGameManager>("Test Game Manager");
+    testMenu_->registerTest<test::TestGameManager>("Test Game");
   } catch (int error) {
     return -1;
   }
